@@ -90,7 +90,7 @@ const EventPage = () => {
   const { event, organization } = eventData;
 
   return (
-    <div className="container mx-auto px-2 sm:p-6 space-y-6">
+    <div className="container mx-auto space-y-6">
       {/* Event Header */}
       <EventHeader event={event} organization={organization} />
 
@@ -105,7 +105,7 @@ const EventPage = () => {
           <Sessions eventId={event._id} />
 
           {/* Custom Fields */}
-          <InputField eventId={event._id} />
+          <InputField eventId={event._id} className={'max-h-dvh'} />
 
           <Referrals eventId={event._id} />
 

@@ -127,7 +127,7 @@ const AnnouncementAnalytics = ({ eventId }) => {
             </div>
 
             {/* Summary Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-1">
+            <div className="grid grid-cols-1 gap-1">
                 {/* Announcements Overview */}
                 <Card className={'gap-1'}>
                     <CardTitle className="flex items-center gap-1 text-xs pb-0">

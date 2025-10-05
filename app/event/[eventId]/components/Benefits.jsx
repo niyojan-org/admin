@@ -10,8 +10,9 @@ import { useBenefitsData } from './benefits/useBenefitsData';
 import BenefitsHeader from './benefits/BenefitsHeader';
 import BenefitsList from './benefits/BenefitsList';
 import BenefitForm from './benefits/BenefitForm';
+import { cn } from '@/lib/utils';
 
-export const Benefits = ({ eventId }) => {
+export const Benefits = ({ eventId, className }) => {
     const { user } = useUserStore();
     const [mounted, setMounted] = useState(false);
     const userRole = user?.organization?.role || 'volunteer';
@@ -93,7 +94,7 @@ export const Benefits = ({ eventId }) => {
 
     return (
         <>
-            <Card className="w-full gap-2">
+            <Card className={cn(className, '"w-full gap-2"')}>
                 <BenefitsHeader
                     benefitCount={benefits.length}
                     onAddBenefit={() => setShowAddDialog(true)}

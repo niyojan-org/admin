@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import { IconTicket, IconPlus } from '@tabler/icons-react';
+import { IconTicket, IconPlus, IconAlertHexagon } from '@tabler/icons-react';
 import api from '@/lib/api';
 import { toast } from 'sonner';
 import { useStore, useUserStore } from '@/store/userStore';
@@ -14,8 +14,9 @@ import { TicketStats } from './tickets/TicketStats';
 import { TicketFormDialog } from './tickets/TicketFormDialog';
 import { DeleteTicketDialog } from './tickets/DeleteTicketDialog';
 import { TicketDetailsDialog } from './tickets/TicketDetailsDialog';
+import { cn } from '@/lib/utils';
 
-export default function Tickets({ eventId }) {
+export default function Tickets({ eventId, className }) {
     // State management
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -218,10 +219,28 @@ export default function Tickets({ eventId }) {
     if (error) {
         return null;
     }
+    if (!eventId) {
+        return (
+            <Card className={cn("w-full h-full my-auto items-center flex-col justify-center", className)}>
+                <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
+                    <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-2">
+                        <IconAlertHexagon className='h-20 w-20' />
+                    </div>
+                    <div className="space-y-2">
+                        <h3 className="text-lg font-semibold text-foreground">No Event Selected</h3>
+                        <p className="text-sm text-muted-foreground max-w-sm">
+                            Please select an event to view and manage its tickets
+                        </p>
+                    </div>
+                </div>
+            </Card>
+        );
+    }
+
 
     return (
         <>
-            <Card>
+            <Card className={cn("w-full", className)}>
                 <CardHeader className="pb-4">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div className="flex items-center gap-2">
@@ -313,11 +332,34 @@ export default function Tickets({ eventId }) {
                             ))}
                         </div>
                     ) : tickets.length === 0 ? (
-                        <div className="text-center py-8 px-4 text-muted-foreground">
-                            <IconTicket className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                            <p className="text-lg font-medium mb-2">No tickets created yet</p>
-                            <p className="text-sm">Create your first ticket to start selling</p>
-                        </div>
+                        <Card className="border-dashed border-2 border-muted-foreground/25">
+                            <CardContent className="flex flex-col items-center justify-center py-12 px-6 text-center">
+                                <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mb-6">
+                                    <IconTicket className="w-10 h-10 text-muted-foreground/50" />
+                                </div>
+                                <div className="space-y-3 flex flex-col items-center">
+                                    <h3 className="text-xl font-semibold text-foreground">No Tickets Found</h3>
+                                    <p className="text-sm text-muted-foreground max-w-md">
+                                        You haven't created any tickets for this event yet. Create your first ticket to start selling and managing attendee registrations.
+                                    </p>
+                                    {['owner', 'admin'].includes(userRole) && (
+                                        <div className="pt-4">
+                                            <TicketFormDialog
+                                                isCreateMode={true}
+                                                onCreate={handleCreateTicket}
+                                                createLoading={createLoading}
+                                                trigger={
+                                                    <Button className="flex items-center gap-2">
+                                                        <IconPlus className="w-4 h-4" />
+                                                        Create Your First Ticket
+                                                    </Button>
+                                                }
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            </CardContent>
+                        </Card>
                     ) : (
                         <div className="space-y-3">
                             {tickets.map((ticket) => (

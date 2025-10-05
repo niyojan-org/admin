@@ -48,7 +48,8 @@ export function useSessionData(eventId) {
             setLoading(true);
             setError(null);
             const response = await api.post(`/event/admin/session/${eventId}`, sessionData);
-            setSessions(prev => [...prev, response.data.session]);
+            console.log(response.data.sessions);
+            setSessions(response.data.sessions || []);
             toast.success(response.data.message || 'Session added successfully');
             return response.data.session;
         } catch (error) {

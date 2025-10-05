@@ -11,34 +11,105 @@ import { validateSession, formatDateTimeLocal } from './sessionUtils';
 import { IconAlertTriangle } from '@tabler/icons-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
-const initialFormData = {
-    title: '',
-    description: '',
-    startTime: '',
-    endTime: '',
-    venue: {
-        name: '',
-        address: '',
-        city: '',
-        state: '',
-        country: '',
-        zipCode: ''
-    }
-};
-
 export function SessionForm({
     open,
     onOpenChange,
     session = null,
     onSubmit,
     loading = false,
-    eventMode = 'online'
+    eventMode,
+    event
 }) {
-    const [formData, setFormData] = useState(initialFormData);
+    // Helper function to create default form data
+    const getDefaultFormData = () => ({
+        title: '',
+        description: '',
+        startTime: event?.registrationEndsAt 
+            ? new Date(new Date(event.registrationEndsAt).getTime() + 60 * 60 * 1000).toISOString() 
+            : new Date().toISOString(),
+        endTime: event?.registrationEndsAt 
+            ? new Date(new Date(event.registrationEndsAt).getTime() + 2 * 60 * 60 * 1000).toISOString() 
+            : new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+        venue: {
+            name: '',
+            address: '',
+            city: '',
+            state: '',
+            country: '',
+            zipCode: ''
+        }
+    });
+
+    const [formData, setFormData] = useState(getDefaultFormData);
     const [errors, setErrors] = useState([]);
 
     const isEditing = !!session;
     const isVenueRequired = eventMode === 'offline' || eventMode === 'hybrid';
+
+    // Venue field configuration
+    const venueFields = [
+        { key: 'name', label: 'Venue Name', placeholder: 'Enter venue name' },
+        { key: 'address', label: 'Address', placeholder: 'Enter venue address' },
+        { key: 'city', label: 'City', placeholder: 'Enter city' },
+        { key: 'state', label: 'State', placeholder: 'Enter state' },
+        { key: 'country', label: 'Country', placeholder: 'Enter country' },
+        { key: 'zipCode', label: 'ZIP Code', placeholder: 'Enter ZIP code' }
+    ];
+
+    // Basic form fields configuration
+    const basicFields = [
+        { 
+            key: 'title', 
+            label: 'Session Title', 
+            placeholder: 'Enter session title', 
+            type: 'input', 
+            required: true 
+        },
+        { 
+            key: 'description', 
+            label: 'Description', 
+            placeholder: 'Enter session description', 
+            type: 'textarea', 
+            required: false,
+            rows: 3
+        }
+    ];
+
+    const dateFields = [
+        { 
+            key: 'startTime', 
+            label: 'Start Time', 
+            required: true 
+        },
+        { 
+            key: 'endTime', 
+            label: 'End Time', 
+            required: true,
+            minDateTime: formData.startTime
+        }
+    ];
+
+    // Handle form input changes
+    const handleInputChange = (field, value) => {
+        setFormData(prev => {
+            const newData = {
+                ...prev,
+                [field]: value
+            };
+            return newData;
+        });
+    };
+
+    // Handle venue input changes
+    const handleVenueChange = (field, value) => {
+        setFormData(prev => ({
+            ...prev,
+            venue: {
+                ...prev.venue,
+                [field]: value
+            }
+        }));
+    };
 
     // Initialize form data when session changes
     useEffect(() => {
@@ -46,8 +117,8 @@ export function SessionForm({
             setFormData({
                 title: session.title || '',
                 description: session.description || '',
-                startTime: formatDateTimeLocal(session.startTime),
-                endTime: formatDateTimeLocal(session.endTime),
+                startTime: session.startTime ? new Date(session.startTime).toISOString() : new Date().toISOString(),
+                endTime: session.endTime ? new Date(session.endTime).toISOString() : new Date(Date.now() + 60 * 60 * 1000).toISOString(),
                 venue: {
                     name: session.venue?.name || '',
                     address: session.venue?.address || '',
@@ -58,17 +129,17 @@ export function SessionForm({
                 }
             });
         } else {
-            setFormData(initialFormData);
+            setFormData(getDefaultFormData());
         }
-    }, [session]);
+    }, [session, event]);
 
     // Reset form when dialog closes
     useEffect(() => {
         if (!open) {
-            setFormData(initialFormData);
+            setFormData(getDefaultFormData());
             setErrors([]);
         }
-    }, [open]);
+    }, [open, event]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -95,23 +166,6 @@ export function SessionForm({
         } catch (error) {
             // Error handling is done in the hook
         }
-    };
-
-    const updateFormData = (field, value) => {
-        setFormData(prev => ({
-            ...prev,
-            [field]: value
-        }));
-    };
-
-    const updateVenueData = (field, value) => {
-        setFormData(prev => ({
-            ...prev,
-            venue: {
-                ...prev.venue,
-                [field]: value
-            }
-        }));
     };
 
     return (
@@ -141,55 +195,52 @@ export function SessionForm({
 
                         {/* Basic Information */}
                         <div className="space-y-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="title">Session Title *</Label>
-                                <Input
-                                    id="title"
-                                    value={formData.title}
-                                    onChange={(e) => updateFormData('title', e.target.value)}
-                                    placeholder="Enter session title"
-                                    disabled={loading}
-                                    required
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
-                                <Textarea
-                                    id="description"
-                                    value={formData.description}
-                                    onChange={(e) => updateFormData('description', e.target.value)}
-                                    placeholder="Enter session description"
-                                    disabled={loading}
-                                    rows={3}
-                                />
-                            </div>
+                            {basicFields.map((field) => (
+                                <div key={field.key} className="space-y-2">
+                                    <Label htmlFor={field.key}>
+                                        {field.label} {field.required && '*'}
+                                    </Label>
+                                    {field.type === 'textarea' ? (
+                                        <Textarea
+                                            id={field.key}
+                                            value={formData[field.key]}
+                                            onChange={(e) => handleInputChange(field.key, e.target.value)}
+                                            placeholder={field.placeholder}
+                                            disabled={loading}
+                                            rows={field.rows}
+                                            required={field.required}
+                                        />
+                                    ) : (
+                                        <Input
+                                            id={field.key}
+                                            value={formData[field.key]}
+                                            onChange={(e) => handleInputChange(field.key, e.target.value)}
+                                            placeholder={field.placeholder}
+                                            disabled={loading}
+                                            required={field.required}
+                                        />
+                                    )}
+                                </div>
+                            ))}
                         </div>
 
                         {/* Date & Time */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="startTime">Start Time *</Label>
-                                <DateTimeInput
-                                    id="startTime"
-                                    value={formData.startTime}
-                                    onChange={(value) => updateFormData('startTime', value)}
-                                    disabled={loading}
-                                    required
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <Label htmlFor="endTime">End Time *</Label>
-                                <DateTimeInput
-                                    id="endTime"
-                                    value={formData.endTime}
-                                    onChange={(value) => updateFormData('endTime', value)}
-                                    minDateTime={formData.startTime}
-                                    disabled={loading}
-                                    required
-                                />
-                            </div>
+                        <div className="grid grid-cols-1 gap-4">
+                            {dateFields.map((field) => (
+                                <div key={field.key} className="space-y-2">
+                                    <Label htmlFor={field.key}>
+                                        {field.label} {field.required && '*'}
+                                    </Label>
+                                    <DateTimeInput
+                                        id={field.key}
+                                        value={formData[field.key]}
+                                        onChange={(value) => handleInputChange(field.key, value)}
+                                        minDateTime={field.minDateTime}
+                                        disabled={loading}
+                                        required={field.required}
+                                    />
+                                </div>
+                            ))}
                         </div>
 
                         {/* Venue Information */}
@@ -203,77 +254,19 @@ export function SessionForm({
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div className="space-y-2">
-                                        <Label htmlFor="venueName">Venue Name *</Label>
-                                        <Input
-                                            id="venueName"
-                                            value={formData.venue.name}
-                                            onChange={(e) => updateVenueData('name', e.target.value)}
-                                            placeholder="Enter venue name"
-                                            disabled={loading}
-                                            required={isVenueRequired}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="venueAddress">Address *</Label>
-                                        <Input
-                                            id="venueAddress"
-                                            value={formData.venue.address}
-                                            onChange={(e) => updateVenueData('address', e.target.value)}
-                                            placeholder="Enter venue address"
-                                            disabled={loading}
-                                            required={isVenueRequired}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="venueCity">City *</Label>
-                                        <Input
-                                            id="venueCity"
-                                            value={formData.venue.city}
-                                            onChange={(e) => updateVenueData('city', e.target.value)}
-                                            placeholder="Enter city"
-                                            disabled={loading}
-                                            required={isVenueRequired}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="venueState">State *</Label>
-                                        <Input
-                                            id="venueState"
-                                            value={formData.venue.state}
-                                            onChange={(e) => updateVenueData('state', e.target.value)}
-                                            placeholder="Enter state"
-                                            disabled={loading}
-                                            required={isVenueRequired}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="venueCountry">Country *</Label>
-                                        <Input
-                                            id="venueCountry"
-                                            value={formData.venue.country}
-                                            onChange={(e) => updateVenueData('country', e.target.value)}
-                                            placeholder="Enter country"
-                                            disabled={loading}
-                                            required={isVenueRequired}
-                                        />
-                                    </div>
-
-                                    <div className="space-y-2">
-                                        <Label htmlFor="venueZipCode">ZIP Code *</Label>
-                                        <Input
-                                            id="venueZipCode"
-                                            value={formData.venue.zipCode}
-                                            onChange={(e) => updateVenueData('zipCode', e.target.value)}
-                                            placeholder="Enter ZIP code"
-                                            disabled={loading}
-                                            required={isVenueRequired}
-                                        />
-                                    </div>
+                                    {venueFields.map((field) => (
+                                        <div key={field.key} className="space-y-2">
+                                            <Label htmlFor={`venue${field.key}`}>{field.label} *</Label>
+                                            <Input
+                                                id={`venue${field.key}`}
+                                                value={formData.venue[field.key]}
+                                                onChange={(e) => handleVenueChange(field.key, e.target.value)}
+                                                placeholder={field.placeholder}
+                                                disabled={loading}
+                                                required={isVenueRequired}
+                                            />
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         )}

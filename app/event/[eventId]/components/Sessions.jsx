@@ -11,8 +11,10 @@ import SessionForm from './sessions/SessionForm';
 import DeleteSessionDialog from './sessions/DeleteSessionDialog';
 import ToggleMultipleSessionsDialog from './sessions/ToggleMultipleSessionsDialog';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+import { IconAlertHexagon } from '@tabler/icons-react';
 
-export default function Sessions({ eventId }) {
+export default function Sessions({ eventId, className, event }) {
     const { user } = useUserStore();
     const [mounted, setMounted] = useState(false);
     const userRole = user?.organization.role || 'volunteer';
@@ -110,9 +112,27 @@ export default function Sessions({ eventId }) {
         }
     };
 
+    if (!eventId) {
+        return (
+            <Card className={cn("w-full h-full my-auto items-center flex-col justify-center", className)}>
+                <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
+                    <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-2">
+                        <IconAlertHexagon className='h-20 w-20' />
+                    </div>
+                    <div className="space-y-2">
+                        <h3 className="text-lg font-semibold text-foreground">No Event Selected</h3>
+                        <p className="text-sm text-muted-foreground max-w-sm">
+                            Please select an event to view and manage its sessions
+                        </p>
+                    </div>
+                </div>
+            </Card>
+        );
+    }
+
     return (
         <>
-            <Card className="w-full">
+            <Card className={cn("w-full", className)}>
                 <SessionHeader
                     sessionCount={sessions.length}
                     allowMultipleSessions={allowMultipleSessions}
@@ -138,7 +158,7 @@ export default function Sessions({ eventId }) {
                 onOpenChange={setShowAddDialog}
                 onSubmit={handleAddSession}
                 loading={loading}
-                eventMode="online"
+                eventMode={event?.mode || "offline"}
             />
 
             {/* Edit Session Dialog */}
@@ -148,7 +168,7 @@ export default function Sessions({ eventId }) {
                 session={selectedSession}
                 onSubmit={handleUpdateSession}
                 loading={loading}
-                eventMode="online"
+                eventMode={event?.mode || "offline"}
             />
 
             {/* Delete Session Dialog */}

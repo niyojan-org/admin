@@ -103,7 +103,7 @@ const AntiSpamStatus = ({ eventId, status, onRefresh }) => {
             </Card>
 
             {/* Usage Limits */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
                 {/* Hourly Limit */}
                 <Card className="gap-1">
                     <CardTitle className="text-sm flex items-center gap-2">
@@ -146,7 +146,7 @@ const AntiSpamStatus = ({ eventId, status, onRefresh }) => {
             </div>
 
             {/* Additional Limits */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4">
                 {/* Scheduled Messages */}
                 <Card className="gap-1">
                     <CardTitle className="text-sm flex items-center gap-2">
