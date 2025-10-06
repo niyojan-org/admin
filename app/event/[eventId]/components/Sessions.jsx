@@ -13,6 +13,7 @@ import ToggleMultipleSessionsDialog from './sessions/ToggleMultipleSessionsDialo
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { IconAlertHexagon } from '@tabler/icons-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function Sessions({ eventId, className, event }) {
     const { user } = useUserStore();
@@ -132,7 +133,7 @@ export default function Sessions({ eventId, className, event }) {
 
     return (
         <>
-            <Card className={cn("w-full", className)}>
+            <Card className={cn("w-full ", className)}>
                 <SessionHeader
                     sessionCount={sessions.length}
                     allowMultipleSessions={allowMultipleSessions}
@@ -141,7 +142,7 @@ export default function Sessions({ eventId, className, event }) {
                     userRole={userRole}
                     loading={loading}
                 />
-
+                <ScrollArea className="h-[400px] max-h-[400px]">
                 <SessionList
                     sessions={sessions}
                     loading={loading}
@@ -150,6 +151,7 @@ export default function Sessions({ eventId, className, event }) {
                     onDeleteSession={handleDeleteSession}
                     userRole={userRole}
                 />
+                </ScrollArea>
             </Card>
 
             {/* Add Session Dialog */}

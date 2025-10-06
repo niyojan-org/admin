@@ -15,6 +15,7 @@ import { TicketFormDialog } from './tickets/TicketFormDialog';
 import { DeleteTicketDialog } from './tickets/DeleteTicketDialog';
 import { TicketDetailsDialog } from './tickets/TicketDetailsDialog';
 import { cn } from '@/lib/utils';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function Tickets({ eventId, className }) {
     // State management
@@ -361,25 +362,27 @@ export default function Tickets({ eventId, className }) {
                             </CardContent>
                         </Card>
                     ) : (
-                        <div className="space-y-3">
-                            {tickets.map((ticket) => (
-                                <div key={ticket._id} className="border rounded-lg p-3 sm:p-4 space-y-3">
-                                    <TicketHeader
-                                        ticket={ticket}
-                                        onToggle={handleToggleTicket}
-                                        onEdit={openEditDialog}
-                                        onDelete={openDeleteDialog}
-                                        onViewDetails={fetchTicketDetails}
-                                        toggleLoading={toggleLoading.has(ticket._id)}
-                                        userRole={userRole}
-                                    />
-                                    <TicketStats
-                                        ticket={ticket}
-                                        userRole={userRole}
-                                    />
-                                </div>
-                            ))}
-                        </div>
+                        <ScrollArea className="max-h-[400px] h-[500px] w-full">
+                            <div className="space-y-3 pr-4 h-full ">
+                                {tickets.map((ticket) => (
+                                    <div key={ticket._id} className="border rounded-lg p-3 sm:p-4 space-y-3">
+                                        <TicketHeader
+                                            ticket={ticket}
+                                            onToggle={handleToggleTicket}
+                                            onEdit={openEditDialog}
+                                            onDelete={openDeleteDialog}
+                                            onViewDetails={fetchTicketDetails}
+                                            toggleLoading={toggleLoading.has(ticket._id)}
+                                            userRole={userRole}
+                                        />
+                                        <TicketStats
+                                            ticket={ticket}
+                                            userRole={userRole}
+                                        />
+                                    </div>
+                                ))}
+                            </div>
+                        </ScrollArea>
                     )}
                 </CardContent>
             </Card>

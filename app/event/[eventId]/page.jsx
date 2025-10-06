@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import EventHeader from "./components/EventHeader";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import api from "@/lib/api";
 import { toast } from "sonner";
 import Coupons from "./components/Coupons";
@@ -11,11 +11,12 @@ import Sessions from "./components/Sessions";
 import InputField from "./components/InputField";
 import Referrals from "./components/Referrals";
 import { QuickActions } from "./components/QuickActions";
-import Announcement from "./components/Announcement.jsx";
 import ProtectedComp from "@/components/ProtectedComp";
 import GuestSpeaker from "./components/GuestSpeaker";
 import { RegistrationDashboard } from "./components/registration";
 import { Benefits } from "./components/Benefits";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const EventPage = () => {
   const params = useParams();
@@ -122,10 +123,37 @@ const EventPage = () => {
           {/* Quick Actions */}
           <QuickActions event={event} setEventData={setEventData} />
 
+          <Card>
+            <CardHeader>
+              <CardTitle>Share Hub</CardTitle>
+              <CardDescription>
+                Share your event on social media and other platforms to boost visibility and attendance.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className={'w-full items-end flex'}>
+              <Button asChild>
+                <Link href={`/event/${event._id}/share`}> Share Event</Link>
+              </Button>
+            </CardContent>
+          </Card>
+
 
           {/* Announcement */}
           <ProtectedComp roles={["admin", "owner", "manager"]}>
-            <Announcement eventId={event._id} />
+            <Card>
+              <CardHeader>
+                <CardTitle>Announcement</CardTitle>
+                <CardDescription>
+                  Make your event announcements fro this event.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className={'w-full items-end flex'}>
+                <Button asChild>
+                  <Link href={`/event/${event._id}/announcements`}> Make a announcements</Link>
+                </Button>
+              </CardContent>
+            </Card>
+            {/* <Announcement eventId={event._id} /> */}
           </ProtectedComp>
           {/* Coupons */}
           <ProtectedComp roles={["admin", "owner", "manager"]}>
@@ -141,7 +169,7 @@ const EventPage = () => {
 
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

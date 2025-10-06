@@ -7,6 +7,6 @@ export default function CustomFieldsStep({ event, setEvent }) {
 
 
   return (
-    <InputFieldManager className={'flex-1'} eventId={event?._id} />
+    <InputFieldManager className={'flex-1 h-full'} eventId={event?._id} />
   );
 }

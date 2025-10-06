@@ -17,7 +17,7 @@ import FormActions from './FormActions';
 import AnnouncementPreview from './AnnouncementPreview';
 import { useAnnouncementForm } from './useAnnouncementForm';
 
-const AnnouncementForm = ({ eventId, onAnnouncementCreated }) => {
+const AnnouncementForm = ({ eventId, onAnnouncementCreated, isFullPage = false }) => {
     const {
         formData,
         participants,
@@ -43,12 +43,14 @@ const AnnouncementForm = ({ eventId, onAnnouncementCreated }) => {
 
     return (
         <>
-            <DialogHeader className="pb-4">
-                <DialogTitle className="flex items-center gap-2">
-                    <Send className="h-5 w-5" />
-                    Create New Announcement
-                </DialogTitle>
-            </DialogHeader>
+            {!isFullPage && (
+                <DialogHeader className="pb-4">
+                    <DialogTitle className="flex items-center gap-2">
+                        <Send className="h-5 w-5" />
+                        Create New Announcement
+                    </DialogTitle>
+                </DialogHeader>
+            )}
 
             <Tabs defaultValue="compose" className="w-full">
                 <TabsList className="grid w-full grid-cols-2">

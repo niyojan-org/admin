@@ -35,7 +35,7 @@ export default function EventSharePage() {
   const hasCoupon = Array.isArray(coupon) && coupon.length > 0;
 
   return (
-    <div className="container max-w-6xl mx-auto px-2 pt-2 space-y-6">
+    <div className="container mx-auto px-2 pt-2 space-y-2">
       <div className="space-y-2">
         <h1 className="text-3xl font-bold tracking-tight">Share Event</h1>
         <p className="text-muted-foreground">

@@ -46,13 +46,6 @@ const AnnouncementAnalytics = ({ eventId }) => {
         return Math.round((stats.sent / stats.total) * 100);
     };
 
-    const getAvgSuccessRate = (eventStats) => {
-        if (!eventStats || typeof eventStats.avgSuccessRate !== 'number' || isNaN(eventStats.avgSuccessRate)) {
-            return 0;
-        }
-        return Math.round(eventStats.avgSuccessRate);
-    };
-
     const getBadgeVariant = (rate) => {
         if (rate >= 90) return "secondary";
         if (rate >= 70) return "outline";
@@ -75,8 +68,8 @@ const AnnouncementAnalytics = ({ eventId }) => {
                 {[1, 2, 3].map(i => (
                     <Card key={i} className="animate-pulse">
                         <CardContent className="p-2">
-                            <div className="h-3 bg-gray-200 rounded w-3/4 mb-1"></div>
-                            <div className="h-6 bg-gray-200 rounded"></div>
+                            <div className="h-3 bg-muted rounded w-3/4 mb-1"></div>
+                            <div className="h-6 bg-muted rounded"></div>
                         </CardContent>
                     </Card>
                 ))}
@@ -88,7 +81,7 @@ const AnnouncementAnalytics = ({ eventId }) => {
         return (
             <Card>
                 <CardContent className="p-4 text-center">
-                    <BarChart3 className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                    <BarChart3 className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
                     <p className="text-muted-foreground text-sm">No analytics data available</p>
                     <Button onClick={fetchAnalytics} className="mt-2 h-8 text-xs">
                         <RefreshCw className="h-3 w-3 mr-1" />
@@ -101,7 +94,6 @@ const AnnouncementAnalytics = ({ eventId }) => {
 
     return (
         <div className="space-y-1">
-            {/* Header */}
             <div className="flex items-center justify-between mb-1">
                 <div>
                     <h3 className="font-medium text-sm">Analytics</h3>
@@ -126,14 +118,14 @@ const AnnouncementAnalytics = ({ eventId }) => {
                 </div>
             </div>
 
-            {/* Summary Cards */}
-            <div className="grid grid-cols-1 gap-1">
-                {/* Announcements Overview */}
-                <Card className={'gap-1'}>
-                    <CardTitle className="flex items-center gap-1 text-xs pb-0">
-                        <MessageSquare className="h-3 w-3" />
-                        Announcements
-                    </CardTitle>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+                <Card className={'p-2 gap-0'}>
+                    <CardHeader className="">
+                        <CardTitle className="flex items-center gap-1 text-xs">
+                            <MessageSquare className="h-3 w-3" />
+                            Announcements
+                        </CardTitle>
+                    </CardHeader>
                     <CardContent className="">
                         <div className="space-y-0.5 text-xs">
                             <div className="flex justify-between">
@@ -156,13 +148,14 @@ const AnnouncementAnalytics = ({ eventId }) => {
                     </CardContent>
                 </Card>
 
-                {/* Delivery Stats */}
-                <Card className={'gap-1'}>
-                    <CardTitle className="flex items-center gap-1 text-xs">
-                        <Users className="h-3 w-3" />
-                        Delivery
-                    </CardTitle>
-                    <CardContent className="p-1.5">
+                <Card className={'p-2 gap-0'}>
+                    <CardHeader className="">
+                        <CardTitle className="flex items-center gap-1 text-xs">
+                            <Users className="h-3 w-3" />
+                            Delivery
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="">
                         <div className="space-y-0.5 text-xs">
                             <div className="flex justify-between">
                                 <span className="text-muted-foreground">Participants:</span>
@@ -184,13 +177,14 @@ const AnnouncementAnalytics = ({ eventId }) => {
                     </CardContent>
                 </Card>
 
-                {/* Success Rates */}
-                <Card className={'gap-1'}>
-                    <CardTitle className="flex items-center gap-1 text-xs">
-                        <TrendingUp className="h-3 w-3" />
-                        Rates
-                    </CardTitle>
-                    <CardContent className="p-1.5">
+                <Card className={'p-2 gap-0'}>
+                    <CardHeader className="">
+                        <CardTitle className="flex items-center gap-1 text-xs">
+                            <TrendingUp className="h-3 w-3" />
+                            Rates
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-1.5 pt-0">
                         <div className="space-y-0.5 text-xs">
                             <div className="flex justify-between">
                                 <span className="text-muted-foreground">Success:</span>
@@ -206,19 +200,20 @@ const AnnouncementAnalytics = ({ eventId }) => {
                             </div>
                             <div className="flex justify-between">
                                 <span className="text-muted-foreground">Failure:</span>
-                                <Badge variant="destructive" className="h-4 text-xs">{analytics.summary?.failureRate || 0}%</Badge>
+                                <Badge variant="destructive" className="h-4 text-xs">{0}%</Badge>
                             </div>
                         </div>
                     </CardContent>
                 </Card>
 
-                {/* Performance & Priority */}
-                <Card className={'gap-1'}>
-                    <CardTitle className="flex items-center gap-1 text-xs">
-                        <Clock className="h-3 w-3" />
-                        Performance
-                    </CardTitle>
-                    <CardContent className="p-1.5">
+                <Card className={'p-2 gap-0'}>
+                    <CardHeader className="">
+                        <CardTitle className="flex items-center gap-1 text-xs">
+                            <Clock className="h-3 w-3" />
+                            Performance
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-1.5 pt-0">
                         <div className="space-y-0.5 text-xs">
                             <div className="flex justify-between">
                                 <span className="text-muted-foreground">Avg Time:</span>
@@ -241,19 +236,20 @@ const AnnouncementAnalytics = ({ eventId }) => {
                 </Card>
             </div>
 
-            {/* Trends */}
             {analytics.trends && analytics.trends.length > 0 && (
-                <Card className={'gap-1'}>
-                    <CardTitle className="flex items-center gap-1 text-xs">
-                        <BarChart3 className="h-3 w-3" />
-                        Recent Activity
-                    </CardTitle>
-                    <CardContent className="p-1">
+                <Card>
+                    <CardHeader className="p-2 pb-1">
+                        <CardTitle className="flex items-center gap-1 text-xs">
+                            <BarChart3 className="h-3 w-3" />
+                            Recent Activity
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-1 pt-0">
                         <div className="space-y-0.5">
                             {analytics.trends.slice(0, 2).map((trend, index) => (
-                                <div key={index} className="flex items-center justify-between p-1 bg-gray-50 rounded text-xs">
+                                <div key={index} className="flex items-center justify-between p-1 bg-muted/50 rounded text-xs">
                                     <div className="flex items-center gap-1">
-                                        <Calendar className="h-2 w-2 text-gray-400" />
+                                        <Calendar className="h-2 w-2 text-muted-foreground" />
                                         <span className="font-medium">{moment(trend.date).format('MMM D')}</span>
                                         <span className="text-muted-foreground">({trend.announcements})</span>
                                     </div>
@@ -267,20 +263,20 @@ const AnnouncementAnalytics = ({ eventId }) => {
                 </Card>
             )}
 
-            {/* Status Overview */}
             {analytics.summary?.statusDistribution && (
-                <Card className={'gap-1'}>
-                    <CardTitle className="text-xs">Status</CardTitle>
-
-                    <CardContent className="p-1">
+                <Card>
+                    <CardHeader className="p-2 pb-1">
+                        <CardTitle className="text-xs">Status</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-1 pt-0">
                         <div className="grid grid-cols-2 gap-0.5 text-xs">
                             {Object.entries(analytics.summary.statusDistribution).slice(0, 4).map(([status, count]) => (
-                                <div key={status} className="flex items-center justify-between p-1 bg-gray-50 rounded">
+                                <div key={status} className="flex items-center justify-between p-1 bg-muted/50 rounded">
                                     <div className="flex items-center gap-1">
-                                        {status === 'sent' && <CheckCircle className="h-2 w-2 text-green-500" />}
-                                        {status === 'failed' && <XCircle className="h-2 w-2 text-red-500" />}
-                                        {status === 'pending' && <Clock className="h-2 w-2 text-yellow-500" />}
-                                        {status === 'scheduled' && <Calendar className="h-2 w-2 text-blue-500" />}
+                                        {status === 'sent' && <CheckCircle className="h-2 w-2 text-green-600" />}
+                                        {status === 'failed' && <XCircle className="h-2 w-2 text-destructive" />}
+                                        {status === 'pending' && <Clock className="h-2 w-2 text-yellow-600" />}
+                                        {status === 'scheduled' && <Calendar className="h-2 w-2 text-primary" />}
                                         <span className="capitalize text-xs">{status}</span>
                                     </div>
                                     <Badge variant={getStatusBadgeVariant(status)} className="h-4 text-xs">{count}</Badge>
