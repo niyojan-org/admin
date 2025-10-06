@@ -139,6 +139,7 @@ export default function QRScanner({ onResult, frameSize = 320, className = "" })
             {data && (
                 <div className="mt-4 bg-green-100 p-4 rounded flex flex-col items-center w-full">
                     <p className="font-semibold mb-2">Scanned Completed </p>
+                    <p>{data}</p>
                     <Button size="sm" variant="outline" onClick={handleScanAgain} className="mt-2 flex items-center gap-1">
                         <RefreshCw className="w-4 h-4" /> Scan Again
                     </Button>
