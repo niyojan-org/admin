@@ -18,13 +18,11 @@ export default function ParticipantPage() {
       setOrg(ev?.organization);
     });
   }, [eventId]);
-
-  if (!eventId) return <div>Event ID not found.</div>;
+  if (!eventId) return <div className="p-6 text-center text-muted-foreground">Event ID not found.</div>;
   return (
-    <div className="p-4">
-      <EventCard event={event} organization={org} />
-      <h1 className="text-2xl font-bold mb-4">Participants</h1>
-      <DataTable eventId={eventId} event={event} />
+    <div className="flex flex-col w-full">
+        <EventCard event={event} organization={org} />
+        <DataTable eventId={eventId} event={event} />
     </div>
   );
 }

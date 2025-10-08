@@ -243,6 +243,7 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
           <RegistrationStats
             statistics={registrationData?.statistics}
             tickets={registrationData?.tickets}
+            eventId={eventId}
           />
         </TabsContent>
 

@@ -27,6 +27,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import moment from "moment";
 import { Download } from "lucide-react";
 import api from "@/lib/api";
+import { Skeleton } from "@/components/ui/skeleton";
+import ConfirmDialog from "./ConfirmParticipantDialog";
+import Link from "next/link";
 
 function getDynamicFieldColumns(data, inputFields) {
   // Collect all unique dynamic field keys
@@ -94,6 +97,7 @@ const DataTable = ({ eventId }) => {
   const [event, setEvent] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [dialogParticipant, setDialogParticipant] = useState(null);
+	const [maxWidth, setMaxWidth] = useState(0);
 
   // Debounce search
   useEffect(() => {
@@ -108,6 +112,17 @@ const DataTable = ({ eventId }) => {
     if (!eventId) return;
     fetchEvent(eventId).then(setEvent);
   }, [eventId]);
+
+    useEffect(() => {
+  const handleResize = () => {
+    // Subtract some padding to account for page margins (adjust as needed)
+    const padding = 48; // 24px on each side (or adjust based on your layout)
+    setMaxWidth(window.innerWidth - padding);
+  };
+  handleResize();
+  window.addEventListener("resize", handleResize);
+  return () => window.removeEventListener("resize", handleResize);
+}, []);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -223,9 +238,25 @@ const DataTable = ({ eventId }) => {
     }
   };
 
+  const LoadingSkeleton = () => (
+		<>
+			{Array.from({ length: 10 }).map((_, i) => (
+				<TableRow key={i}>
+					{Array.from({ length: columns.length }).map((_, j) => (
+						<TableCell key={j}>
+							<Skeleton className="h-4 w-full rounded bg-muted relative overflow-hidden">
+								<span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent"></span>
+							</Skeleton>
+						</TableCell>
+					))}
+				</TableRow>
+			))}
+		</>
+	);
+	
   return (
-    <Card className="w-full p-4">
-      
+    <Card className="w-full">
+
       <DataTableToolbar
         table={table}
         search={search}
@@ -242,35 +273,21 @@ const DataTable = ({ eventId }) => {
         setPaymentStatus={setPaymentStatus}
         handleExport={handleExport}
       />
-      <Dialog open={!!dialogParticipant} onOpenChange={open => setDialogParticipant(open ? dialogParticipant : null)}>
-        <DialogContent className="max-w-5xl">
-          {dialogParticipant && (
-            <>
-              <DialogHeader>
-                <DialogTitle>Confirm Participant</DialogTitle>
-              </DialogHeader>
-              <ParticipantDetailsCard participant={dialogParticipant} />
-              <DialogFooter>
-                {dialogParticipant.status === "pending" && (
-                  <Button
-                    onClick={async () => {
-                      await confirmParticipantData(eventId, dialogParticipant._id);
-                      setDialogParticipant(null);
-                      fetchData();
-                    }}
-                  >
-                    Confirm
-                  </Button>
-                )}
-              </DialogFooter>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-      <div className="overflow-x-auto">
-        <Table>
-          <TableHeader>
-            <TableRow>
+      <ConfirmDialog
+        dialogParticipant={dialogParticipant}
+        setDialogParticipant={setDialogParticipant}
+        eventId={eventId}
+        fetchData={fetchData}
+      />
+      <Button className="md:w-fit sm:w-auto"  asChild>
+				<Link href={`/event/${eventId}/participants/view`}>
+					Get Full View
+				</Link>
+			</Button>
+      <div style={{ maxWidth }} className="[&>div]:h-96 overflow-x-auto border rounded-b">
+        <Table className="">
+          <TableHeader className="bg-background/90 sticky top-0 z-10 backdrop-blur-xs">
+            <TableRow className="hover:bg-transparent">
               {table.getHeaderGroups()[0].headers.map((header) => (
                 <TableHead
                   key={header.id}
@@ -307,13 +324,13 @@ const DataTable = ({ eventId }) => {
           </TableHeader>
           <TableBody>
             {loading ? (
-              <TableRow>
-                <TableCell colSpan={table.getAllLeafColumns().length}>Loading...</TableCell>
-              </TableRow>
+              <LoadingSkeleton />
             ) : data.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={table.getAllLeafColumns().length}>
-                  No participants found.
+                    <div className="h-24 flex items-center justify-center text-muted-foreground">
+                        No participants found.
+                    </div>
                 </TableCell>
               </TableRow>
             ) : (

@@ -5,12 +5,14 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Users, Ticket, TrendingUp, Target } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 /**
  * Registration Statistics Component
  * Displays registration progress and ticket breakdown
  */
-export default function RegistrationStats({ statistics, tickets = [] }) {
+export default function RegistrationStats({ statistics, tickets = [], eventId }) {
   if (!statistics) {
     return (
       <Card>
@@ -103,6 +105,11 @@ export default function RegistrationStats({ statistics, tickets = [] }) {
               {Math.round(registrationPercentage)}%
             </div>
             <div className="text-sm text-muted-foreground">Capacity Filled</div>
+            <Button variant="link" size="sm" className="mt-2 p-0">
+             <Link href={`/event/${eventId}/participants`}>
+               View Details
+             </Link>
+            </Button>
           </div>
         </CardContent>
       </Card>
