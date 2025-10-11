@@ -29,7 +29,9 @@ export default function Sessions({ eventId, className, event }) {
         addSession,
         updateSession,
         deleteSession,
-        toggleMultipleSessions
+        toggleMultipleSessions,
+        enableCheckIn,
+        disableCheckIn
     } = useSessionData(eventId);
 
     // Dialog states
@@ -113,6 +115,24 @@ export default function Sessions({ eventId, className, event }) {
         }
     };
 
+    // Handle enable check-in
+    const handleEnableCheckIn = async (sessionId, checkInData) => {
+        try {
+            await enableCheckIn(sessionId, checkInData);
+        } catch (error) {
+            // Error is handled in the hook
+        }
+    };
+
+    // Handle disable check-in
+    const handleDisableCheckIn = async (sessionId) => {
+        try {
+            await disableCheckIn(sessionId);
+        } catch (error) {
+            // Error is handled in the hook
+        }
+    };
+
     if (!eventId) {
         return (
             <Card className={cn("w-full h-full my-auto items-center flex-col justify-center", className)}>
@@ -149,6 +169,8 @@ export default function Sessions({ eventId, className, event }) {
                     error={error}
                     onEditSession={handleEditSession}
                     onDeleteSession={handleDeleteSession}
+                    onEnableCheckIn={handleEnableCheckIn}
+                    onDisableCheckIn={handleDisableCheckIn}
                     userRole={userRole}
                 />
                 </ScrollArea>

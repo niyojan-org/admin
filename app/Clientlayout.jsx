@@ -23,9 +23,9 @@ function ClientLayoutInner({ children }) {
   const { isAuthenticated, setToken } = useUserStore();
 
   useEffect(() => {
-    if (token) {
-      setToken({ token });
-    }
+
+    setToken({ token });
+
   }, [token, setToken]);
 
   // Routes that should show the sidebar

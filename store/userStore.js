@@ -19,7 +19,8 @@ export const useUserStore = create((set) => ({
   setToken: async ({ token }) => {
     try {
       if (!token) {
-        toast.error("Token is required");
+        set({ isAuthenticated: false, user: null, token: null, organization: null });
+        sessionStorage.clear();
         return false;
       }
 
@@ -52,6 +53,7 @@ export const useUserStore = create((set) => ({
 
       return true;
     } catch (error) {
+      set({ isAuthenticated: false, user: null, token: null, organization: null });
       console.error("Error setting token:", error);
       toast.error("Session expired or organization not found. Please login again.");
       sessionStorage.clear();
@@ -75,7 +77,7 @@ export const useUserStore = create((set) => ({
       // use token to fetch user + organization
       const ok = await useUserStore.getState().setToken({ token });
       if (ok) {
-        setTimeout(() => redirect("/dashboard"), 500);
+        setTimeout(() => window.history.back(), 500);
         return true;
       } else {
         return false;

@@ -32,7 +32,20 @@ export default function QRScanner({ onResult, frameSize = 320, className = "" })
             const devices = await navigator.mediaDevices.enumerateDevices();
             const videoInputs = devices.filter((device) => device.kind === 'videoinput');
             setCameras(videoInputs);
-            if (videoInputs[0]) setSelectedCameraId(videoInputs[0].deviceId);
+            
+            // Prioritize back camera (environment-facing)
+            const backCamera = videoInputs.find(device => 
+                device.label.toLowerCase().includes('back') || 
+                device.label.toLowerCase().includes('rear') ||
+                device.label.toLowerCase().includes('environment')
+            );
+            
+            if (backCamera) {
+                setSelectedCameraId(backCamera.deviceId);
+            } else if (videoInputs[0]) {
+                setSelectedCameraId(videoInputs[0].deviceId);
+            }
+            
             if (videoInputs.length === 0) setError("No camera devices found.");
         } catch (err) {
             setError("Camera permission denied or unavailable.");
@@ -136,7 +149,7 @@ export default function QRScanner({ onResult, frameSize = 320, className = "" })
                 </div>
             )}
 
-            {data && (
+            {/* {data && (
                 <div className="mt-4 bg-green-100 p-4 rounded flex flex-col items-center w-full">
                     <p className="font-semibold mb-2">Scanned Completed </p>
                     <p>{data}</p>
@@ -144,7 +157,7 @@ export default function QRScanner({ onResult, frameSize = 320, className = "" })
                         <RefreshCw className="w-4 h-4" /> Scan Again
                     </Button>
                 </div>
-            )}
+            )} */}
         </Card>
     );
 }

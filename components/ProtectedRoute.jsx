@@ -10,6 +10,7 @@ export default function ProtectedRoute({ children, roles }) {
   const router = useRouter();
 
   useEffect(() => {
+
     if (loading === false && isAuthenticated === false) {
       router.push("/auth");
       console.warn("User is not authenticated, redirecting to auth page.");
@@ -88,11 +89,10 @@ export default function ProtectedRoute({ children, roles }) {
               className="mt-6 px-5 py-2 rounded-md bg-primary text-primary-foreground font-semibold shadow hover:bg-primary/90 transition-colors duration-200"
               onClick={() => window.location.href = '/dashboard'}
             >
-              <span className="inline-flex items-center gap-2" asChild>
-                {/* Tabler Dashboard Icon */}
-                <IconDashboard className="h-4 w-4" />
-                Go to Dashboard
-              </span>
+              {/* Tabler Dashboard Icon */}
+              <IconDashboard className="h-4 w-4" />
+              Go to Dashboard
+
             </Button>
           </div>
         </div>

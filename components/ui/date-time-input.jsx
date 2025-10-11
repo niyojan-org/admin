@@ -204,7 +204,8 @@ export function DateTimeInput({ value, onChange, minDateTime, className }) {
             className={cn(
               "w-full justify-between text-left font-normal h-10 px-3",
               "hover:bg-accent hover:text-accent-foreground",
-              !hour && "text-muted-foreground"
+              !hour && "text-muted-foreground",
+              isTimeDisabled && "bg-destructive/10 border-destructive/50 hover:bg-destructive/20"
             )}
           >
             <div className="flex items-center gap-2">
@@ -276,7 +277,10 @@ export function DateTimeInput({ value, onChange, minDateTime, className }) {
                         onChange={(e) => handleInputChange("hour", e.target.value)}
                         onBlur={(e) => handleInputBlur("hour", e.target.value)}
                         onKeyDown={(e) => handleKeyDown(e, "hour")}
-                        className="text-center font-mono text-lg h-10"
+                        className={cn(
+                          "text-center font-mono text-lg h-10",
+                          isTimeDisabled && "bg-destructive/10 border-destructive/50 focus-visible:ring-destructive"
+                        )}
                         maxLength={2}
                         placeholder="12"
                       />
@@ -293,7 +297,10 @@ export function DateTimeInput({ value, onChange, minDateTime, className }) {
 
                   {/* Colon */}
                   <div className="flex justify-center">
-                    <span className="text-lg font-bold">:</span>
+                    <span className={cn(
+                      "text-lg font-bold",
+                      isTimeDisabled && "text-destructive"
+                    )}>:</span>
                   </div>
 
                   {/* Minute */}
@@ -312,7 +319,10 @@ export function DateTimeInput({ value, onChange, minDateTime, className }) {
                         onChange={(e) => handleInputChange("minute", e.target.value)}
                         onBlur={(e) => handleInputBlur("minute", e.target.value)}
                         onKeyDown={(e) => handleKeyDown(e, "minute")}
-                        className="text-center font-mono text-lg h-10"
+                        className={cn(
+                          "text-center font-mono text-lg h-10",
+                          isTimeDisabled && "bg-destructive/10 border-destructive/50 focus-visible:ring-destructive"
+                        )}
                         maxLength={2}
                         placeholder="00"
                       />
@@ -330,7 +340,10 @@ export function DateTimeInput({ value, onChange, minDateTime, className }) {
                   {/* Period */}
                   <div className="col-span-2">
                     <Select value={period} onValueChange={setPeriod}>
-                      <SelectTrigger className="h-10">
+                      <SelectTrigger className={cn(
+                        "h-10",
+                        isTimeDisabled && "bg-destructive/10 border-destructive/50"
+                      )}>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>

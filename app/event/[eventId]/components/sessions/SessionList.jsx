@@ -12,6 +12,8 @@ export function SessionList({
     error = null,
     onEditSession,
     onDeleteSession,
+    onEnableCheckIn,
+    onDisableCheckIn,
     userRole
 }) {
     const sortedSessions = sortSessionsByTime(sessions);
@@ -88,6 +90,8 @@ export function SessionList({
                         session={session}
                         onEdit={onEditSession}
                         onDelete={onDeleteSession}
+                        onEnableCheckIn={onEnableCheckIn}
+                        onDisableCheckIn={onDisableCheckIn}
                         userRole={userRole}
                         loading={loading}
                     />

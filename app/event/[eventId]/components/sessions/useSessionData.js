@@ -130,6 +130,57 @@ export function useSessionData(eventId) {
         }
     };
 
+    // Enable check-in for a session
+    const enableCheckIn = async (sessionId, checkInData) => {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await api.post(`/event/admin/checkin/${eventId}/${sessionId}`, checkInData);
+            console.log(response.data.session)
+            setSessions(prev =>
+                prev.map(session =>
+                    session._id === sessionId ? { ...session, ...response.data.session } : session
+                )
+            );
+            toast.success(response.data.message || 'Check-in enabled successfully');
+            return response.data.session;
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'Failed to enable check-in';
+            setError(errorMessage);
+            toast.error(errorMessage, {
+                description: error.response?.data?.error?.details
+            });
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Disable check-in for a session
+    const disableCheckIn = async (sessionId) => {
+        try {
+            setLoading(true);
+            setError(null);
+            const response = await api.patch(`/event/admin/checkin/${eventId}/${sessionId}`);
+            setSessions(prev =>
+                prev.map(session =>
+                    session._id === sessionId ? { ...session, ...response.data.session } : session
+                )
+            );
+            toast.success(response.data.message || 'Check-in disabled successfully');
+            return response.data.session;
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'Failed to disable check-in';
+            setError(errorMessage);
+            toast.error(errorMessage, {
+                description: error.response?.data?.error?.details
+            });
+            throw error;
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Initialize sessions and status on mount
     useEffect(() => {
         fetchSessions();
@@ -145,6 +196,8 @@ export function useSessionData(eventId) {
         updateSession,
         deleteSession,
         toggleMultipleSessions,
+        enableCheckIn,
+        disableCheckIn,
         refetch: fetchSessions
     };
 }
