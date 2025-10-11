@@ -144,7 +144,7 @@ const EventPage = () => {
               <CardHeader>
                 <CardTitle>Announcement</CardTitle>
                 <CardDescription>
-                  Make your event announcements fro this event.
+                  Make your event announcements for this event.
                 </CardDescription>
               </CardHeader>
               <CardContent className={'w-full items-end flex'}>

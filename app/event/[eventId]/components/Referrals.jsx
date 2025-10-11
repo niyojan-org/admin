@@ -7,7 +7,6 @@ import { toast } from 'sonner';
 
 // Import organized components
 import ReferralCard from './referrals/ReferralCard';
-import ReferralFormDialog from './referrals/ReferralFormDialog';
 import DeleteReferralDialog from './referrals/DeleteReferralDialog';
 import ReferralDetailsDialog from './referrals/ReferralDetailsDialog';
 import ReferralStats from './referrals/ReferralStats';
@@ -17,6 +16,7 @@ import ReferralEmptyState from './referrals/ReferralEmptyState';
 import ReferralLoadingSkeleton from './referrals/ReferralLoadingSkeleton';
 import { useReferralData } from './referrals/useReferralData';
 import { processReferrals, paginateData } from './referrals/referralUtils';
+import ReferralFormDialog from './referrals/ReferralFormDialog';
 
 export default function Referrals({ eventId }) {
     // Use custom hook for data management
@@ -57,8 +57,8 @@ export default function Referrals({ eventId }) {
     // Process and paginate referrals
     const processedReferrals = processReferrals(referrals, searchQuery, statusFilter, sortBy);
     const { data: paginatedReferrals, totalPages, totalItems } = paginateData(
-        processedReferrals, 
-        currentPage, 
+        processedReferrals,
+        currentPage,
         itemsPerPage
     );
 
@@ -76,7 +76,7 @@ export default function Referrals({ eventId }) {
             setShowDetailsDialog(true);
         } catch (error) {
             console.error('Error fetching referral details:', error);
-            
+
             // Handle specific error cases
             if (error.response?.data?.error?.code === 'REFERRAL_NOT_FOUND') {
                 toast.error('Referral not found or has been deleted');
@@ -117,31 +117,20 @@ export default function Referrals({ eventId }) {
         setSortBy('newest');
     };
 
-    // Form handlers
-    const handleCreateSuccess = async (formData) => {
-        try {
-            setCreateLoading(true);
-            await handleCreateReferral(formData);
-            setShowCreateDialog(false);
-        } catch (error) {
-            console.error('Error creating referral:', error);
-            toast.error(error.response?.data?.message || 'Failed to create referral');
-            throw error;
-        } finally {
-            setCreateLoading(false);
-        }
+    // Form handlers - These are called AFTER the API call succeeds
+    const handleCreateSuccess = async (newReferral) => {
+        // The API call was already made in useReferralForm
+        // Just update local state with the new referral
+        refetch(); // Refresh the list to get the latest data
+        setShowCreateDialog(false);
     };
 
-    const handleEditSuccess = async (referralId, formData) => {
-        try {
-            await handleUpdateReferral(referralId, formData);
-            setShowEditDialog(false);
-            setSelectedReferral(null);
-        } catch (error) {
-            console.error('Error updating referral:', error);
-            toast.error(error.response?.data?.message || 'Failed to update referral');
-            throw error;
-        }
+    const handleEditSuccess = async (updatedReferral) => {
+        // The API call was already made in useReferralForm
+        // Just refresh to get the latest data
+        refetch();
+        setShowEditDialog(false);
+        setSelectedReferral(null);
     };
 
     const handleDeleteSuccess = async () => {

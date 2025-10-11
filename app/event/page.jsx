@@ -35,6 +35,7 @@ export default function EventsPage() {
         setEvents(data.data.events);
         setLoading(false);
       } catch (error) {
+        console.log(error.response)
         toast.error(error.response?.data?.message || "Failed to fetch events. Please try again later.");
         setLoading(false);
       }
