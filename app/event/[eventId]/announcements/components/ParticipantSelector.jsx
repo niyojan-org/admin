@@ -1,92 +1,167 @@
-"use client";
-import React from 'react';
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Users } from "lucide-react";
+import { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import api from '@/lib/api';
 
-const ParticipantSelector = ({ 
-    participants, 
-    selectedParticipantIds, 
-    selectedAll, 
-    loading,
-    error,
-    onParticipantSelect, 
-    onSelectAll 
-}) => {
+/**
+ * Component for selecting event participants
+ */
+export const ParticipantSelector = ({ eventId, selectedIds, onChange, disabled }) => {
+    const [participants, setParticipants] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    useEffect(() => {
+        fetchParticipants();
+    }, [eventId]);
+
+    const fetchParticipants = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+
+            // Fetch participants from API
+            const response = await api.get(`/event/admin/participant/${eventId}?limit=1000`);
+            setParticipants(response.data.participants || []);
+        } catch (err) {
+            console.error('Error fetching participants:', err);
+            setError(err.response?.data?.message || err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const filteredParticipants = participants.filter((p) => {
+        const query = searchQuery.toLowerCase();
+        return (
+            p.name?.toLowerCase().includes(query) ||
+            p.email?.toLowerCase().includes(query) ||
+            p.phone?.includes(query)
+        );
+    });
+
+    const handleSelectAll = () => {
+        if (selectedIds.length === filteredParticipants.length) {
+            onChange([]);
+        } else {
+            onChange(filteredParticipants.map((p) => p._id));
+        }
+    };
+
+    const handleToggle = (participantId) => {
+        if (selectedIds.includes(participantId)) {
+            onChange(selectedIds.filter((id) => id !== participantId));
+        } else {
+            onChange([...selectedIds, participantId]);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="space-y-2">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-64 w-full" />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <Alert variant="destructive">
+                <AlertDescription>
+                    Failed to load participants: {error}
+                </AlertDescription>
+            </Alert>
+        );
+    }
+
+    if (participants.length === 0) {
+        return (
+            <Alert>
+                <AlertDescription>
+                    No participants found for this event.
+                </AlertDescription>
+            </Alert>
+        );
+    }
+
     return (
-        <Card>
-            <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                    <CardTitle className="text-base flex items-center gap-2">
-                        <Users className="h-4 w-4" />
-                        Select Participants *
-                    </CardTitle>
-                    <Badge variant="outline" className="text-xs">
-                        {participants.length} available
-                    </Badge>
-                </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-                <div className="flex items-center space-x-2">
-                    <Checkbox
-                        id="selectAll"
-                        checked={selectedAll}
-                        onCheckedChange={onSelectAll}
-                    />
-                    <Label htmlFor="selectAll" className="text-sm">
-                        Select All Participants
-                    </Label>
-                </div>
+        <div className="space-y-3 border rounded-lg p-4">
+            {/* Search */}
+            <Input
+                placeholder="Search participants..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                disabled={disabled}
+            />
 
-                {loading ? (
-                    <div className="flex items-center justify-center py-4">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-                    </div>
+            {/* Select All */}
+            <div className="flex items-center justify-between border-b pb-2">
+                <Label className="text-sm font-medium">
+                    {selectedIds.length} of {filteredParticipants.length} selected
+                </Label>
+                <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleSelectAll}
+                    disabled={disabled || filteredParticipants.length === 0}
+                >
+                    {selectedIds.length === filteredParticipants.length ? 'Deselect All' : 'Select All'}
+                </Button>
+            </div>
+
+            {/* Participants List */}
+            <ScrollArea className="h-64">
+                {filteredParticipants.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-8">
+                        No participants match your search.
+                    </p>
                 ) : (
-                    <ScrollArea className="h-40 border rounded-md p-2">
-                        <div className="space-y-2">
-                            {participants.map((participant) => (
-                                <div
-                                    key={participant._id}
-                                    className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50"
+                    <div className="space-y-2">
+                        {filteredParticipants.map((participant) => (
+                            <div
+                                key={participant._id}
+                                className="flex items-center space-x-3 p-2 rounded hover:bg-gray-50"
+                            >
+                                <Checkbox
+                                    id={participant._id}
+                                    checked={selectedIds.includes(participant._id)}
+                                    onCheckedChange={() => handleToggle(participant._id)}
+                                    disabled={disabled}
+                                />
+                                <Label
+                                    htmlFor={participant._id}
+                                    className="flex-1 cursor-pointer"
                                 >
-                                    <Checkbox
-                                        id={participant._id}
-                                        checked={selectedParticipantIds.includes(participant._id)}
-                                        onCheckedChange={(checked) =>
-                                            onParticipantSelect(participant._id, checked)
-                                        }
-                                    />
-                                    <Label
-                                        htmlFor={participant._id}
-                                        className="text-sm flex-1 cursor-pointer"
-                                    >
-                                        <div>
-                                            <p className="font-medium">
-                                                {participant.name || participant.email}
-                                            </p>
-                                            {participant.name && participant.email && (
-                                                <p className="text-xs text-muted-foreground">
-                                                    {participant.email}
-                                                </p>
-                                            )}
-                                        </div>
-                                    </Label>
-                                </div>
-                            ))}
-                        </div>
-                    </ScrollArea>
+                                    <div className="flex flex-col">
+                                        <span className="font-medium">{participant.name}</span>
+                                        <span className="text-xs text-muted-foreground">
+                                            {participant.email}
+                                            {participant.phone && ` • ${participant.phone}`}
+                                        </span>
+                                    </div>
+                                </Label>
+                            </div>
+                        ))}
+                    </div>
                 )}
+            </ScrollArea>
 
-                {error && (
-                    <p className="text-xs text-destructive">{error}</p>
-                )}
-            </CardContent>
-        </Card>
+            {/* Warning for max limit */}
+            {selectedIds.length > 1000 && (
+                <Alert variant="destructive">
+                    <AlertDescription>
+                        Maximum 1000 participants allowed per announcement.
+                    </AlertDescription>
+                </Alert>
+            )}
+        </div>
     );
 };
-
-export default ParticipantSelector;
