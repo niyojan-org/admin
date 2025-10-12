@@ -36,7 +36,9 @@ function ClientLayoutInner({ children }) {
     return (
       <div className="font-source-sans-3 flex flex-col md:flex-row overflow-hidden">
         <AppSidebar />
-        {children}
+        <div className="flex-1">
+          {children}
+        </div>
       </div>
     );
   }
