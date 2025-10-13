@@ -88,13 +88,13 @@ const MemberStatsCards = ({ summary, loading }) => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 w-full">
       {/* Main Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
-            <Card key={index}>
+            <Card key={index} className={'p-2 px-3'}>
               <CardContent className="">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
@@ -113,7 +113,7 @@ const MemberStatsCards = ({ summary, loading }) => {
       </div>
 
       {/* Role Distribution */}
-      <Card>
+      <Card className={'hidden'}>
         <CardHeader>
           <CardTitle className="text-lg">Role Distribution</CardTitle>
         </CardHeader>

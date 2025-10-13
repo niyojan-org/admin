@@ -138,10 +138,10 @@ export default function Auth() {
         </div>
 
         {/* Form Section */}
-        <Card className="w-full md:w-1/2 flex flex-col justify-between rounded-none border-none shadow-none">
+        <Card className="w-full md:w-1/2 flex flex-col justify-between rounded-none border-none shadow-none gap-0">
 
           {/* Header with back button */}
-          <div className="flex flex-col space-y-6">
+          <div className="flex flex-col gap-2">
             {pageContent.showBackButton && (
               <Link
                 href="/"
@@ -153,8 +153,8 @@ export default function Auth() {
             )}
 
             {/* Title and Form */}
-            <Card className="border-none shadow-none bg-transparent">
-              <CardHeader className="text-center space-y-3 px-0">
+            <Card className="border-none shadow-none bg-transparent p-0 gap-2">
+              <CardHeader className="text-center space-y-0 sm:space-y-3 px-0">
                 <CardTitle className="text-2xl md:text-3xl font-bold">
                   {pageContent.title}
                 </CardTitle>

@@ -31,7 +31,7 @@ const OrganizationPage = () => {
       setLoading(true);
       setError(null);
       const response = await api.get("/org/me");
-      
+
       if (response.data.success && response.data.org) {
         setOrganization(response.data.org);
       } else {
@@ -83,12 +83,12 @@ const OrganizationPage = () => {
   }
 
   return (
-    <div className="space-y-4 md:space-y-6 w-full min-h-dvh">
+    <div className="space-y-4 md:space-y-6 w-full min-h-dvh pb-8 pt-2">
       {/* Header */}
 
       {/* Responsive Navigation */}
-      <ResponsiveNavigation 
-        activeSection={activeSection} 
+      <ResponsiveNavigation
+        activeSection={activeSection}
         onSectionChange={handleSectionChange}
         organization={organization}
       />

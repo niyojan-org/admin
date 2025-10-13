@@ -17,15 +17,17 @@ function ClientLayoutInner({ children }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const token =
-    searchParams.get("token") ||
+    searchParams.get("auth") ||
     (typeof window !== "undefined" ? sessionStorage.getItem("token") : null);
 
   const { isAuthenticated, setToken } = useUserStore();
 
   useEffect(() => {
-
+    console.log(token)
+    if (!token) {
+      return;
+    }
     setToken({ token });
-
   }, [token, setToken]);
 
   // Routes that should show the sidebar

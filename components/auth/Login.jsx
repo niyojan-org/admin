@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useUserStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { IconEye, IconEyeOff, IconLoader2 } from '@tabler/icons-react';
+import GoogleAuthButton from '@/app/auth/GoogleAuthButton';
 
 export default function Login({ userEmail, setUserEmail, onViewChange }) {
   const [password, setPassword] = useState('');
@@ -28,6 +29,7 @@ export default function Login({ userEmail, setUserEmail, onViewChange }) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      <GoogleAuthButton />
       <div className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm font-medium">

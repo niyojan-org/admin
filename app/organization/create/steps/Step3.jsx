@@ -161,31 +161,28 @@ export default function Step3({ goNext, goBack }) {
     }
   };
   return (
-    <div className="h-full bg-white rounded border shadow-navy border-navy px-10 flex flex-col justify-between py-2 space-y-1">
-      <div className="flex items-center justify-between">
-        <p className="text-navy text-lg">Please provide your payment details for transactions</p>
-        <div className="flex items-center space-x-4">
-          <div className="text-sm text-gray text-center">
-            <span className="text-red">*</span> All fields are required
+    <div className="h-full bg-background rounded border border-border shadow flex flex-col justify-between py-2 sm:py-4 md:py-8 space-y-4 w-full px-2 sm:px-4 md:px-10">
+
+      {/* Header and Info Button Row */}
+      <div className="flex gap-4 justify-between items-start flex-wrap">
+        <p className="text-foreground text-sm sm:text-lg flex-1">Please provide your payment details for transactions</p>
+        <div className="flex items-center gap-2">
+          <div className="text-sm text-muted-foreground text-center">
+            <span className="text-destructive">*</span> All fields are required
           </div>
-          {/* Info Button */}
           <Dialog open={showGuidelinesDialog} onOpenChange={setShowGuidelinesDialog}>
             <DialogTrigger asChild>
-              <button
-                className="w-8 h-8 cursor-pointer rounded-full bg-blue-100 hover:bg-blue-200 border border-blue-300 flex items-center justify-center text-blue-600 hover:text-blue-700 transition-colors"
-                type="button"
-                title="View Guidelines"
-              >
+              <Button type="button" title="View Guidelines" variant={'icon'}>
                 <IconInfoSquareRounded />
-              </button>
+              </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle className="text-navy">Payment Details Guidelines</DialogTitle>
+                <DialogTitle className="text-xl font-bold text-primary">Payment Details Guidelines</DialogTitle>
               </DialogHeader>
-              <div className="space-y-4">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <ul className="text-sm text-blue-800 space-y-2">
+              <div className="space-y-6 mt-4">
+                <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
+                  <ul className="text-sm text-primary space-y-1">
                     <li>• Both UPI and complete bank details are required for paid events</li>
                     <li>• UPI ID format: username@bankname (e.g., john@paytm)</li>
                     <li>• IFSC code format: 4 letters + 0 + 6 alphanumeric characters</li>
@@ -194,18 +191,18 @@ export default function Step3({ goNext, goBack }) {
                     <li>• These details are used for payment processing and settlements</li>
                   </ul>
                 </div>
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                  <h4 className="font-medium text-purple-900 mb-2">Free Events Option</h4>
-                  <ul className="text-sm text-purple-800 space-y-1">
+                <div className="p-4 bg-secondary/5 rounded-lg border-l-4 border-secondary">
+                  <h4 className="font-medium text-secondary mb-2">Free Events Option</h4>
+                  <ul className="text-sm text-secondary space-y-1">
                     <li>• If you plan to create only free events, you can skip this step</li>
                     <li>• Use the "Skip (Free Events Only)" button at the bottom</li>
                     <li>• You can always add payment details later in settings</li>
                     <li>• Skipping will allow you to proceed without payment setup</li>
                   </ul>
                 </div>
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h4 className="font-medium text-green-900 mb-2">Tips</h4>
-                  <ul className="text-sm text-green-800 space-y-1">
+                <div className="p-4 bg-success/5 rounded-lg border-l-4 border-success">
+                  <h4 className="font-medium text-success mb-2">Tips</h4>
+                  <ul className="text-sm text-success space-y-1">
                     <li>• Double-check account number and IFSC code for accuracy</li>
                     <li>• Use the UPI ID that's linked to the same bank account</li>
                     <li>• Ensure the account is active and operational</li>
@@ -213,9 +210,9 @@ export default function Step3({ goNext, goBack }) {
                     <li>• Keep bank statements ready for verification if needed</li>
                   </ul>
                 </div>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <h4 className="font-medium text-yellow-900 mb-2">Security</h4>
-                  <ul className="text-sm text-yellow-800 space-y-1">
+                <div className="p-4 bg-warning/5 rounded-lg border-l-4 border-warning">
+                  <h4 className="font-medium text-warning mb-2">Security</h4>
+                  <ul className="text-sm text-warning space-y-1">
                     <li>• Your payment details are encrypted and secure</li>
                     <li>• Only authorized transactions will be processed</li>
                     <li>• You can update these details later in settings</li>
@@ -227,17 +224,18 @@ export default function Step3({ goNext, goBack }) {
         </div>
       </div>
 
-      <Card className="border-2 border-navy shadow-sm bg-white">
-        <CardContent className="px-6 space-y-2">
+      {/* Card Section */}
+      <Card className="shadow-sm bg-background py-1 border-0 p-0">
+        <CardContent className="py-2 sm:py-4 sm:space-y-6">
           {/* UPI Section */}
           <div className="space-y-2">
             <div className="border-b pb-1 flex items-center gap-4">
-              <h3 className="text-navy font-semibold text-lg">UPI Details</h3>
-              <p className="text-sm text-gray-600">Provide UPI ID for quick payments</p>
+              <h3 className="text-primary font-semibold text-lg">UPI Details</h3>
+              <p className="text-sm text-muted-foreground">Provide UPI ID for quick payments</p>
             </div>
 
             <div className="space-y-1">
-              <Label htmlFor="upiId" className="text-navy font-semibold text-base">
+              <Label htmlFor="upiId" className="text-foreground font-semibold text-base">
                 UPI ID *
               </Label>
               <Input
@@ -247,11 +245,11 @@ export default function Step3({ goNext, goBack }) {
                 value={formData.upiId || ""}
                 onChange={handleChange}
                 placeholder="e.g., xyz12345@oksbi"
-                className="h-11 border-gray-300 focus:border-navy focus:ring-navy"
+                className="h-11 border-border focus:border-primary focus:ring-primary"
                 required
               />
               {formData.upiId && !/^[\w.-]+@[\w.-]+$/.test(formData.upiId) && (
-                <p className="text-sm text-red-500 mt-1">Please enter a valid UPI ID format</p>
+                <p className="text-sm text-destructive mt-1">Please enter a valid UPI ID format</p>
               )}
             </div>
           </div>
@@ -259,14 +257,14 @@ export default function Step3({ goNext, goBack }) {
           {/* Bank Details Section */}
           <div className="space-y-2">
             <div className="border-b pb-2 flex items-center gap-4">
-              <h3 className="text-navy font-semibold text-lg">Bank Details</h3>
-              <p className="text-sm text-gray-600">Provide complete bank account information</p>
+              <h3 className="text-primary font-semibold text-lg">Bank Details</h3>
+              <p className="text-sm text-muted-foreground">Provide complete bank account information</p>
             </div>
 
-            <div className="grid grid-cols-2 space-x-6 space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-0 sm:gap-x-6 gap-y-4">
               {/* Account Holder Name */}
               <div className="space-y-1">
-                <Label htmlFor="accountHolderName" className="text-navy font-semibold text-base">
+                <Label htmlFor="accountHolderName" className="text-foreground font-semibold text-base">
                   Account Holder Name *
                 </Label>
                 <Input
@@ -276,19 +274,17 @@ export default function Step3({ goNext, goBack }) {
                   value={formData.accountHolderName || ""}
                   onChange={handleChange}
                   placeholder="Enter account holder name"
-                  className="h-11 border-gray-300 focus:border-navy focus:ring-navy"
+                  className="h-11 border-border focus:border-primary focus:ring-primary"
                   required
                 />
                 {formData.accountHolderName && formData.accountHolderName.length < 2 && (
-                  <p className="text-sm text-red-500 mt-1">
-                    Name must be at least 2 characters long
-                  </p>
+                  <p className="text-sm text-destructive mt-1">Name must be at least 2 characters long</p>
                 )}
               </div>
 
               {/* Bank Name */}
               <div className="space-y-1">
-                <Label htmlFor="bankName" className="text-navy font-semibold text-base">
+                <Label htmlFor="bankName" className="text-foreground font-semibold text-base">
                   Bank Name *
                 </Label>
                 <Input
@@ -298,19 +294,17 @@ export default function Step3({ goNext, goBack }) {
                   value={formData.bankName || ""}
                   onChange={handleChange}
                   placeholder="e.g., State Bank Of India"
-                  className="h-11 border-gray-300 focus:border-navy focus:ring-navy"
+                  className="h-11 border-border focus:border-primary focus:ring-primary"
                   required
                 />
                 {formData.bankName && formData.bankName.length < 2 && (
-                  <p className="text-sm text-red-500 mt-1">
-                    Bank name must be at least 2 characters long
-                  </p>
+                  <p className="text-sm text-destructive mt-1">Bank name must be at least 2 characters long</p>
                 )}
               </div>
 
               {/* Branch Name */}
               <div className="space-y-1">
-                <Label htmlFor="branchName" className="text-navy font-semibold text-base">
+                <Label htmlFor="branchName" className="text-foreground font-semibold text-base">
                   Branch Name *
                 </Label>
                 <Input
@@ -320,14 +314,14 @@ export default function Step3({ goNext, goBack }) {
                   value={formData.branchName || ""}
                   onChange={handleChange}
                   placeholder="Enter branch name"
-                  className="h-11 border-gray-300 focus:border-navy focus:ring-navy"
+                  className="h-11 border-border focus:border-primary focus:ring-primary"
                   required
                 />
               </div>
 
               {/* Account Number */}
               <div className="space-y-1">
-                <Label htmlFor="accountNumber" className="text-navy font-semibold text-base">
+                <Label htmlFor="accountNumber" className="text-foreground font-semibold text-base">
                   Account Number *
                 </Label>
                 <Input
@@ -337,19 +331,17 @@ export default function Step3({ goNext, goBack }) {
                   value={formData.accountNumber || ""}
                   onChange={handleChange}
                   placeholder="Enter account number"
-                  className="h-11 border-gray-300 focus:border-navy focus:ring-navy"
+                  className="h-11 border-border focus:border-primary focus:ring-primary"
                   required
                 />
                 {formData.accountNumber && formData.accountNumber.length < 8 && (
-                  <p className="text-sm text-red-500 mt-1">
-                    Account number must be at least 8 digits
-                  </p>
+                  <p className="text-sm text-destructive mt-1">Account number must be at least 8 digits</p>
                 )}
               </div>
 
               {/* IFSC Code */}
-              <div className="space-y-1 col-span-2">
-                <Label htmlFor="ifscCode" className="text-navy font-semibold text-base">
+              <div className="space-y-1 sm:col-span-2">
+                <Label htmlFor="ifscCode" className="text-foreground font-semibold text-base">
                   IFSC Code *
                 </Label>
                 <Input
@@ -359,14 +351,12 @@ export default function Step3({ goNext, goBack }) {
                   value={formData.ifscCode || ""}
                   onChange={handleChange}
                   placeholder="e.g., SBIN0000123"
-                  className="h-11 border-gray-300 focus:border-navy focus:ring-navy"
+                  className="h-11 border-border focus:border-primary focus:ring-primary"
                   style={{ textTransform: "uppercase" }}
                   required
                 />
                 {formData.ifscCode && !/^[A-Z]{4}0[A-Z0-9]{6}$/.test(formData.ifscCode) && (
-                  <p className="text-sm text-red-500 mt-1">
-                    Please enter a valid IFSC code (e.g., SBIN0000123)
-                  </p>
+                  <p className="text-sm text-destructive mt-1">Please enter a valid IFSC code (e.g., SBIN0000123)</p>
                 )}
               </div>
             </div>
@@ -374,16 +364,18 @@ export default function Step3({ goNext, goBack }) {
         </CardContent>
       </Card>
 
-      <div className="flex justify-between items-center mt-2 ">
-        <Button onClick={handleSkip} variant="outline">
+      {/* Button Row */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mt-1 sm:mt-4 gap-2 sm:gap-4 w-full">
+        <Button onClick={handleSkip} variant="outline" className="w-full sm:w-auto">
           <span>Skip</span>
-          <span className="text-xs text-gray-500">(Free Events Only)</span>
+          <span className="text-xs text-muted-foreground">(Free Events Only)</span>
         </Button>
-        <div className="flex space-x-4">
-          <Button variant="outline" onClick={() => goBack()}>
+        <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2 sm:gap-4 justify-end">
+          <Button variant="outline" className="w-full sm:w-auto" onClick={() => goBack()}>
             Back
           </Button>
           <Button
+            className="w-full sm:w-auto"
             onClick={() => {
               if (!validateForm()) {
                 return;

@@ -31,9 +31,6 @@ import {
 import Image from "next/image";
 
 export default function EventCard({ event, index = 0 }) {
-  const formatDateTime = (dateTime) => {
-    return format(new Date(dateTime), "MMM dd, yyyy • h:mm a");
-  };
 
   const calculateStats = () => {
     if (!event.tickets || event.tickets.length === 0) return { total: 0, sold: 0, percentage: 0 };
@@ -61,17 +58,17 @@ export default function EventCard({ event, index = 0 }) {
       transition={{ duration: 0.3, delay: index * 0.1 }}
       className="w-full"
     >
-      <Card className="group hover:shadow-lg transition-all duration-300 overflow-hidden">
+      <Card className="group transition-all duration-300 overflow-hidden p-0 px-0 w-full ">
         {/* Banner Image */}
-        <div className="relative h-40 overflow-hidden">
+        <div className="relative h-40 overflow-hidden w-full object-cover">
           <Image
             src={event?.bannerImage || "https://placehold.co/600x400/png"}
             alt={event.title}
             fill
-            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            className="object-cover transition-transform duration-300 group-hover:scale-105 w-full"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          
+
           {/* Top badges */}
           <div className="absolute top-3 left-3 flex gap-2">
             <Badge variant={event.status === "published" ? "default" : "secondary"}>
@@ -134,7 +131,7 @@ export default function EventCard({ event, index = 0 }) {
           )}
         </div>
 
-        <CardContent className="p-4 space-y-3">
+        <CardContent className="space-y-3 pb-4 w-full">
           {/* Event Title */}
           <div>
             <h3 className="font-semibold text-lg line-clamp-1 text-foreground">{event.title}</h3>

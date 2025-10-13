@@ -18,20 +18,23 @@ export const useUserStore = create((set) => ({
 
   setToken: async ({ token }) => {
     try {
-      if (!token) {
+      if (!token ) {
         set({ isAuthenticated: false, user: null, token: null, organization: null });
         sessionStorage.clear();
         return false;
       }
 
-      // Save token to sessionStorage  console.log(eventData);
+      // Save token to sessionStorage
       sessionStorage.setItem("token", token);
 
-      // Fetch user data
+      // Check if user data already exists
       const currentState = useUserStore.getState();
-      if (currentState.user) {
-        return true; // User already set, no need to fetch again
+      if (currentState.user && currentState.organization) {
+        set({ token, isAuthenticated: true });
+        return true;
       }
+
+      // Fetch user data only if not present
       const resUser = await api.get("/user/me", {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -55,7 +58,7 @@ export const useUserStore = create((set) => ({
     } catch (error) {
       set({ isAuthenticated: false, user: null, token: null, organization: null });
       console.error("Error setting token:", error);
-      toast.error("Session expired or organization not found. Please login again.");
+      toast.error(error?.response?.data?.message || "Session expired or organization not found. Please login again.");
       sessionStorage.clear();
       return false;
     } finally {
@@ -77,7 +80,9 @@ export const useUserStore = create((set) => ({
       // use token to fetch user + organization
       const ok = await useUserStore.getState().setToken({ token });
       if (ok) {
-        setTimeout(() => window.history.back(), 500);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 100);
         return true;
       } else {
         return false;

@@ -42,7 +42,7 @@ const StatsCards = ({ stats, trustScore, riskLevel }) => {
       {statsData.map((stat) => {
         const Icon = stat.icon;
         return (
-          <Card key={stat.title}>
+          <Card key={stat.title} className={'p-0 gap-0'}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4 sm:p-6">
               <CardTitle className="text-xs sm:text-sm font-medium">{stat.title}</CardTitle>
               <Icon className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground flex-shrink-0" />

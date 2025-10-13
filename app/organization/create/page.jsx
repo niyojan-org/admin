@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useOrgStore } from "@/store/orgStore";
-import Step1 from "./steps/Step1";
+import Step1 from "./steps/BasicOrganization";
 import Step2 from "./steps/Step2";
 import Step3 from "./steps/Step3";
 import Step4 from "./steps/Step4";
@@ -14,6 +14,7 @@ import {
 } from "@tabler/icons-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function OrganizationWizard() {
   const organization = useOrgStore((s) => s.organization);
@@ -33,15 +34,15 @@ export default function OrganizationWizard() {
 
   if (allStepsCompleted) {
     return (
-      <div className="mx-auto px-10 justify-center items-center h-screen flex flex-col py-10 text-center">
+      <div className="mx-auto px-10 justify-center items-center flex flex-col py-10 text-center w-full">
         <div className="max-w-2xl mx-auto">
           {/* Success Message */}
           <div className="mb-8">
-            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
               <IconChecks className="text-green" size={40} />
             </div>
-            <h1 className="text-3xl font-bold text-navy mb-4">🎉 Successfully Registered!</h1>
-            <p className="text-lg text-gray-600 mb-6">
+            <h1 className="text-3xl font-bold text-navy mb-4">Successfully Registered!</h1>
+            <p className="text-lg text-muted-foreground mb-6">
               We have successfully registered your organization{" "}
               <strong>{organization?.name}</strong> with us.
             </p>
@@ -49,16 +50,16 @@ export default function OrganizationWizard() {
 
           {/* Verification Status */}
           {organization?.verified === true ? (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
+            <div className="bg-green-50 dark:bg-green-900 border border-green-200 rounded-lg p-6 mb-6">
               <div className="flex items-center justify-center mb-4">
-                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center">
                   <IconRosetteDiscountCheckFilled className="text-green" />
                 </div>
               </div>
-              <h2 className="text-xl font-semibold text-green-800 mb-2">
-                ✅ Organization Verified
+              <h2 className="text-xl font-semibold text-green-800 dark:text-green-50 mb-2">
+                Organization Verified
               </h2>
-              <p className="text-green-700 mb-4">
+              <p className="text-green-700 dark:text-green-100 mb-4">
                 Your organization has been verified and is ready to use our platform.
               </p>
               <button
@@ -93,8 +94,8 @@ export default function OrganizationWizard() {
           )}
 
           {/* Additional Info */}
-          <div className="text-sm text-gray-500">
-            <p>Need help? Contact our support team for assistance.</p>
+          <div className="text-sm text-muted-foreground">
+            <Link href={'/contact'}>Need help? Contact our support team for assistance.</Link>
           </div>
         </div>
       </div>
@@ -134,7 +135,7 @@ export default function OrganizationWizard() {
   ];
 
   return (
-    <div className="mx-auto px-10 justify-between h-screen pr-20 pb-20 flex flex-col py-10">
+    <div className="mx-auto justify-between h-full pb-20 flex flex-col w-full">
       <div className="mb-6 flex flex-col">
         <h1 className="text-2xl font-bold text-navy">Register your Organization.!</h1>
         <p className="text-gray">
@@ -143,7 +144,7 @@ export default function OrganizationWizard() {
       </div>
 
       {/* -------------------------- Stepper UI ------------------------- */}
-      <div className="mb-8 flex flex-wrap gap-2">
+      <div className="mb-8 flex flex-wrap gap-2 w-full h-full">
         {steps.map((s, index) => {
           const completed = stepsCompleted[s.key];
           const isActive = index === step;

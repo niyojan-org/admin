@@ -177,7 +177,7 @@ export default function EventsPage() {
               {filteredEvents.map((event, index) => (
                 <div
                   key={event._id}
-                  className="transition hover:scale-[1.02] hover:shadow-xl"
+                  className=""
                 >
                   <EventCard event={event} index={index} />
                 </div>

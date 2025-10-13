@@ -12,7 +12,7 @@ export default function ProtectedRoute({ children, roles }) {
   useEffect(() => {
 
     if (loading === false && isAuthenticated === false) {
-      router.push("/auth");
+      router.replace("/auth");
       console.warn("User is not authenticated, redirecting to auth page.");
     }
   }, [loading, isAuthenticated, router]);

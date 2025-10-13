@@ -165,31 +165,26 @@ export default function Step4({ goNext, goBack }) {
     }
   };
   return (
-    <div className="h-full bg-white rounded border shadow-navy border-navy px-10 flex flex-col justify-between py-8 space-y-4">
-      <div className="flex items-center justify-between">
-        <p className="text-navy text-lg">Please upload your organization documents</p>
-        <div className="flex items-center space-x-4">
-          <div className="text-sm text-gray text-center">
-            <span className="text-red">*</span> At least one document required
+  <div className="h-full bg-background rounded border border-border shadow flex flex-col justify-between py-4 sm:py-6 md:py-8 space-y-4 w-full px-2 sm:px-4 md:px-10">
+      <div className="flex gap-4 justify-between items-start flex-wrap">
+        <p className="text-foreground text-sm sm:text-lg flex-1">Please upload your organization documents</p>
+        <div className="flex items-center gap-2">
+          <div className="text-sm text-muted-foreground text-center">
+            <span className="text-destructive">*</span> At least one document required
           </div>
-          {/* Info Button */}
           <Dialog open={showGuidelinesDialog} onOpenChange={setShowGuidelinesDialog}>
             <DialogTrigger asChild>
-              <button
-                className="w-8 h-8 cursor-pointer rounded-full bg-blue-100 hover:bg-blue-200 border border-blue-300 flex items-center justify-center text-blue-600 hover:text-blue-700 transition-colors"
-                type="button"
-                title="View Guidelines"
-              >
+              <Button type="button" title="View Guidelines" variant={'icon'}>
                 <IconInfoSquareRounded />
-              </button>
+              </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-md">
+            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle className="text-navy">Document Upload Guidelines</DialogTitle>
+                <DialogTitle className="text-xl font-bold text-primary">Document Upload Guidelines</DialogTitle>
               </DialogHeader>
-              <div className="space-y-4">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <ul className="text-sm text-blue-800 space-y-2">
+              <div className="space-y-6 mt-4">
+                <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
+                  <ul className="text-sm text-primary space-y-1">
                     <li>• Supported formats: PDF, JPEG, PNG</li>
                     <li>• Maximum file size: 5MB per document</li>
                     <li>• Ensure documents are clear and readable</li>
@@ -198,9 +193,9 @@ export default function Step4({ goNext, goBack }) {
                     <li>• You can upload multiple documents of the same type if needed</li>
                   </ul>
                 </div>
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h4 className="font-medium text-green-900 mb-2">Tips</h4>
-                  <ul className="text-sm text-green-800 space-y-1">
+                <div className="p-4 bg-success/5 rounded-lg border-l-4 border-success">
+                  <h4 className="font-medium text-success mb-2">Tips</h4>
+                  <ul className="text-sm text-success space-y-1">
                     <li>• Scan documents in high resolution for clarity</li>
                     <li>• Ensure all text is legible in the uploaded files</li>
                     <li>• PAN Card and GST Certificate are commonly required</li>
@@ -208,9 +203,9 @@ export default function Step4({ goNext, goBack }) {
                     <li>• Use "Other" category for additional supporting documents</li>
                   </ul>
                 </div>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <h4 className="font-medium text-yellow-900 mb-2">Important</h4>
-                  <ul className="text-sm text-yellow-800 space-y-1">
+                <div className="p-4 bg-warning/5 rounded-lg border-l-4 border-warning">
+                  <h4 className="font-medium text-warning mb-2">Important</h4>
+                  <ul className="text-sm text-warning space-y-1">
                     <li>• All documents must be valid and current</li>
                     <li>• Expired documents will not be accepted</li>
                     <li>• Organization name must match across all documents</li>
@@ -222,12 +217,12 @@ export default function Step4({ goNext, goBack }) {
         </div>
       </div>
 
-      <Card className="border-2 border-navy shadow-sm bg-white flex-1 overflow-y-auto">
-        <CardContent className="p-6 space-y-6">
+      <Card className="shadow-sm bg-background py-1 border-0 p-0 flex-1 overflow-y-auto">
+        <CardContent className="py-2 sm:py-4 sm:space-y-6">
           <div className="space-y-4">
             <div className="border-b pb-2">
-              <h3 className="text-navy font-semibold text-lg">Document Upload</h3>
-              <p className="text-sm text-gray-600">
+              <h3 className="text-primary font-semibold text-lg">Document Upload</h3>
+              <p className="text-sm text-muted-foreground">
                 Upload organization documents (PDF, JPEG, PNG - Max 5MB each)
               </p>
             </div>
@@ -235,31 +230,31 @@ export default function Step4({ goNext, goBack }) {
             {/* Document List */}
             <div className="space-y-4">
               {documents.length === 0 ? (
-                <div className="text-center py-8 text-gray-500">
+                <div className="text-center py-8 text-muted-foreground">
                   <p>No documents added yet. Click "Add Document" to get started.</p>
                 </div>
               ) : (
                 documents.map((document, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg p-4 space-y-4">
+                  <div key={index} className="border border-border rounded-lg p-4 space-y-4">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-navy">Document {index + 1}</h4>
+                      <h4 className="font-medium text-primary">Document {index + 1}</h4>
                       <button
                         onClick={() => removeDocument(index)}
-                        className="text-red-500 hover:text-red-700 text-sm"
+                        className="text-destructive hover:text-destructive text-sm"
                         type="button"
                       >
                         Remove
                       </button>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Document Type */}
                       <div className="space-y-2">
-                        <Label className="text-navy font-semibold text-base">Document Type *</Label>
+                        <Label className="text-foreground font-semibold text-base">Document Type *</Label>
                         <select
                           value={document.type}
                           onChange={(e) => handleDocumentTypeChange(index, e.target.value)}
-                          className="w-full h-11 px-3 border border-gray-300 rounded-md focus:border-navy focus:ring-navy"
+                          className="w-full h-11 px-3 border border-border rounded-md focus:border-primary focus:ring-primary"
                           required
                         >
                           <option value="">Select Document Type</option>
@@ -273,35 +268,35 @@ export default function Step4({ goNext, goBack }) {
 
                       {/* File Upload */}
                       <div className="space-y-2">
-                        <Label className="text-navy font-semibold text-base">Upload File *</Label>
+                        <Label className="text-foreground font-semibold text-base">Upload File *</Label>
                         <div className="relative">
                           <Input
                             type="file"
                             accept=".pdf,.jpeg,.jpg,.png"
                             onChange={(e) => handleFileChange(index, e)}
-                            className="h-11 border-gray-300 focus:border-navy focus:ring-navy"
+                            className="h-11 border-border focus:border-primary focus:ring-primary"
                             disabled={uploadingFiles[index]}
                           />
                           {uploadingFiles[index] && (
                             <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-navy"></div>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary"></div>
                             </div>
                           )}
                         </div>
                         {document.url && (
-                          <p className="text-sm text-green-600">✓ File uploaded successfully</p>
+                          <p className="text-sm text-success">✓ File uploaded successfully</p>
                         )}
                       </div>
                     </div>
 
                     {/* File Preview/Info */}
                     {document.file && (
-                      <div className="bg-gray-50 p-3 rounded border">
+                      <div className="bg-muted p-3 rounded border">
                         <div className="flex items-center space-x-2">
-                          <div className="text-sm text-gray-600">
+                          <div className="text-sm text-muted-foreground">
                             <strong>File:</strong> {document.file.name}
                           </div>
-                          <div className="text-sm text-gray-600">
+                          <div className="text-sm text-muted-foreground">
                             <strong>Size:</strong> {(document.file.size / 1024 / 1024).toFixed(2)}{" "}
                             MB
                           </div>
@@ -315,13 +310,14 @@ export default function Step4({ goNext, goBack }) {
 
             {/* Add Document Button */}
             <div className="flex justify-center">
-              <button
+              <Button
                 onClick={addDocument}
-                className="px-4 py-2 bg-gray-100 text-navy border border-navy rounded hover:bg-gray-200 transition-colors"
+                variant="outline"
+                className="px-4 py-2 w-full sm:w-auto"
                 type="button"
               >
                 Add Document
-              </button>
+              </Button>
             </div>
 
             {/* Removed inline Guidelines - now shown in dialog */}
@@ -329,11 +325,12 @@ export default function Step4({ goNext, goBack }) {
         </CardContent>
       </Card>
 
-      <div className="flex justify-end mt-6 space-x-4">
-        <Button variant="outline" onClick={() => goBack()}>
+      <div className="flex flex-col sm:flex-row justify-end mt-4 gap-2 sm:gap-4">
+        <Button variant="outline" className="w-full sm:w-auto" onClick={() => goBack()}>
           Back
         </Button>
         <Button
+          className="w-full sm:w-auto"
           onClick={() => {
             if (!validateForm()) {
               return;

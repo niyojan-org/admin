@@ -68,15 +68,6 @@ export default function Step6({ goNext, goBack }) {
         ...prevData,
         maxEventsPerMonth: "", // Allow empty value for editing
       }));
-      return;
-    }
-
-    const value = parseInt(inputValue);
-    if (!isNaN(value)) {
-      setFormData((prevData) => ({
-        ...prevData,
-        maxEventsPerMonth: Math.max(1, Math.min(20, value)), // Limit between 1-20
-      }));
     }
   };
 
@@ -194,138 +185,120 @@ export default function Step6({ goNext, goBack }) {
     }
   };
   return (
-    <Card className="h-full rounded border shadow-navy border-navy px-10 flex py-6 flex-col justify-between space-y-2">
-      <div className="flex items-center justify-between">
-        <p className="text-navy text-lg">Set your organization's event hosting preferences</p>
-        <div className="flex items-center space-x-4">
-          <div className="text-sm text-gray text-center">
-            <span className="text-red">*</span> Required fields
-          </div>
-          {/* Info Button */}
-          <Dialog open={showGuidelinesDialog} onOpenChange={setShowGuidelinesDialog}>
-            <DialogTrigger asChild>
-              <button
-                className="w-8 h-8 cursor-pointer rounded-full bg-blue-100 hover:bg-blue-200 border border-blue-300 flex items-center justify-center text-blue-600 hover:text-blue-700 transition-colors"
-                type="button"
-                title="View Guidelines"
-              >
-                <IconInfoSquareRounded />
-              </button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md">
-              <DialogHeader>
-                <DialogTitle className="text-navy">Event Preferences Guidelines</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <ul className="text-sm text-blue-800 space-y-2">
-                    <li>• Set a realistic maximum number of events based on your capacity</li>
-                    <li>• Choose event types that align with your organization's mission</li>
-                    <li>• You can add custom event types by clicking the "Add Custom" button</li>
-                    <li>• Custom event types are marked with ✨ sparkle icon</li>
-                    <li>• You can modify these preferences later in your organization settings</li>
-                    <li>• These preferences help us match you with suitable event opportunities</li>
-                  </ul>
-                </div>
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h4 className="font-medium text-green-900 mb-2">Tips</h4>
-                  <ul className="text-sm text-green-800 space-y-1">
-                    <li>• Start with 1-3 events per month if you're new to hosting</li>
-                    <li>• Select 3-5 event types that match your expertise</li>
-                    <li>• Consider your team size and available resources</li>
-                    <li>• Think about your target audience preferences</li>
-                  </ul>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+    <div className="h-full bg-background rounded border border-border shadow flex flex-col justify-between py-4 sm:py-6 md:py-8 space-y-4 w-full px-2 sm:px-4 md:px-10">
+      <div className="flex gap-4 justify-between items-start flex-wrap">
+        <p className="text-foreground text-sm sm:text-lg flex-1">Set your organization's event hosting preferences</p>
+        <div className="text-sm text-muted-foreground text-center flex items-start">
+          <span className="text-destructive">*</span> Required fields
         </div>
+        <Dialog open={showGuidelinesDialog} onOpenChange={setShowGuidelinesDialog}>
+          <DialogTrigger asChild>
+            <Button type="button" title="View Guidelines" variant={'icon'}>
+              <IconInfoSquareRounded />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-primary">Event Preferences Guidelines</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-6 mt-4">
+              <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
+                <ul className="text-sm text-primary space-y-1">
+                  <li>• Set a realistic maximum number of events based on your capacity</li>
+                  <li>• Choose event types that align with your organization's mission</li>
+                  <li>• You can add custom event types by clicking the "Add Custom" button</li>
+                  <li>• Custom event types are marked with ✨ sparkle icon</li>
+                  <li>• You can modify these preferences later in your organization settings</li>
+                  <li>• These preferences help us match you with suitable event opportunities</li>
+                </ul>
+              </div>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h4 className="font-medium text-green-900 mb-2">Tips</h4>
+                <ul className="text-sm text-green-800 space-y-1">
+                  <li>• Start with 1-3 events per month if you're new to hosting</li>
+                  <li>• Select 3-5 event types that match your expertise</li>
+                  <li>• Consider your team size and available resources</li>
+                  <li>• Think about your target audience preferences</li>
+                </ul>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      <Card className="border-2 border-navy shadow-sm py-1">
-        <CardContent className="px-6 py-1 space-y-2">
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="border-b pb-2">
-                  <h3 className="text-navy font-semibold text-lg">Event Hosting Preferences</h3>
-                  <p className="text-sm text-gray-600">
-                    Configure your organization's event hosting capacity and preferences
-                  </p>
-                </div>
 
-                {/* Maximum Events Per Month */}
-                <div className="space-y-2">
-                  <div className="space-y-1">
-                    <Label
-                      htmlFor="maxEventsPerMonth"
-                      className="text-navy font-semibold text-base"
-                    >
-                      Maximum Events Per Month *
-                    </Label>
-                    <div className="flex items-center space-x-4">
-                      <Input
-                        type="number"
-                        id="maxEventsPerMonth"
-                        name="maxEventsPerMonth"
-                        value={formData.maxEventsPerMonth}
-                        onChange={handleMaxEventsChange}
-                        min="1"
-                        max="20"
-                        className="h-11 border-gray-300 focus:border-navy focus:ring-navy w-32"
-                        required
-                      />
-                      <div className="text-sm text-gray-600">
-                        Events your organization can host per month (1-20)
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      Currently set to:{" "}
-                      <span className="font-semibold text-navy">
-                        {formData.maxEventsPerMonth} events per month
-                      </span>
-                    </div>
+      <Card className="shadow-sm bg-background py-1 border-0 p-0 flex-1 overflow-y-auto">
+        <CardContent className="py-2 sm:py-4 sm:space-y-6">
+          <div className="space-y-4">
+            <div className="border-b pb-2">
+              <h3 className="text-primary font-semibold text-lg">Event Hosting Preferences</h3>
+              <p className="text-sm text-muted-foreground">
+                Configure your organization's event hosting capacity and preferences
+              </p>
+            </div>
+
+            {/* Maximum Events Per Month */}
+            <div className="space-y-2">
+              <div className="space-y-1">
+                <Label htmlFor="maxEventsPerMonth" className="text-foreground font-semibold text-base">
+                  Maximum Events Per Month *
+                </Label>
+                <div className="flex items-center gap-4">
+                  <Input
+                    type="number"
+                    id="maxEventsPerMonth"
+                    name="maxEventsPerMonth"
+                    value={formData.maxEventsPerMonth}
+                    onChange={handleMaxEventsChange}
+                    min="1"
+                    max="20"
+                    className="h-11 border-border focus:border-primary focus:ring-primary w-32"
+                    required
+                  />
+                  <div className="text-sm text-muted-foreground">
+                    Events your organization can host per month (1-20)
                   </div>
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Currently set to: <span className="font-semibold text-primary">{formData.maxEventsPerMonth} events per month</span>
                 </div>
               </div>
-              {formData.preferredEventTypes.length > 0 && (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4 max-w-md">
-                  <h4 className="font-medium text-green-900 mb-2">Summary</h4>
-                  <div className="text-sm text-green-800">
-                    <p>
-                      Your organization can host up to{" "}
-                      <strong>{formData.maxEventsPerMonth} events per month</strong>
-                    </p>
-                    <p>
-                      Preferred event types:{" "}
-                      <strong>{formData.preferredEventTypes.join(", ")}</strong>
-                    </p>
-                  </div>
-                </div>
-              )}
             </div>
+
+            {/* Summary */}
+            {formData.preferredEventTypes.length > 0 && (
+              <div className="bg-success/5 border-l-4 border-success rounded-lg p-4 max-w-md">
+                <h4 className="font-medium text-success mb-2">Summary</h4>
+                <div className="text-sm text-success">
+                  <p>
+                    Your organization can host up to <strong>{formData.maxEventsPerMonth} events per month</strong>
+                  </p>
+                  <p>
+                    Preferred event types: <strong>{formData.preferredEventTypes.join(", ")}</strong>
+                  </p>
+                </div>
+              </div>
+            )}
 
             {/* Preferred Event Types */}
             <div className="space-y-1">
               <div className="space-y-1">
-                <Label className="text-navy font-semibold text-base">Preferred Event Types *</Label>
-                <p className="text-sm text-gray-600">
-                  Select the types of events your organization prefers to host (select at least 1,
-                  maximum 10)
+                <Label className="text-foreground font-semibold text-base">Preferred Event Types *</Label>
+                <p className="text-sm text-muted-foreground">
+                  Select the types of events your organization prefers to host (select at least 1, maximum 10)
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-5 space-x-3 space-y-2">
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-x-3 gap-y-2">
                 {eventTypes.map((eventType) => (
                   <div
                     key={eventType}
                     onClick={() => handleEventTypeToggle(eventType)}
                     className={`
                       px-3 py-2 rounded-lg border-2 cursor-pointer transition-all duration-200 text-center
-                      ${
-                        formData.preferredEventTypes.includes(eventType)
-                          ? "border-secondary bg-primary text-white"
-                          : "border-gray-300 bg-white text-gray-700 hover:border-navy hover:bg-gray-50"
+                      ${formData.preferredEventTypes.includes(eventType)
+                        ? "border-secondary bg-primary text-white"
+                        : "border-border bg-background text-muted-foreground hover:border-primary hover:bg-primary/5"
                       }
                     `}
                   >
@@ -353,13 +326,13 @@ export default function Step6({ goNext, goBack }) {
                 {!showCustomInput ? (
                   <div
                     onClick={() => setShowCustomInput(true)}
-                    className="px-3 py-2 flex items-center justify-center rounded-lg border-2 border-dashed border-gray-400 cursor-pointer transition-all duration-200 text-center hover:border-navy hover:bg-gray/20"
+                    className="px-3 py-2 flex items-center justify-center rounded-lg border-2 border-dashed border-border cursor-pointer transition-all duration-200 text-center hover:border-primary hover:bg-primary/10"
                   >
-                    <div className="text-2xl text-gray">+</div>
-                    <div className="text-xs text-gray">Add Custom</div>
+                    <div className="text-2xl text-muted-foreground">+</div>
+                    <div className="text-xs text-muted-foreground">Add Custom</div>
                   </div>
                 ) : (
-                  <div className="p-2 rounded-lg border-2 border-navy bg-white">
+                  <div className="p-2 rounded-lg border-2 border-primary bg-background">
                     <Input
                       type="text"
                       value={customEventType}
@@ -372,7 +345,7 @@ export default function Step6({ goNext, goBack }) {
                     <div className="flex justify-between mt-1">
                       <button
                         onClick={handleAddCustomEventType}
-                        className="text-xs bg-navy text-white px-2 py-1 rounded hover:bg-blue-700"
+                        className="text-xs bg-primary text-white px-2 py-1 rounded hover:bg-primary/80"
                         type="button"
                       >
                         Add
@@ -382,7 +355,7 @@ export default function Step6({ goNext, goBack }) {
                           setShowCustomInput(false);
                           setCustomEventType("");
                         }}
-                        className="text-xs text-gray-500 px-2 py-1 rounded hover:text-gray-700"
+                        className="text-xs text-muted-foreground px-2 py-1 rounded hover:text-primary"
                         type="button"
                       >
                         Cancel
@@ -392,11 +365,8 @@ export default function Step6({ goNext, goBack }) {
                 )}
               </div>
 
-              <div className="text-sm text-gray-500 flex items-center space-x-2">
-                Selected:{" "}
-                <span className="font-semibold text-navy">
-                  {formData.preferredEventTypes.length} event types
-                </span>
+              <div className="text-sm text-muted-foreground flex items-center gap-2 flex-col sm:flex-row">
+                <p>Selected: <span className="font-semibold text-primary">{formData.preferredEventTypes.length} event types</span></p>
                 {formData.preferredEventTypes.length > 0 && (
                   <div className="">
                     {formData.preferredEventTypes.map((type, index) => (
@@ -410,17 +380,16 @@ export default function Step6({ goNext, goBack }) {
                 )}
               </div>
             </div>
-
-            {/* Removed inline Guidelines - now shown in dialog */}
           </div>
         </CardContent>
       </Card>
 
-      <div className="flex justify-end mt-2 space-x-4">
-        <Button variant="outline" onClick={() => goBack()}>
+      <div className="flex flex-col sm:flex-row justify-end mt-4 gap-2 sm:gap-4">
+        <Button variant="outline" className="w-full sm:w-auto" onClick={() => goBack()}>
           Back
         </Button>
         <Button
+          className="w-full sm:w-auto"
           onClick={() => {
             if (!validateForm()) {
               return;
@@ -431,6 +400,6 @@ export default function Step6({ goNext, goBack }) {
           Submit
         </Button>
       </div>
-    </Card>
+    </div>
   );
 }

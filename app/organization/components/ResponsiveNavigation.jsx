@@ -240,9 +240,9 @@ const ResponsiveNavigation = ({ activeSection, onSectionChange, organization }) 
               </div>
 
               {/* Navigation Items */}
-              <div className="flex-1 min-h-0 overflow-hidden">
-                <ScrollArea className="h-full">
-                  <div className="space-y-2 pb-4">
+              <div className="flex-1 min-h-0 overflow-hidden w-full">
+                <ScrollArea className="h-full w-full">
+                  <div className="space-y-2 pb-4 pr-2">
                     {navigationItems.map((item) => {
                       const Icon = item.icon;
                       const isActive = activeSection === item.id;

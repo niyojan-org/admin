@@ -40,7 +40,7 @@ const contactMethods = [
 
 export const ContactMethods = () => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-8 h-fit ">
+    <div className="grid grid-cols-2 sm:grid-cols-2 gap-x-8 gap-y-8 h-fit ">
       {contactMethods.map((method, index) => {
         const Icon = method.icon;
 
@@ -54,15 +54,14 @@ export const ContactMethods = () => {
 
             {method.type === "link" && (
               <Link
-                className="font-medium text-primary hover:underline inline-block"
+                className="font-medium text-primary hover:underline inline-block "
                 href={method.href}
                 target={method.href.startsWith("http") ? "_blank" : undefined}
                 rel={method.href.startsWith("http") ? "noopener noreferrer" : undefined}
               >
                 {method.value.split('\n').map((line, i) => (
-                  <span key={i}>
+                  <span key={i} className="truncate line-clamp-1">
                     {line}
-                    {i < method.value.split('\n').length - 1 && <><br /></>}
                   </span>
                 ))}
               </Link>

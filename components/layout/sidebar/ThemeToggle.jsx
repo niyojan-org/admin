@@ -34,9 +34,9 @@ const ThemeToggle = ({ isCollapsed }) => {
         <TooltipTrigger asChild>
           <button
             onClick={toggleTheme}
-            className="w-full flex justify-center h-10 px-3 items-center text-muted-foreground hover:text-foreground transition-colors duration-200"
+            className="w-full flex justify-center h-10 px-3 items-center text-muted-foreground hover:text-foreground transition-colors duration-200 font-medium"
           >
-            <ThemeIcon className="h-5 w-5" />
+            <ThemeIcon className="h-5 w-5 shrink-0" />
           </button>
         </TooltipTrigger>
         <TooltipContent side="right">
@@ -49,9 +49,9 @@ const ThemeToggle = ({ isCollapsed }) => {
   return (
     <button
       onClick={toggleTheme}
-      className="w-full flex items-center text-sm text-muted-foreground hover:text-foreground transition-all duration-200 relative group px-3 py-2"
+      className="w-full flex items-center text-sm text-muted-foreground hover:text-foreground transition-all duration-200 relative group px-3 py-2 font-medium"
     >
-      <ThemeIcon className="mr-3 h-4 w-4" />
+      <ThemeIcon className="mr-3 h-5 w-5 shrink-0" />
       {getThemeLabel()}
       <div className="absolute bottom-0 left-3 right-3 h-0.5 bg-foreground transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
     </button>

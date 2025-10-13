@@ -215,62 +215,43 @@ export function DateTimeInput({ value, onChange, minDateTime, className }) {
             <Clock className="h-4 w-4 shrink-0" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0" align="start">
-          <div className="flex">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={handleDateSelect}
-              className="rounded-r-none border-r"
-              disabled={[
-                { before: new Date() },
-              ]}
-            />
-            <div className="w-72 p-4 space-y-4">
-              <div className="text-center">
-                <Badge variant="secondary" className="mb-2">
+        <PopoverContent className="w-auto p-2 max-w-[95vw] gap-0" align="start">
+          <div className="flex flex-col gap-2">
+            {/* Calendar Section */}
+            <div className="w-full">
+              <Calendar
+                mode="single"
+                selected={date}
+                onSelect={handleDateSelect}
+                className="sm:border-b-0 sm:border-r !p-0 !min-h-[260px] !max-h-[260px]"
+                disabled={[
+                  { before: new Date() },
+                ]}
+              />
+            </div>
+            {/* Time Selection Section */}
+            <div className="w-full">
+              <div className="text-center mb-2">
+                <Badge variant="secondary" className="text-sm sm:text-xs">
                   {format(date, "EEE, MMM d, yyyy")}
                 </Badge>
               </div>
-
               <Separator />
-
-              <div className="space-y-3">
-                <Label className="text-sm font-medium">Time Selection</Label>
-
-                <div className="grid grid-cols-7 gap-2 items-center">
+              <div className="space-y-1">
+                <Label className="text-[11px] sm:text-xs font-medium">Time</Label>
+                {/* Time Inputs */}
+                <div className="flex items-center justify-center gap-1 sm:gap-1.5">
                   {/* Hour */}
-                  <div className="col-span-2">
-                    <Label className="text-xs text-muted-foreground">Hour</Label>
-
-                  </div>
-                  {/* Colon */}
-                  <div className="flex justify-center">
-
-                  </div>
-                  {/* Minute */}
-                  <div className="col-span-2">
-                    <Label className="text-xs text-muted-foreground">Min</Label>
-                  </div>
-
-                  {/* Period */}
-                  <div className="col-span-2">
-                    <Label className="text-xs text-muted-foreground">Period</Label>
-                  </div>
-                </div>
-
-
-                <div className="grid grid-cols-7 gap-2 items-center py-2">
-                  {/* Hour */}
-                  <div className="col-span-2">
+                  <div className="flex-1 max-w-[54px]">
+                    <Label className="text-[9px] sm:text-[10px] text-muted-foreground block text-center mb-0.5">Hr</Label>
                     <div className="relative">
                       <Button
-                        size="sm"
+                        size="icon"
                         variant="ghost"
-                        className="absolute -top-3 left-1/2 -translate-x-1/2 h-4 w-4 p-0"
+                        className="absolute -top-2 left-1/2 -translate-x-1/2 h-2.5 w-2.5 p-0"
                         onClick={() => adjustTime("hour", 1)}
                       >
-                        <ChevronUp className="h-3 w-3" />
+                        <ChevronUp className="h-2 w-2" />
                       </Button>
                       <Input
                         value={hour}
@@ -278,41 +259,40 @@ export function DateTimeInput({ value, onChange, minDateTime, className }) {
                         onBlur={(e) => handleInputBlur("hour", e.target.value)}
                         onKeyDown={(e) => handleKeyDown(e, "hour")}
                         className={cn(
-                          "text-center font-mono text-lg h-10",
+                          "text-center font-mono text-[15px] h-7 px-1 py-0",
                           isTimeDisabled && "bg-destructive/10 border-destructive/50 focus-visible:ring-destructive"
                         )}
                         maxLength={2}
                         placeholder="12"
                       />
                       <Button
-                        size="sm"
+                        size="icon"
                         variant="ghost"
-                        className="absolute -bottom-3 left-1/2 -translate-x-1/2 h-4 w-4 p-0"
+                        className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-2.5 w-2.5 p-0"
                         onClick={() => adjustTime("hour", -1)}
                       >
-                        <ChevronDown className="h-3 w-3" />
+                        <ChevronDown className="h-2 w-2" />
                       </Button>
                     </div>
                   </div>
-
                   {/* Colon */}
-                  <div className="flex justify-center">
+                  <div className="flex items-end pb-1">
                     <span className={cn(
-                      "text-lg font-bold",
+                      "text-[15px] font-bold",
                       isTimeDisabled && "text-destructive"
                     )}>:</span>
                   </div>
-
                   {/* Minute */}
-                  <div className="col-span-2">
+                  <div className="flex-1 max-w-[54px]">
+                    <Label className="text-[9px] sm:text-[10px] text-muted-foreground block text-center mb-0.5">Min</Label>
                     <div className="relative">
                       <Button
-                        size="sm"
+                        size="icon"
                         variant="ghost"
-                        className="absolute -top-3 left-1/2 -translate-x-1/2 h-4 w-4 p-0"
+                        className="absolute -top-2 left-1/2 -translate-x-1/2 h-2.5 w-2.5 p-0"
                         onClick={() => adjustTime("minute", 1)}
                       >
-                        <ChevronUp className="h-3 w-3" />
+                        <ChevronUp className="h-2 w-2" />
                       </Button>
                       <Input
                         value={minute}
@@ -320,28 +300,28 @@ export function DateTimeInput({ value, onChange, minDateTime, className }) {
                         onBlur={(e) => handleInputBlur("minute", e.target.value)}
                         onKeyDown={(e) => handleKeyDown(e, "minute")}
                         className={cn(
-                          "text-center font-mono text-lg h-10",
+                          "text-center font-mono text-[15px] h-7 px-1 py-0",
                           isTimeDisabled && "bg-destructive/10 border-destructive/50 focus-visible:ring-destructive"
                         )}
                         maxLength={2}
                         placeholder="00"
                       />
                       <Button
-                        size="sm"
+                        size="icon"
                         variant="ghost"
-                        className="absolute -bottom-3 left-1/2 -translate-x-1/2 h-4 w-4 p-0"
+                        className="absolute -bottom-2 left-1/2 -translate-x-1/2 h-2.5 w-2.5 p-0"
                         onClick={() => adjustTime("minute", -1)}
                       >
-                        <ChevronDown className="h-3 w-3" />
+                        <ChevronDown className="h-2 w-2" />
                       </Button>
                     </div>
                   </div>
-
                   {/* Period */}
-                  <div className="col-span-2">
+                  <div className="flex-1 max-w-[54px]">
+                    <Label className="text-[9px] sm:text-[10px] text-muted-foreground block text-center mb-0.5">AM/PM</Label>
                     <Select value={period} onValueChange={setPeriod}>
                       <SelectTrigger className={cn(
-                        "h-10",
+                        "h-7 text-[13px]",
                         isTimeDisabled && "bg-destructive/10 border-destructive/50"
                       )}>
                         <SelectValue />
@@ -353,28 +333,26 @@ export function DateTimeInput({ value, onChange, minDateTime, className }) {
                     </Select>
                   </div>
                 </div>
-
                 {isTimeDisabled && (
-                  <div className="bg-destructive/10 border border-destructive/20 rounded-md p-2">
-                    <p className="text-xs text-destructive text-center">
+                  <div className="bg-destructive/10 border border-destructive/20 rounded-md p-1">
+                    <p className="text-[10px] text-destructive text-center">
                       Time must be after {format(minDate, "MMM d, yyyy 'at' h:mm a")}
                     </p>
                   </div>
                 )}
-
-                <div className="flex gap-2">
+                <div className="flex gap-1 pt-1">
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={() => setOpen(false)}
-                    className="flex-1"
+                    className="flex-1 h-7 text-[12px]"
                   >
                     Cancel
                   </Button>
                   <Button
                     size="sm"
                     onClick={() => setOpen(false)}
-                    className="flex-1"
+                    className="flex-1 h-7 text-[12px]"
                     disabled={isTimeDisabled}
                   >
                     Confirm

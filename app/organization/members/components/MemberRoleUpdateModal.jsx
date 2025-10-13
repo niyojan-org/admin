@@ -11,45 +11,46 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardHeader, CardContent, CardDescription, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Loader2, Shield, AlertTriangle, CheckCircle2, User, Mail, Crown } from 'lucide-react';
+import { IconHomeEdit } from '@tabler/icons-react';
 
-const MemberRoleUpdateModal = ({ 
-  open, 
-  onClose, 
-  member, 
-  onSubmit 
+const MemberRoleUpdateModal = ({
+  open,
+  onClose,
+  member,
+  onSubmit
 }) => {
   const [selectedRole, setSelectedRole] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
   const roles = [
-    { 
-      value: 'admin', 
-      label: 'Admin', 
+    {
+      value: 'admin',
+      label: 'Admin',
       description: 'Can manage members and organization settings',
       permissions: ['Manage Members', 'Organization Settings', 'Event Management', 'View Reports'],
       icon: Crown,
       color: 'text-purple-600'
     },
-    { 
-      value: 'manager', 
-      label: 'Manager', 
+    {
+      value: 'manager',
+      label: 'Manager',
       description: 'Can manage events and view reports',
       permissions: ['Event Management', 'View Reports', 'Member Directory'],
       icon: Shield,
       color: 'text-blue-600'
     },
-    { 
-      value: 'member', 
-      label: 'Member', 
+    {
+      value: 'member',
+      label: 'Member',
       description: 'Can participate in events',
       permissions: ['Event Participation', 'Profile Management'],
       icon: User,
       color: 'text-green-600'
     },
-    { 
-      value: 'volunteer', 
-      label: 'Volunteer', 
+    {
+      value: 'volunteer',
+      label: 'Volunteer',
       description: 'Can help with events',
       permissions: ['Event Assistance', 'Profile Management'],
       icon: User,
@@ -117,33 +118,33 @@ const MemberRoleUpdateModal = ({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[700px] w-full max-h-[90vh] overflow-y-auto p-3">
         <DialogHeader className="space-y-3">
-          <DialogTitle className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/20">
-              <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+          <DialogTitle className="flex items-start gap-3">
+            <div className="flex items-center justify-center p-2 rounded-full bg-primary/10">
+              <IconHomeEdit className="w-7 h-7 text-primary" />
             </div>
-            <div>
+            <div className='text-start'>
               <h2 className="text-xl font-semibold">Update Member Role</h2>
-              <p className="text-sm text-muted-foreground font-normal mt-1">
+              <p className="text-sm text-muted-foreground font-normal">
                 Modify permissions and access level for this member
               </p>
             </div>
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Member Info Card */}
-          <Card>
-            <CardContent className="p-6">
+          <Card className={'py-1 px-2'}>
+            <CardContent className="p-0">
               <div className="flex items-center gap-4">
                 <Avatar className="w-16 h-16 border-2 border-border">
                   <AvatarImage src={member.avatar} alt={member.name} />
-                  <AvatarFallback className="text-lg font-semibold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                  <AvatarFallback className="text-lg font-semibold bg-gradient-to-br from-primary to-secondary text-white">
                     {getInitials(member.name)}
                   </AvatarFallback>
                 </Avatar>
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 space-y-1">
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-muted-foreground" />
                     <h3 className="font-semibold text-lg">{member.name}</h3>
@@ -173,7 +174,7 @@ const MemberRoleUpdateModal = ({
           )}
 
           {/* Role Selection */}
-          <Card>
+          <Card className={'p-2 py-3 gap-2'}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Crown className="w-5 h-5" />
@@ -189,15 +190,15 @@ const MemberRoleUpdateModal = ({
                 onValueChange={setSelectedRole}
                 disabled={isSubmitting}
               >
-                <SelectTrigger className="h-14">
+                <SelectTrigger className="h-16 w-full">
                   <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
                   {roles.map((role) => {
                     const IconComponent = role.icon;
                     return (
-                      <SelectItem 
-                        key={role.value} 
+                      <SelectItem
+                        key={role.value}
                         value={role.value}
                         disabled={role.value === currentRole}
                         className="cursor-pointer"
@@ -224,7 +225,7 @@ const MemberRoleUpdateModal = ({
 
           {/* Role Permissions Preview */}
           {selectedRoleData && (
-            <Card>
+            <Card className={'p-4 gap-2'}>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <CheckCircle2 className="w-5 h-5 text-green-600" />
@@ -235,7 +236,7 @@ const MemberRoleUpdateModal = ({
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {selectedRoleData.permissions.map((permission, index) => (
                     <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-800">
                       <div className="flex items-center justify-center w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/20">
@@ -256,7 +257,7 @@ const MemberRoleUpdateModal = ({
             <Alert className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-900/10">
               <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
               <AlertDescription className="text-amber-800 dark:text-amber-200">
-                <strong>Important:</strong> Changing the member's role will immediately update their permissions. 
+                <strong>Important:</strong> Changing the member's role will immediately update their permissions.
                 The member will be notified via email about this change.
               </AlertDescription>
             </Alert>

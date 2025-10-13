@@ -4,6 +4,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import {
+  IconWorld,
+  IconPalette,
+  IconBrandFacebook,
+  IconBrandInstagram,
+  IconBriefcase,
+  IconBrandTwitter,
+  IconBrandYoutube,
+  IconNotes,
+} from "@tabler/icons-react";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -201,76 +211,69 @@ export default function Step5({ goNext, goBack }) {
     }
   };
   return (
-    <div className="h-full bg-white rounded border shadow-navy border-navy px-10 flex flex-col justify-between py-2 space-y-2">
-      <div className="flex items-center justify-between">
-        <p className="text-navy text-lg">Connect your organization's online presence</p>
-        <div className="flex items-center space-x-4">
-          <div className="text-sm text-gray text-center">
-            <span className="text-red">*</span> At least one link or website required
-          </div>
-          {/* Info Button */}
-          <Dialog open={showGuidelinesDialog} onOpenChange={setShowGuidelinesDialog}>
-            <DialogTrigger asChild>
-              <button
-                className="w-8 h-8 cursor-pointer rounded-full bg-blue-100 hover:bg-blue-200 border border-blue-300 flex items-center justify-center text-blue-600 hover:text-blue-700 transition-colors"
-                type="button"
-                title="View Guidelines"
-              >
-                <IconInfoSquareRounded />
-              </button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md">
-              <DialogHeader>
-                <DialogTitle className="text-navy">Social Media Guidelines</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <ul className="text-sm text-blue-800 space-y-2">
-                    <li>• Enter complete URLs including https://</li>
-                    <li>• At least one social media link or organization website is required</li>
-                    <li>• Make sure all links are publicly accessible</li>
-                    <li>• Upload your organization logo (JPEG, PNG, or GIF, max 5MB)</li>
-                    <li>• These links will be used to verify your organization's presence</li>
-                    <li>• Links help establish credibility and authenticity</li>
-                    <li>• You can update these links later in your organization settings</li>
-                  </ul>
-                </div>
-                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <h4 className="font-medium text-green-900 mb-2">Tips</h4>
-                  <ul className="text-sm text-green-800 space-y-1">
-                    <li>• Add your official website first if available</li>
-                    <li>• LinkedIn is highly recommended for professional organizations</li>
-                    <li>• Include platforms where you're most active</li>
-                    <li>• Ensure all profiles are up-to-date and professional</li>
-                    <li>• Use consistent branding across all platforms</li>
-                  </ul>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+    <div className="h-full bg-background rounded border border-border shadow flex flex-col justify-between py-4 sm:py-6 md:py-8 space-y-4 w-full px-2 sm:px-4 md:px-10">
+      <div className="flex gap-4 justify-between items-start flex-wrap">
+        <p className="text-foreground text-sm sm:text-lg flex-1">Connect your organization's online presence</p>
+        <div className="text-sm text-muted-foreground text-center flex items-start">
+          <span className="text-destructive">*</span> At least one link or website required
         </div>
+        <Dialog open={showGuidelinesDialog} onOpenChange={setShowGuidelinesDialog}>
+          <DialogTrigger asChild>
+            <Button type="button" title="View Guidelines" variant={'icon'}>
+              <IconInfoSquareRounded />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-bold text-primary">Social Media Guidelines</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-6 mt-4">
+              <div className="p-4 bg-primary/5 rounded-lg border-l-4 border-primary">
+                <ul className="text-sm text-primary space-y-1">
+                  <li>• Enter complete URLs including https://</li>
+                  <li>• At least one social media link or organization website is required</li>
+                  <li>• Make sure all links are publicly accessible</li>
+                  <li>• Upload your organization logo (JPEG, PNG, or GIF, max 5MB)</li>
+                  <li>• These links will be used to verify your organization's presence</li>
+                  <li>• Links help establish credibility and authenticity</li>
+                  <li>• You can update these links later in your organization settings</li>
+                </ul>
+              </div>
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <h4 className="font-medium text-green-900 mb-2">Tips</h4>
+                <ul className="text-sm text-green-800 space-y-1">
+                  <li>• Add your official website first if available</li>
+                  <li>• LinkedIn is highly recommended for professional organizations</li>
+                  <li>• Include platforms where you're most active</li>
+                  <li>• Ensure all profiles are up-to-date and professional</li>
+                  <li>• Use consistent branding across all platforms</li>
+                </ul>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      <Card className="border-2 border-navy shadow-sm bg-white py-2">
-        <CardContent className="px-6 py-1">
+      <Card className="shadow-sm bg-background py-1 border-0 p-0">
+        <CardContent className="py-2 sm:py-4 sm:space-y-6">
           <div className="space-y-2">
             {/* Organization Website and Logo Section */}
             <div className="space-y-3">
               <div className="border-b pb-2">
-                <h3 className="text-navy font-semibold text-lg">Organization Details</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="text-primary font-semibold text-lg">Organization Details</h3>
+                <p className="text-sm text-muted-foreground">
                   Add your official website and organization logo
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Organization Website */}
                 <div className="space-y-2">
                   <Label
                     htmlFor="website"
-                    className="text-navy font-semibold text-base flex items-center gap-2"
+                    className="text-foreground font-semibold text-base flex items-center gap-2"
                   >
-                    <span className="text-blue-600">🌐</span> Organization Website *
+                    <IconWorld className="text-primary w-5 h-5" /> Organization Website *
                   </Label>
                   <Input
                     type="url"
@@ -279,17 +282,17 @@ export default function Step5({ goNext, goBack }) {
                     value={formData.website || ""}
                     onChange={handleChange}
                     placeholder="https://www.yourorganization.com"
-                    className="h-11 border-gray-300 focus:border-navy focus:ring-navy"
+                    className="h-11 border-border focus:border-primary focus:ring-primary"
                   />
                   {formData.website && !isValidUrl(formData.website) && (
-                    <p className="text-sm text-red-500 mt-1">Please enter a valid website URL</p>
+                    <p className="text-sm text-destructive mt-1">Please enter a valid website URL</p>
                   )}
                 </div>
 
                 {/* Logo Upload */}
                 <div className="space-y-2">
-                  <Label className="text-navy font-semibold text-base flex items-center gap-2">
-                    <span className="text-orange-600">🎨</span> Organization Logo
+                  <Label className="text-foreground font-semibold text-base flex items-center gap-2">
+                    <IconPalette className="text-primary w-5 h-5" /> Organization Logo
                   </Label>
                   <div className="space-y-2">
                     {/* File Selection */}
@@ -350,9 +353,8 @@ export default function Step5({ goNext, goBack }) {
                       )}
                     </div>
                   </div>
-                  <p className="text-xs text-gray-500">
-                    Upload JPEG, PNG, or GIF. Max size: 5MB. Click "Upload Logo" after selecting
-                    file.
+                  <p className="text-xs text-muted-foreground">
+                    Upload JPEG, PNG, or GIF. Max size: 5MB. Click "Upload Logo" after selecting file.
                   </p>
                 </div>
               </div>
@@ -361,18 +363,18 @@ export default function Step5({ goNext, goBack }) {
             {/* Social Media Section */}
             <div className="space-y-2">
               <div className="border-b pb-2">
-                <h3 className="text-navy font-semibold text-lg">Social Media & Online Presence</h3>
-                <p className="text-sm text-gray-600">Add your organization's social media links</p>
+                <h3 className="text-primary font-semibold text-lg">Social Media & Online Presence</h3>
+                <p className="text-sm text-muted-foreground">Add your organization's social media links</p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 space-x-6 space-y-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-x-0 sm:gap-x-6 gap-y-4">
                 {/* Facebook */}
                 <div className="space-y-1">
                   <Label
                     htmlFor="facebook"
-                    className="text-navy font-semibold text-base flex items-center gap-1"
+                    className="text-foreground font-semibold text-base flex items-center gap-1"
                   >
-                    <span className="text-blue-600">📘</span> Facebook
+                    <IconBrandFacebook className="text-primary w-5 h-5" /> Facebook
                   </Label>
                   <Input
                     type="url"
@@ -392,9 +394,9 @@ export default function Step5({ goNext, goBack }) {
                 <div className="space-y-1">
                   <Label
                     htmlFor="instagram"
-                    className="text-navy font-semibold text-base flex items-center gap-1"
+                    className="text-foreground font-semibold text-base flex items-center gap-1"
                   >
-                    <span className="text-pink-500">📷</span> Instagram
+                    <IconBrandInstagram className="text-primary w-5 h-5" /> Instagram
                   </Label>
                   <Input
                     type="url"
@@ -414,9 +416,9 @@ export default function Step5({ goNext, goBack }) {
                 <div className="space-y-1">
                   <Label
                     htmlFor="linkedin"
-                    className="text-navy font-semibold text-base flex items-center gap-1"
+                    className="text-foreground font-semibold text-base flex items-center gap-1"
                   >
-                    <span className="text-blue-700">💼</span> LinkedIn
+                    <IconBriefcase className="text-primary w-5 h-5" /> LinkedIn
                   </Label>
                   <Input
                     type="url"
@@ -436,9 +438,9 @@ export default function Step5({ goNext, goBack }) {
                 <div className="space-y-1">
                   <Label
                     htmlFor="twitter"
-                    className="text-navy font-semibold text-base flex items-center gap-1"
+                    className="text-foreground font-semibold text-base flex items-center gap-1"
                   >
-                    <span className="text-black">🐦</span> Twitter/X
+                    <IconBrandTwitter className="text-primary w-5 h-5" /> Twitter/X
                   </Label>
                   <Input
                     type="url"
@@ -458,9 +460,9 @@ export default function Step5({ goNext, goBack }) {
                 <div className="space-y-1">
                   <Label
                     htmlFor="youtube"
-                    className="text-navy font-semibold text-base flex items-center gap-1"
+                    className="text-foreground font-semibold text-base flex items-center gap-1"
                   >
-                    <span className="text-red-600">📺</span> YouTube
+                    <IconBrandYoutube className="text-primary w-5 h-5" /> YouTube
                   </Label>
                   <Input
                     type="url"
@@ -480,9 +482,9 @@ export default function Step5({ goNext, goBack }) {
                 <div className="space-y-1">
                   <Label
                     htmlFor="blog"
-                    className="text-navy font-semibold text-base flex items-center gap-1"
+                    className="text-foreground font-semibold text-base flex items-center gap-1"
                   >
-                    <span className="text-orange-600">📝</span> Blog
+                    <IconNotes className="text-primary w-5 h-5" /> Blog
                   </Label>
                   <Input
                     type="url"
@@ -505,11 +507,12 @@ export default function Step5({ goNext, goBack }) {
         </CardContent>
       </Card>
 
-      <div className="flex justify-end mt-2 space-x-4">
-        <Button variant="outline" onClick={() => goBack()}>
+      <div className="flex flex-col sm:flex-row justify-end mt-4 gap-2 sm:gap-4">
+        <Button variant="outline" className="w-full sm:w-auto" onClick={() => goBack()}>
           Back
         </Button>
         <Button
+          className="w-full sm:w-auto"
           onClick={() => {
             if (!validateForm()) {
               return;
@@ -520,6 +523,6 @@ export default function Step5({ goNext, goBack }) {
           Next
         </Button>
       </div>
-    </div>
+    </div >
   );
 }

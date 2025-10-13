@@ -20,14 +20,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { 
-  MoreHorizontal, 
-  Edit, 
-  Trash2, 
-  Mail, 
-  MailX, 
-  Shield, 
-  ChevronLeft, 
+import {
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Mail,
+  MailX,
+  Shield,
+  ChevronLeft,
   ChevronRight,
   ArrowUpDown,
   ArrowUp,
@@ -77,7 +77,7 @@ const MemberTable = ({
   const getStatusBadgeVariant = (status) => {
     const variants = {
       active: 'default',
-      pending: 'secondary',
+      pending: 'destructive',
       inactive: 'outline'
     };
     return variants[status] || 'outline';
@@ -110,8 +110,8 @@ const MemberTable = ({
     if (sortConfig.field !== field) {
       return <ArrowUpDown className="w-4 h-4" />;
     }
-    return sortConfig.direction === 'asc' ? 
-      <ArrowUp className="w-4 h-4" /> : 
+    return sortConfig.direction === 'asc' ?
+      <ArrowUp className="w-4 h-4" /> :
       <ArrowDown className="w-4 h-4" />;
   };
 
@@ -156,7 +156,7 @@ const MemberTable = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow>
@@ -238,31 +238,31 @@ const MemberTable = ({
                   </Avatar>
                   <div>
                     <div className="font-medium">{member.name}</div>
-                    <div className="text-sm text-gray-500">{member.email}</div>
+                    <div className="text-sm text-muted-foreground">{member.email}</div>
                     {member.phone_number && (
-                      <div className="text-xs text-gray-400">{member.phone_number}</div>
+                      <div className="text-xs text-muted-foreground">{member.phone_number}</div>
                     )}
                   </div>
                 </div>
               </TableCell>
               <TableCell>
-                <Badge variant={getRoleBadgeVariant(member.organization.role)}>
+                <Badge variant={getRoleBadgeVariant(member.organization.role)} className={'capitalize'}>
                   {member.organization.role}
                 </Badge>
               </TableCell>
               <TableCell>
-                <Badge variant={getStatusBadgeVariant(member.organization.status)}>
+                <Badge variant={getStatusBadgeVariant(member.organization.status)} className={'capitalize'}>
                   {member.organization.status}
                 </Badge>
               </TableCell>
               <TableCell>
-                <Badge variant={member.isVerified ? 'default' : 'secondary'}>
+                <Badge variant={member.isVerified ? 'default' : 'destructive'}>
                   {member.isVerified ? 'Verified' : 'Unverified'}
                 </Badge>
               </TableCell>
               <TableCell>
-                {member.organization.joinedAt ? 
-                  formatDate(member.organization.joinedAt) : 
+                {member.organization.joinedAt ?
+                  formatDate(member.organization.joinedAt) :
                   formatDate(member.createdAt)
                 }
               </TableCell>
@@ -283,14 +283,14 @@ const MemberTable = ({
                         <DropdownMenuSeparator />
                       </>
                     )}
-                    
+
                     {member.organization.status === 'pending' && (
                       <>
                         <DropdownMenuItem onClick={() => onResendInvitation(member._id)}>
                           <Mail className="w-4 h-4 mr-2" />
                           Resend Invitation
                         </DropdownMenuItem>
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           onClick={() => onCancelInvitation(member._id)}
                           className="text-destructive"
                         >
@@ -299,11 +299,11 @@ const MemberTable = ({
                         </DropdownMenuItem>
                       </>
                     )}
-                    
+
                     {canManageMember(member) && member.organization.status !== 'pending' && (
                       <>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           onClick={() => handleRemoveMember(member)}
                           className="text-destructive"
                         >
