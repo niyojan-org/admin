@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { Separator } from "@/components/ui/separator";
 
 export default function EventCard({ event, organization }) {
   if (!event) return null;
@@ -43,139 +44,106 @@ export default function EventCard({ event, organization }) {
   const ModeIcon = modeBadge.icon;
 
   return (
-    <Card className="mb-6 overflow-hidden">
-      {/* Banner Image */}
-      {event.bannerImage && (
-        <div className="relative h-48 sm:h-56 md:h-64 w-full">
-          <Image
-            src={event.bannerImage}
-            alt={event.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
-            priority
-          />
-          <div className="absolute inset-0 bg-black/20" />
-
-          {/* Action Buttons Overlay */}
-          <div className="absolute top-4 right-4 flex gap-2">
-            <Button size="sm" variant="outline" className="hidden sm:flex" asChild>
-              <Link href={`/event/share/${event._id}`}>
-                <Share2 className="w-4 h-4 mr-1" />
-                Share
-              </Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link href={`/event/edit/${event._id}`}>
-                <Edit className="w-4 h-4 sm:mr-1" />
-                <span className="hidden sm:inline">Edit</span>
-              </Link>
-            </Button>
-          </div>
-        </div>
-      )}
-
-      <CardContent className="p-4 sm:p-6">
-        {/* Status and Mode Badges */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
-          <Badge variant={modeBadge.variant}>
-            <ModeIcon className="w-3 h-3 mr-1" />
-            {modeBadge.label}
-          </Badge>
-          {event.category && (
-            <Badge variant="outline">{event.category}</Badge>
+    <Card className="mb-2 md:mb-3 overflow-hidden shadow-md">
+      {/* Banner Image with Overlay Content */}
+      <div className="relative">
+        {/* Background Image */}
+        <div className="relative h-60 sm:h-64 w-full">
+          {event.bannerImage ? (
+            <Image
+              src={event.bannerImage}
+              alt={event.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+              priority
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-primary/30" />
           )}
-          {event.type && (
-            <Badge variant="outline">{event.type}</Badge>
-          )}
-          {event.featured && <Badge variant="warning">Featured</Badge>}
-          {event.fraudulent && <Badge variant="destructive">Fraudulent</Badge>}
+          {/* Dark gradient overlay for better text visibility */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20" />
         </div>
 
-        {/* Title and Organization */}
-        <div className="space-y-2">
-          <div className="flex items-start gap-3">
-            {organization?.logo && (
-              <img 
-                src={organization.logo} 
-                alt={organization.name} 
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full flex-shrink-0 object-cover" 
-              />
+        {/* Content Overlay */}
+        <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6">
+          {/* Status and Mode Badges */}
+          <div className="flex flex-wrap gap-2 mb-3">
+            <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
+            <Badge variant={modeBadge.variant}>
+              <ModeIcon className="w-3 h-3 mr-1" />
+              {modeBadge.label}
+            </Badge>
+            {event.category && (
+              <Badge variant="outline" className="bg-accent-foreground">{event.category}</Badge>
             )}
-            <div className="flex-1 min-w-0">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold leading-tight break-words">
-                {event.title}
-              </h1>
-              {organization && (
-                <p className="text-sm sm:text-base text-muted-foreground mt-1 break-words">
-                  by <span className="font-medium text-primary">{organization.name}</span>
-                  {organization.verified && (
-                    <span className="ml-1 text-blue-500">✓</span>
-                  )}
-                </p>
+            {event.featured && <Badge variant="warning">Featured</Badge>}
+          </div>
+
+          {/* Title and Organization */}
+          <div className="space-y-1 mb-3">
+            <div className="flex items-start gap-3">
+              {organization?.logo && (
+                <img 
+                  src={organization.logo} 
+                  alt={organization.name} 
+                  className="w-10 h-10 rounded-full flex-shrink-0 object-cover border-2 border-white/80" 
+                />
+              )}
+              <div className="flex-1 min-w-0">
+                <h1 className="text-xl sm:text-2xl font-bold leading-tight break-words text-white">
+                  {event.title}
+                </h1>
+                {organization && (
+                  <p className="text-sm text-white/80 break-words">
+                    by <span className="font-medium text-white">{organization.name}</span>
+                    {organization.verified && (
+                      <span className="ml-1 text-blue-400">✓</span>
+                    )}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Tags - Limited to 3 for overlay */}
+          {event.tags && event.tags.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mb-2">
+              {event.tags.slice(0, 3).map((tag, index) => (
+                <Badge key={index} variant="outline" className="text-xs bg-black/50 text-white border-white/20">
+                  #{tag}
+                </Badge>
+              ))}
+              {event.tags.length > 3 && (
+                <Badge variant="outline" className="text-xs bg-black/50 text-white border-white/20">
+                  +{event.tags.length - 3} more
+                </Badge>
               )}
             </div>
-          </div>
+          )}
         </div>
+      </div>
 
-        {/* Description */}
-        {event.description && (
-          <p className="text-muted-foreground mt-4 text-sm sm:text-base leading-relaxed line-clamp-3">
-            {event.description}
-          </p>
-        )}
+        <Separator />
 
-        {/* Tags */}
-        {event.tags && event.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-4">
-            {event.tags.map((tag, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
-                #{tag}
-              </Badge>
-            ))}
-          </div>
-        )}
-
-        {/* Registration Period */}
-        {event.registrationStart && event.registrationEnd && (
-          <div className="mt-4 p-3 sm:p-4 bg-muted/50 rounded-lg">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4 flex-shrink-0" />
-                <span className="font-medium">Registration:</span>
-              </div>
-              <span className="sm:ml-auto text-xs sm:text-sm">
-                {new Date(event.registrationStart).toLocaleDateString('en-US', { 
-                  month: 'short', 
-                  day: 'numeric',
-                  year: 'numeric' 
-                })} - {new Date(event.registrationEnd).toLocaleDateString('en-US', { 
-                  month: 'short', 
-                  day: 'numeric',
-                  year: 'numeric' 
-                })}
-              </span>
-            </div>
-          </div>
-        )}
-
+      {/* Bottom Card Content - Stats and Other Info */}
+      <CardContent className="sm:p-3    ">
         {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mt-6 pt-4 border-t">
-          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-            <Users className="w-4 h-4 flex-shrink-0" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Users className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate">{event.totalRegistrations || 0} registered</span>
           </div>
-          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-            <Eye className="w-4 h-4 flex-shrink-0" />
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Eye className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate">{event.viewCount || 0} views</span>
           </div>
-          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-            <Calendar className="w-4 h-4 flex-shrink-0" />
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate">{event.sessions?.length || 0} sessions</span>
           </div>
-          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-            <Clock className="w-4 h-4 flex-shrink-0" />
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Clock className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate">Created {new Date(event.createdAt).toLocaleDateString()}</span>
           </div>
         </div>

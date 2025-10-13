@@ -167,7 +167,7 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-2 h-full md:grid-cols-4">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
             Overview
@@ -188,8 +188,7 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 gap-6">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <QuickActions
                 eventId={eventId}
                 isRegistrationOpen={registrationData?.isRegistrationOpen}
@@ -198,25 +197,17 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
                 requirements={requirements}
                 onStatusChange={handleStatusChange}
               />
-            </div>
-            <div className="space-y-6">
               <TimelineDisplay
                 registrationStart={registrationData?.registrationStart}
                 registrationEnd={registrationData?.registrationEnd}
                 isRegistrationOpen={registrationData?.isRegistrationOpen}
               />
-            </div>
           </div>
         </TabsContent>
 
         {/* Timeline Tab */}
         <TabsContent value="timeline" className="space-y-6">
-          <div className="grid grid-cols-1 gap-6">
-            <TimelineDisplay
-              registrationStart={registrationData?.registrationStart}
-              registrationEnd={registrationData?.registrationEnd}
-              isRegistrationOpen={registrationData?.isRegistrationOpen}
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Timeline Management</CardTitle>
@@ -235,16 +226,23 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
                 </Button>
               </CardContent>
             </Card>
+						<TimelineDisplay
+              registrationStart={registrationData?.registrationStart}
+              registrationEnd={registrationData?.registrationEnd}
+              isRegistrationOpen={registrationData?.isRegistrationOpen}
+            />
           </div>
         </TabsContent>
 
         {/* Statistics Tab */}
         <TabsContent value="statistics" className="space-y-6">
+					<div className="grid grid-cols-1 gap-6">
           <RegistrationStats
             statistics={registrationData?.statistics}
             tickets={registrationData?.tickets}
             eventId={eventId}
           />
+					</div>
         </TabsContent>
 
         {/* Settings Tab */}

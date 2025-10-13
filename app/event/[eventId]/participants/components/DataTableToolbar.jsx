@@ -29,7 +29,7 @@ export default function DataTableToolbar({
       <div className="flex w-full justify-between items-center">
         <h1 className="text-2xl font-bold">Participants</h1>
         <Button size="sm" variant="outline" onClick={handleExport} className="flex items-center gap-2">
-          <Download className="w-4 h-4 mr-1" /> Export CSV
+          <Download className="w-4 h-4" /> Export CSV
         </Button>
       </div>
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4 w-full">

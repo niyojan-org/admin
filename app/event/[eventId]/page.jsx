@@ -10,7 +10,6 @@ import Ticket from "./components/Ticket";
 import Sessions from "./components/Sessions";
 import InputField from "./components/InputField";
 import Referrals from "./components/Referrals";
-import { QuickActions } from "./components/QuickActions";
 import ProtectedComp from "@/components/ProtectedComp";
 import GuestSpeaker from "./components/GuestSpeaker";
 import { RegistrationDashboard } from "./components/registration";
@@ -92,13 +91,20 @@ const EventPage = () => {
 
   return (
     <div className="container mx-auto space-y-6">
-      {/* Event Header */}
-      <EventHeader event={event} organization={organization} />
+      {/* Event Header with Quick Actions */}
+      <EventHeader event={event} organization={organization} setEventData={setEventData} />
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1  lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Main Content */}
-        <div className="lg:col-span-2 space-y-6 order-2 sm:order-1">
+        <div className="lg:col-span-2 space-y-6 order-1 lg:order-1">
+					
+					{/* Registration Timeline */}
+          <ProtectedComp roles={["admin", "owner", "manager"]}>
+            <RegistrationDashboard eventId={event._id} />
+            {/* <RegistrationStats eventId={event._id} /> */}
+          </ProtectedComp>
+
           {/* Ticket */}
           <Ticket eventId={event._id} />
 
@@ -117,11 +123,7 @@ const EventPage = () => {
         </div>
 
         {/* Right Column - Sidebar */}
-        <div className="space-y-6 order-1 sm:order-2">
-
-
-          {/* Quick Actions */}
-          <QuickActions event={event} setEventData={setEventData} />
+        <div className="space-y-6 order-2 lg:order-2">
 
           <Card>
             <CardHeader>
@@ -136,7 +138,6 @@ const EventPage = () => {
               </Button>
             </CardContent>
           </Card>
-
 
           {/* Announcement */}
           <ProtectedComp roles={["admin", "owner", "manager"]}>
@@ -155,17 +156,11 @@ const EventPage = () => {
             </Card>
             {/* <Announcement eventId={event._id} /> */}
           </ProtectedComp>
+
           {/* Coupons */}
           <ProtectedComp roles={["admin", "owner", "manager"]}>
             <Coupons eventId={event._id} />
           </ProtectedComp>
-
-          {/* Registration Timeline */}
-          <ProtectedComp roles={["admin", "owner", "manager"]}>
-            <RegistrationDashboard eventId={event._id} />
-            {/* <RegistrationStats eventId={event._id} /> */}
-          </ProtectedComp>
-
 
         </div>
       </div>

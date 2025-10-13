@@ -30,6 +30,8 @@ import api from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import ConfirmDialog from "./ConfirmParticipantDialog";
 import Link from "next/link";
+import ExportDialog from "./ExportDialog";
+import { toast } from "sonner"; // Replace the toast import with Sonner
 
 function getDynamicFieldColumns(data, inputFields) {
   // Collect all unique dynamic field keys
@@ -98,6 +100,8 @@ const DataTable = ({ eventId }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [dialogParticipant, setDialogParticipant] = useState(null);
 	const [maxWidth, setMaxWidth] = useState(0);
+  const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   // Debounce search
   useEffect(() => {
@@ -218,9 +222,18 @@ const DataTable = ({ eventId }) => {
   };
 
   // Handler for export button
-  const handleExport = async () => {
+  const handleExport = async (exportOptions) => {
+    setIsExporting(true);
     try {
-      const res = await api.get(`/event/admin/participant/${eventId}/export`, {
+      // Build query string from export options
+      const queryParams = new URLSearchParams();
+      Object.entries(exportOptions).forEach(([key, value]) => {
+        if (value !== undefined) {
+          queryParams.append(key, value);
+        }
+      });
+      
+      const res = await api.get(`/event/admin/participant/${eventId}/export?${queryParams.toString()}`, {
         responseType: "blob",
       });
       const blob = res.data;
@@ -232,9 +245,18 @@ const DataTable = ({ eventId }) => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
+      
+      setExportDialogOpen(false);
+      toast.success("Export successful", {
+        description: "Your participant data has been exported to CSV."
+      });
     } catch (e) {
-      console.log(e)
-      alert("Failed to export CSV");
+      console.log(e);
+      toast.error("Export failed", {
+        description: "There was a problem exporting your data."
+      });
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -271,7 +293,7 @@ const DataTable = ({ eventId }) => {
         setTicketType={setTicketType}
         paymentStatus={paymentStatus}
         setPaymentStatus={setPaymentStatus}
-        handleExport={handleExport}
+        handleExport={() => setExportDialogOpen(true)}
       />
       <ConfirmDialog
         dialogParticipant={dialogParticipant}
@@ -279,11 +301,18 @@ const DataTable = ({ eventId }) => {
         eventId={eventId}
         fetchData={fetchData}
       />
+      <ExportDialog 
+        open={exportDialogOpen}
+        onOpenChange={setExportDialogOpen}
+        onExport={handleExport}
+        isExporting={isExporting}
+      />
       <Button className="md:w-fit sm:w-auto"  asChild>
-				<Link href={`/event/${eventId}/participants/view`}>
-					Get Full View
-				</Link>
-			</Button>
+        <Link href={`/event/${eventId}/participants/view`}>
+          Get Full View
+        </Link>
+      </Button>
+
       <div style={{ maxWidth }} className="[&>div]:h-96 overflow-x-auto border rounded-b">
         <Table className="">
           <TableHeader className="bg-background/90 sticky top-0 z-10 backdrop-blur-xs">
