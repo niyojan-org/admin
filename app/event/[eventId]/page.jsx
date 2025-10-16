@@ -90,7 +90,7 @@ const EventPage = () => {
   const { event, organization } = eventData;
 
   return (
-    <div className="container mx-auto space-y-6">
+    <div className="container mx-auto space-y-6 h-full">
       {/* Event Header with Quick Actions */}
       <EventHeader event={event} organization={organization} setEventData={setEventData} />
 
@@ -98,8 +98,8 @@ const EventPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Main Content */}
         <div className="lg:col-span-2 space-y-6 order-1 lg:order-1">
-					
-					{/* Registration Timeline */}
+
+          {/* Registration Timeline */}
           <ProtectedComp roles={["admin", "owner", "manager"]}>
             <RegistrationDashboard eventId={event._id} />
             {/* <RegistrationStats eventId={event._id} /> */}

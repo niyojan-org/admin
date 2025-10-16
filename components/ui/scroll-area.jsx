@@ -8,16 +8,21 @@ import { cn } from "@/lib/utils"
 function ScrollArea({
   className,
   children,
-  ...props
+  innerClassName, // Destructure it here
+  ...props // Now props won't include innerClassName
 }) {
+  console.log('props:', props);
+  console.log('innerClassName:', innerClassName);
   return (
-    <ScrollAreaPrimitive.Root data-slot="scroll-area" className={cn("relative overflow-hidden", className)} {...props}>
+    <ScrollAreaPrimitive.Root
+      data-slot="scroll-area"
+      className={cn("relative overflow-hidden", className)}
+      {...props} // Now this is safe
+    >
       <ScrollAreaPrimitive.Viewport
         data-slot="scroll-area-viewport"
-        className="focus-visible:ring-ring/50 h-full w-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1">
-        <div className="max-w-screen">
-          {children}
-        </div>
+        className={cn("focus-visible:ring-ring/50 h-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1", innerClassName)}> {/* Use innerClassName directly */}
+        {children}
       </ScrollAreaPrimitive.Viewport>
       <ScrollBar />
       <ScrollAreaPrimitive.Corner />

@@ -99,7 +99,7 @@ const DataTable = ({ eventId }) => {
   const [event, setEvent] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [dialogParticipant, setDialogParticipant] = useState(null);
-	const [maxWidth, setMaxWidth] = useState(0);
+  const [maxWidth, setMaxWidth] = useState(0);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -117,16 +117,16 @@ const DataTable = ({ eventId }) => {
     fetchEvent(eventId).then(setEvent);
   }, [eventId]);
 
-    useEffect(() => {
-  const handleResize = () => {
-    // Subtract some padding to account for page margins (adjust as needed)
-    const padding = 48; // 24px on each side (or adjust based on your layout)
-    setMaxWidth(window.innerWidth - padding);
-  };
-  handleResize();
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
+  useEffect(() => {
+    const handleResize = () => {
+      // Subtract some padding to account for page margins (adjust as needed)
+      const padding = 48; // 24px on each side (or adjust based on your layout)
+      setMaxWidth(window.innerWidth - padding);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -232,7 +232,7 @@ const DataTable = ({ eventId }) => {
           queryParams.append(key, value);
         }
       });
-      
+
       const res = await api.get(`/event/admin/participant/${eventId}/export?${queryParams.toString()}`, {
         responseType: "blob",
       });
@@ -245,7 +245,7 @@ const DataTable = ({ eventId }) => {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
-      
+
       setExportDialogOpen(false);
       toast.success("Export successful", {
         description: "Your participant data has been exported to CSV."
@@ -261,21 +261,21 @@ const DataTable = ({ eventId }) => {
   };
 
   const LoadingSkeleton = () => (
-		<>
-			{Array.from({ length: 10 }).map((_, i) => (
-				<TableRow key={i}>
-					{Array.from({ length: columns.length }).map((_, j) => (
-						<TableCell key={j}>
-							<Skeleton className="h-4 w-full rounded bg-muted relative overflow-hidden">
-								<span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent"></span>
-							</Skeleton>
-						</TableCell>
-					))}
-				</TableRow>
-			))}
-		</>
-	);
-	
+    <>
+      {Array.from({ length: 10 }).map((_, i) => (
+        <TableRow key={i}>
+          {Array.from({ length: columns.length }).map((_, j) => (
+            <TableCell key={j}>
+              <Skeleton className="h-4 w-full rounded bg-muted relative overflow-hidden">
+                <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent"></span>
+              </Skeleton>
+            </TableCell>
+          ))}
+        </TableRow>
+      ))}
+    </>
+  );
+
   return (
     <Card className="w-full">
 
@@ -301,13 +301,13 @@ const DataTable = ({ eventId }) => {
         eventId={eventId}
         fetchData={fetchData}
       />
-      <ExportDialog 
+      <ExportDialog
         open={exportDialogOpen}
         onOpenChange={setExportDialogOpen}
         onExport={handleExport}
         isExporting={isExporting}
       />
-      <Button className="md:w-fit sm:w-auto"  asChild>
+      <Button className="md:w-fit sm:w-auto" asChild>
         <Link href={`/event/${eventId}/participants/view`}>
           Get Full View
         </Link>
@@ -357,9 +357,9 @@ const DataTable = ({ eventId }) => {
             ) : data.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={table.getAllLeafColumns().length}>
-                    <div className="h-24 flex items-center justify-center text-muted-foreground">
-                        No participants found.
-                    </div>
+                  <div className="h-24 flex items-center justify-center text-muted-foreground">
+                    No participants found.
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (

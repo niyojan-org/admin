@@ -7,15 +7,10 @@ function Table({
   ...props
 }) {
   return (
-    <div className="relative w-full overflow-auto">
-      <table
-        data-slot="table"
-        className={cn("w-full caption-bottom text-sm", className)}
-        {...props} />
-    </div>
+    <table className={cn("w-full caption-bottom text-sm overflow-x-scroll", className)} {...props}>
+    </table>
   );
 }
-
 function TableHeader({
   className,
   ...props
