@@ -11,7 +11,7 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table";
-import { confirmParticipantData, fetchParticipants } from "./participantApi";
+import { fetchParticipants } from "./participantApi";
 import { fetchEvent } from "./useEvent";
 import {
   useReactTable,
@@ -20,18 +20,14 @@ import {
   getSortedRowModel,
   flexRender,
 } from "@tanstack/react-table";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import ParticipantDetailsCard from "./ParticipantDetailsCard";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import moment from "moment";
-import { Download } from "lucide-react";
 import api from "@/lib/api";
 import { Skeleton } from "@/components/ui/skeleton";
 import ConfirmDialog from "./ConfirmParticipantDialog";
-import Link from "next/link";
 import ExportDialog from "./ExportDialog";
 import { toast } from "sonner"; // Replace the toast import with Sonner
+import { ChevronDown, ChevronUp } from "lucide-react"
+
 
 function getDynamicFieldColumns(data, inputFields) {
   // Collect all unique dynamic field keys
@@ -99,7 +95,6 @@ const DataTable = ({ eventId }) => {
   const [event, setEvent] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [dialogParticipant, setDialogParticipant] = useState(null);
-  const [maxWidth, setMaxWidth] = useState(0);
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
 
@@ -116,17 +111,6 @@ const DataTable = ({ eventId }) => {
     if (!eventId) return;
     fetchEvent(eventId).then(setEvent);
   }, [eventId]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      // Subtract some padding to account for page margins (adjust as needed)
-      const padding = 48; // 24px on each side (or adjust based on your layout)
-      setMaxWidth(window.innerWidth - padding);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -277,8 +261,7 @@ const DataTable = ({ eventId }) => {
   );
 
   return (
-    <Card className="w-full">
-
+    <Card className="w-full space-y-4">
       <DataTableToolbar
         table={table}
         search={search}
@@ -295,108 +278,111 @@ const DataTable = ({ eventId }) => {
         setPaymentStatus={setPaymentStatus}
         handleExport={() => setExportDialogOpen(true)}
       />
+
       <ConfirmDialog
         dialogParticipant={dialogParticipant}
         setDialogParticipant={setDialogParticipant}
         eventId={eventId}
         fetchData={fetchData}
       />
+
       <ExportDialog
         open={exportDialogOpen}
         onOpenChange={setExportDialogOpen}
         onExport={handleExport}
         isExporting={isExporting}
       />
-      <Button className="md:w-fit sm:w-auto" asChild>
-        <Link href={`/event/${eventId}/participants/view`}>
-          Get Full View
-        </Link>
-      </Button>
 
-      <div style={{ maxWidth }} className="[&>div]:h-96 overflow-x-auto border rounded-b">
-        <Table className="">
-          <TableHeader className="bg-background/90 sticky top-0 z-10 backdrop-blur-xs">
-            <TableRow className="hover:bg-transparent">
-              {table.getHeaderGroups()[0].headers.map((header) => (
-                <TableHead
-                  key={header.id}
-                  onClick={() => {
-                    if (header.column.getCanSort()) {
-                      table.setSorting([
-                        {
-                          id: header.column.id,
-                          desc:
-                            !header.column.getIsSorted() ||
-                            header.column.getIsSorted() === "asc",
-                        },
-                      ]);
-                    }
-                  }}
-                  className={
-                    header.column.getCanSort()
-                      ? "cursor-pointer select-none"
-                      : ""
-                  }
-                >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                  {header.column.getIsSorted()
-                    ? header.column.getIsSorted() === "desc"
-                      ? " ↓"
-                      : " ↑"
-                    : ""}
-                </TableHead>
-              ))}
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {loading ? (
-              <LoadingSkeleton />
-            ) : data.length === 0 ? (
-              <TableRow>
-                <TableCell colSpan={table.getAllLeafColumns().length}>
-                  <div className="h-24 flex items-center justify-center text-muted-foreground">
-                    No participants found.
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : (
-              table.getRowModel().rows.map((row) => {
-                const participant = row.original;
-                const isPending = participant.status === "pending";
-                return (
-                  <TableRow
-                    key={row.id}
-                    className={isPending ? "bg-destructive/20 hover:bg-destructive/30 cursor-pointer" : "cursor-pointer"}
-                    onClick={() => setDialogParticipant(participant)}
+      <Card className="w-full overflow-hidden">
+        <div className="overflow-x-auto h-96 border rounded">
+          <Table className="w-full">
+            <TableHeader className="bg-card sticky top-0 z-10">
+              <TableRow className="hover:bg-transparent border-b">
+                {table.getHeaderGroups()[0].headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    onClick={() => {
+                      if (header.column.getCanSort()) {
+                        table.setSorting([
+                          {
+                            id: header.column.id,
+                            desc: !header.column.getIsSorted() || header.column.getIsSorted() === "asc",
+                          },
+                        ])
+                      }
+                    }}
+                    className={`${
+                      header.column.getCanSort() ? "cursor-pointer select-none hover:bg-muted/70" : ""
+                    } transition-colors bg-muted/60 backdrop-blur-sm shadow-sm`}
                   >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                );
-              })
-            )}
-          </TableBody>
-        </Table>
-      </div>
+                    <div className="flex items-center gap-2">
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.column.getCanSort() && (
+                        <span className="text-xs opacity-50">
+                          {header.column.getIsSorted() === "desc" ? (
+                            <ChevronDown className="w-4 h-4" />
+                          ) : header.column.getIsSorted() === "asc" ? (
+                            <ChevronUp className="w-4 h-4" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 opacity-0" />
+                          )}
+                        </span>
+                      )}
+                    </div>
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <LoadingSkeleton />
+              ) : data.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={table.getAllLeafColumns().length}>
+                    <div className="h-32 flex items-center justify-center text-muted-foreground">
+                      <div className="text-center">
+                        <p className="font-medium">No participants found</p>
+                        <p className="text-sm">Try adjusting your filters</p>
+                      </div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                table.getRowModel().rows.map((row) => {
+                  const participant = row.original
+                  const isPending = participant.status === "pending"
+                  return (
+                    <TableRow
+                      key={row.id}
+                      className={`cursor-pointer transition-colors ${
+                        isPending ? "bg-destructive/20 hover:bg-destructive/30 cursor-pointer" : "cursor-pointer"
+                      }`}
+                      onClick={() => setDialogParticipant(participant)}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableCell key={cell.id} className="py-3 max-w-12 truncate">
+                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  )
+                })
+              )}
+            </TableBody>
+          </Table>
+        </div>
 
-      <DataTablePagination
-        pagination={pagination}
-        setPagination={setPagination}
-        dataLength={data.length}
-        total={pagination.total}
-      />
-
+        <div className="border-t bg-muted/30 p-4">
+          <DataTablePagination
+            pagination={pagination}
+            setPagination={setPagination}
+            dataLength={data.length}
+            total={pagination.total}
+          />
+        </div>
+      </Card>
     </Card>
-  );
+  )
 };
 
 export default DataTable;

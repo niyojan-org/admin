@@ -90,10 +90,6 @@ const ConfirmDialog = ({ dialogParticipant, setDialogParticipant, eventId, fetch
                     <Info label="Email" value={dialogParticipant.email} />
                     <Info label="Ticket Type" value={dialogParticipant.ticket?.type || "N/A"} />
                     <Info label="Payment Status" value={dialogParticipant.payment?.status || "Free"} />
-                    <Info
-                      label="Registered At"
-                      value={new Date(dialogParticipant.createdAt).toLocaleString()}
-                    />
                   </div>
 
                   {/* ===== PAYMENT DETAILS MOVED HERE ===== */}

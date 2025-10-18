@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { QuickActions } from "./QuickActions";
 
 const EventHeader = ({ event, organization, setEventData }) => {
   const getStatusBadge = (status, isPublished, isBlocked) => {
@@ -114,11 +113,6 @@ const EventHeader = ({ event, organization, setEventData }) => {
                 ))}
               </div>
             )}
-          </div>
-
-          {/* Right: Quick Actions (1 column on large screens, appears second on mobile) */}
-          <div className="lg:col-span-1 order-2">
-            <QuickActions event={event} setEventData={setEventData} />
           </div>
 
           {/* Quick Stats - Always at bottom (spans full width, appears last) */}
