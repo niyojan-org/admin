@@ -54,9 +54,9 @@ function Page() {
     }
 
     return (
-        <Card className="w-full space-y-6 flex flex-row justify-between p-0 px-2 sm:px-2 py-1">
+        <Card className="w-full h-full flex flex-row justify-between p-0 px-2 sm:px-2 pb-0">
             {/* Events Summary Section */}
-            <div className="w-full">
+            <div className="w-full py-2">
                 <div className='pb-2'>
                     <h2 className="text-2xl font-semibold tracking-tight">Event Overview</h2>
                     <p className="text-sm text-muted-foreground -mt-2">
@@ -108,7 +108,7 @@ function Page() {
             <Separator orientation='vertical' className={''} />
 
             {/* Revenue Summary Section */}
-            <div className="w-full">
+            <div className="w-full py-2">
                 <div className="pb-2">
                     <h2 className="text-2xl font-semibold tracking-tight">Revenue Overview</h2>
                     <p className="text-sm text-muted-foreground -mt-2">

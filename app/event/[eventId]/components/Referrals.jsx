@@ -154,7 +154,7 @@ export default function Referrals({ eventId }) {
     }
 
     return (
-        <Card className="w-full">
+        <Card className="w-full hidden">
             <CardHeader className="pb-4">
                 <ReferralStats
                     stats={stats}

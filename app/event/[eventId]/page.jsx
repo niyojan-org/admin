@@ -51,9 +51,6 @@ const EventPage = () => {
     }
   }, [eventId]);
 
-
-
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -92,81 +89,101 @@ const EventPage = () => {
 
   return (
     <div className="container mx-auto space-y-6 h-full">
-      {/* Event Header with Quick Actions */}
+      {/* Event Header */}
       <EventHeader event={event} organization={organization} setEventData={setEventData} />
 
-      {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Main Content */}
-        <div className="lg:col-span-2 space-y-6 order-1 lg:order-1">
+      {/* Bento Grid Layout - 6 columns with auto-fit rows */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 grid-rows-4 ">
 
-          {/* Registration Timeline */}
-          <ProtectedComp roles={["admin", "owner", "manager"]}>
+        {/* Registration Dashboard - spans 4 columns (main focus) */}
+        <ProtectedComp roles={["admin", "owner", "manager"]}>
+          <div className="md:col-span-3 lg:col-span-4 h-full">
             <RegistrationDashboard eventId={event._id} />
-            {/* <RegistrationStats eventId={event._id} /> */}
-          </ProtectedComp>
+          </div>
+        </ProtectedComp>
 
-          {/* Ticket */}
-          <Ticket eventId={event._id} />
-
-          {/* sessions */}
-          <Sessions eventId={event._id} />
-
-          {/* Custom Fields */}
-          <InputField eventId={event._id} className={'max-h-dvh'} />
-
-          <Referrals eventId={event._id} />
-
-          <GuestSpeaker eventId={event._id} />
-
-          <Benefits eventId={event._id} />
-
-        </div>
-
-        {/* Right Column - Sidebar */}
-        <div className="space-y-6 order-2 lg:order-2">
-					<QuickActions event={event} setEventData={setEventData} />
-					{/* Share Hub */}
-          <Card>
+        {/* Quick Actions - spans 2 columns (sidebar) */}
+        <div className="md:col-span-3 lg:col-span-2 h-full space-y-2 ">
+          <QuickActions event={event} setEventData={setEventData} />
+          <Card className="h-fit gap-2">
             <CardHeader>
               <CardTitle>Share Hub</CardTitle>
               <CardDescription>
                 Share your event on social media and other platforms to boost visibility and attendance.
               </CardDescription>
             </CardHeader>
-            <CardContent className={'w-full items-end flex'}>
-              <Button asChild>
-                <Link href={`/event/${event._id}/share`}> Share Event</Link>
+            <CardContent className="w-full items-end flex">
+              <Button asChild className="w-full">
+                <Link href={`/event/${event._id}/share`}>Share Event</Link>
               </Button>
             </CardContent>
           </Card>
 
-          {/* Announcement */}
+          {/* Announcement - spans 2 columns */}
           <ProtectedComp roles={["admin", "owner", "manager"]}>
-            <Card>
-              <CardHeader>
-                <CardTitle>Announcement</CardTitle>
-                <CardDescription>
-                  Make your event announcements for this event.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className={'w-full items-end flex'}>
-                <Button asChild>
-                  <Link href={`/event/${event._id}/announcements`}> Make a announcements</Link>
-                </Button>
-              </CardContent>
-            </Card>
-            {/* <Announcement eventId={event._id} /> */}
+            <div className="">
+              <Card className="h-fit gap-2">
+                <CardHeader>
+                  <CardTitle>Announcement</CardTitle>
+                  <CardDescription>
+                    Make your event announcements for this event.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="w-full items-end flex">
+                  <Button asChild className="w-full">
+                    <Link href={`/event/${event._id}/announcements`}>Make announcements</Link>
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
           </ProtectedComp>
 
-          {/* Coupons */}
-          <ProtectedComp roles={["admin", "owner", "manager"]}>
-            <Coupons eventId={event._id} />
-          </ProtectedComp>
 
         </div>
+
+        {/* Ticket - spans 4 columns */}
+        <div className="md:col-span-3 lg:col-span-4 h-full max-h-[50dvh]">
+          <Ticket eventId={event._id} className={'h-full'} />
+        </div>
+
+        <div className="md:col-span-2 lg:col-span-2 max-h-[50dvh]">
+          <InputField eventId={event._id} className="max-h-dvh h-full" />
+        </div>
+
+        {/* Share Hub - spans 2 columns */}
+
+        {/* Sessions - spans 4 columns */}
+        <div className="md:col-span-3 lg:col-span-4">
+          <Sessions eventId={event._id} />
+        </div>
+
+        {/* Benefits - spans 3 columns */}
+        <div className="md:col-span-3 lg:col-span-3">
+          <Benefits eventId={event._id} />
+        </div>
+
+        {/* Guest Speaker - spans 3 columns */}
+        <div className="md:col-span-3 lg:col-span-3">
+          <GuestSpeaker eventId={event._id} />
+        </div>
+
+        {/* Custom Fields - spans 3 columns */}
+
+
+        {/* Referrals - spans 3 columns */}
+        <div className="md:col-span-3 lg:col-span-3">
+          <Referrals eventId={event._id} />
+        </div>
+
+        {/* Coupons - spans full width (6 columns) */}
+        <ProtectedComp roles={["admin", "owner", "manager"]}>
+          <div className="md:col-span-3 lg:col-span-6">
+            <Coupons eventId={event._id} />
+          </div>
+        </ProtectedComp>
+
       </div>
-    </div >
+    </div>
   );
 };
 
