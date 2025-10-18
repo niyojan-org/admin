@@ -11,8 +11,6 @@ function ScrollArea({
   innerClassName, // Destructure it here
   ...props // Now props won't include innerClassName
 }) {
-  console.log('props:', props);
-  console.log('innerClassName:', innerClassName);
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"

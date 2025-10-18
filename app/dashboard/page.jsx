@@ -69,11 +69,12 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      
+
+
       {/* Original Dashboard Content - Keeping for reference */}
       <div className="pt-8 border-t border-border">
         <h2 className="text-2xl font-bold mb-6">Original Dashboard Components</h2>
-        
+
         {/* Header */}
         <div className="border-b bg-card rounded-lg mb-6">
           <div className="p-6">

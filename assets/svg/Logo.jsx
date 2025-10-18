@@ -1,6 +1,8 @@
-const Logo = ({ size }, props) => (
+const Logo = ({ size, className }, props) => (
     <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size}
         viewBox="0 0 1000 1000"
+        className={className}
+        {...props}
     >
         <path
             fill="#fedbda"

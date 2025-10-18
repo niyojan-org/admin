@@ -3,6 +3,7 @@ import { useUserStore } from "@/store/userStore";
 import { useSearchParams, usePathname, redirect } from "next/navigation";
 import { useEffect, Suspense } from "react";
 import AppSidebar from "@/components/layout/AppSidebar";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export default function ClientLayout({ children }) {
 
@@ -36,18 +37,24 @@ function ClientLayoutInner({ children }) {
 
   if (showSidebar) {
     return (
-      <div className="font-source-sans-3 flex flex-col md:flex-row overflow-hidden">
+      <div className="flex w-full">
         <AppSidebar />
-        <div className="flex-1">
-          {children}
-        </div>
+        <ScrollArea className="h-dvh w-full">
+          <div className="flex-1 min-h-dvh sm:pt-0 w-full font-source-sans-3 px-4">
+            {children}
+          </div>
+        </ScrollArea>
       </div>
     );
   }
 
   return (
-    <div className="font-source-sans-3">
-      {children}
+    <div className="">
+      <ScrollArea className="h-dvh">
+        <div className="h-dvh sm:pt-0 w-full font-source-sans-3">
+          {children}
+        </div>
+      </ScrollArea>
     </div>
   );
 }
