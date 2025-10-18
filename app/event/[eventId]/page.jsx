@@ -16,6 +16,7 @@ import { RegistrationDashboard } from "./components/registration";
 import { Benefits } from "./components/Benefits";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { QuickActions } from "./components/QuickActions";
 
 const EventPage = () => {
   const params = useParams();
@@ -124,7 +125,8 @@ const EventPage = () => {
 
         {/* Right Column - Sidebar */}
         <div className="space-y-6 order-2 lg:order-2">
-
+					<QuickActions event={event} setEventData={setEventData} />
+					{/* Share Hub */}
           <Card>
             <CardHeader>
               <CardTitle>Share Hub</CardTitle>
