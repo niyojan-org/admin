@@ -94,7 +94,7 @@ export const Benefits = ({ eventId, className }) => {
 
     return (
         <>
-            <Card className={cn(className, '"w-full gap-2"')}>
+            <Card className={cn("w-full h-[440px] flex flex-col", className)}>
                 <BenefitsHeader
                     benefitCount={benefits.length}
                     onAddBenefit={() => setShowAddDialog(true)}
@@ -102,17 +102,19 @@ export const Benefits = ({ eventId, className }) => {
                     loading={loading}
                 />
 
-                <BenefitsList
-                    benefits={benefits}
-                    loading={loading}
-                    error={error}
-                    onEditBenefit={handleEditBenefit}
-                    onDeleteBenefit={handleDeleteBenefit}
-                    onReorderBenefits={handleReorderBenefits}
-                    onAddBenefit={() => setShowAddDialog(true)}
-                    onRefresh={refetch}
-                    userRole={userRole}
-                />
+                <div className="flex-1 overflow-hidden">
+                    <BenefitsList
+                        benefits={benefits}
+                        loading={loading}
+                        error={error}
+                        onEditBenefit={handleEditBenefit}
+                        onDeleteBenefit={handleDeleteBenefit}
+                        onReorderBenefits={handleReorderBenefits}
+                        onAddBenefit={() => setShowAddDialog(true)}
+                        onRefresh={refetch}
+                        userRole={userRole}
+                    />
+                </div>
             </Card>
 
             {/* Add Benefit Dialog */}

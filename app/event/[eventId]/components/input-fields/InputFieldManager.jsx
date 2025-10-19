@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { IconPlus, IconArrowsSort, IconAlertHexagon, IconLoader } from "@tabler/icons-react";
 import { FieldsList } from "./FieldsList";
 import { FieldFormDialog } from "./FieldFormDialog";
@@ -201,8 +202,8 @@ export function InputFieldManager({ eventId, className }) {
   }
 
   return (
-    <Card className={cn("w-full", className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+    <Card className={cn("w-full h-[480px] flex flex-col", className)}>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 flex-shrink-0">
         <CardTitle className="flex items-center gap-2">
           Registration Fields ({fields.length || 0})
         </CardTitle>
@@ -260,9 +261,9 @@ export function InputFieldManager({ eventId, className }) {
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="flex-1 overflow-hidden p-0">
         {loading ? (
-          <div className="space-y-4">
+          <div className="space-y-4 px-6">
             {/* Loading skeleton for fields */}
             {[...Array(3)].map((_, i) => (
               <div key={i} className="border rounded-lg p-4 space-y-3">
@@ -292,15 +293,19 @@ export function InputFieldManager({ eventId, className }) {
             </div>
           </div>
         ) : (
-          <FieldsList
-            fields={fields}
-            onEdit={openEdit}
-            onDelete={(index) => {
-              setDeleteIndex(index);
-              setShowDeleteDialog(true);
-            }}
-            onArrange={handleArrangeFields}
-          />
+          <ScrollArea className="h-full w-full">
+            <div className="pb-6 space-y-3">
+              <FieldsList
+                fields={fields}
+                onEdit={openEdit}
+                onDelete={(index) => {
+                  setDeleteIndex(index);
+                  setShowDeleteDialog(true);
+                }}
+                onArrange={handleArrangeFields}
+              />
+            </div>
+          </ScrollArea>
         )}
 
         {/* Add Field Dialog */}

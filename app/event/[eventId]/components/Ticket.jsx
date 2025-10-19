@@ -241,8 +241,8 @@ export default function Tickets({ eventId, className }) {
 
     return (
         <>
-            <Card className={cn("w-full", className)}>
-                <CardHeader className="pb-4">
+            <Card className={cn("w-full h-[480px] flex flex-col", className)}>
+                <CardHeader className="pb-4 flex-shrink-0">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div className="flex items-center gap-2">
                             <IconTicket className="w-5 h-5 text-primary flex-shrink-0" />
@@ -268,9 +268,9 @@ export default function Tickets({ eventId, className }) {
                     </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4">
+                <CardContent className="flex-1 overflow-hidden p-0">
                     {loading ? (
-                        <div className="space-y-3">
+                        <div className="space-y-3 px-6">
                             {[...Array(3)].map((_, i) => (
                                 <div key={i} className="border rounded-lg p-3 sm:p-4">
                                     {/* Mobile Loading Skeleton */}
@@ -333,37 +333,39 @@ export default function Tickets({ eventId, className }) {
                             ))}
                         </div>
                     ) : tickets.length === 0 ? (
-                        <Card className="border-dashed border-2 border-muted-foreground/25">
-                            <CardContent className="flex flex-col items-center justify-center py-12 px-6 text-center">
-                                <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mb-6">
-                                    <IconTicket className="w-10 h-10 text-muted-foreground/50" />
-                                </div>
-                                <div className="space-y-3 flex flex-col items-center">
-                                    <h3 className="text-xl font-semibold text-foreground">No Tickets Found</h3>
-                                    <p className="text-sm text-muted-foreground max-w-md">
-                                        You haven't created any tickets for this event yet. Create your first ticket to start selling and managing attendee registrations.
-                                    </p>
-                                    {['owner', 'admin'].includes(userRole) && (
-                                        <div className="pt-4">
-                                            <TicketFormDialog
-                                                isCreateMode={true}
-                                                onCreate={handleCreateTicket}
-                                                createLoading={createLoading}
-                                                trigger={
-                                                    <Button className="flex items-center gap-2">
-                                                        <IconPlus className="w-4 h-4" />
-                                                        Create Your First Ticket
-                                                    </Button>
-                                                }
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
+                        <div className="px-6">
+                            <Card className="border-dashed border-2 border-muted-foreground/25">
+                                <CardContent className="flex flex-col items-center justify-center py-12 px-6 text-center">
+                                    <div className="w-20 h-20 bg-muted/50 rounded-full flex items-center justify-center mb-6">
+                                        <IconTicket className="w-10 h-10 text-muted-foreground/50" />
+                                    </div>
+                                    <div className="space-y-3 flex flex-col items-center">
+                                        <h3 className="text-xl font-semibold text-foreground">No Tickets Found</h3>
+                                        <p className="text-sm text-muted-foreground max-w-md">
+                                            You haven't created any tickets for this event yet. Create your first ticket to start selling and managing attendee registrations.
+                                        </p>
+                                        {['owner', 'admin'].includes(userRole) && (
+                                            <div className="pt-4">
+                                                <TicketFormDialog
+                                                    isCreateMode={true}
+                                                    onCreate={handleCreateTicket}
+                                                    createLoading={createLoading}
+                                                    trigger={
+                                                        <Button className="flex items-center gap-2">
+                                                            <IconPlus className="w-4 h-4" />
+                                                            Create Your First Ticket
+                                                        </Button>
+                                                    }
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </div>
                     ) : (
-                        <ScrollArea className="max-h-[400px] h-[500px] w-full">
-                            <div className="space-y-3 pr-4 h-full ">
+                        <ScrollArea className="h-full">
+                            <div className="space-y-3 pr-2 pb-6">
                                 {tickets.map((ticket) => (
                                     <div key={ticket._id} className="border rounded-lg p-3 sm:p-4 space-y-3">
                                         <TicketHeader

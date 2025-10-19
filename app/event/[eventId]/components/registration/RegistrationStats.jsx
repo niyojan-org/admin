@@ -52,10 +52,10 @@ export default function RegistrationStats({ statistics, tickets = [], eventId })
   const { label: statusLabel, variant: statusVariant } = getAvailabilityStatus();
 
   return (
-    <div className="space-y-6">
-			<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+    <div className="space-y-6 h-full">
+			<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 h-full">
       {/* Overall Statistics */}
-      <Card>
+      <Card className={'gap-4 h-full'}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="w-5 h-5" />
@@ -106,18 +106,13 @@ export default function RegistrationStats({ statistics, tickets = [], eventId })
               {Math.round(registrationPercentage)}%
             </div>
             <div className="text-sm text-muted-foreground">Capacity Filled</div>
-            <Button variant="link" size="sm" className="mt-2 p-0">
-             <Link href={`/event/${eventId}/participants`}>
-               View Details
-             </Link>
-            </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Ticket Breakdown */}
       {tickets.length > 0 && (
-        <Card>
+        <Card className={'h-full'}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Ticket className="w-5 h-5" />

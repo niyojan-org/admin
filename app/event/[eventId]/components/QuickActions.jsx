@@ -70,7 +70,7 @@ export const QuickActions = ({ event, setEventData }) => {
     }
 
     return (
-        <Card className={'p-0 py-4 gap-2'}>
+        <Card className={' py-4 gap-2'}>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <IconSettings2 className="w-5 h-5" />

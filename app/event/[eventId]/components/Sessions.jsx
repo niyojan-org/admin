@@ -153,7 +153,7 @@ export default function Sessions({ eventId, className, event }) {
 
     return (
         <>
-            <Card className={cn("w-full ", className)}>
+            <Card className={cn("w-full h-[440px] flex flex-col", className)}>
                 <SessionHeader
                     sessionCount={sessions.length}
                     allowMultipleSessions={allowMultipleSessions}
@@ -162,18 +162,21 @@ export default function Sessions({ eventId, className, event }) {
                     userRole={userRole}
                     loading={loading}
                 />
-                <ScrollArea className="h-[400px] max-h-[400px]">
-                <SessionList
-                    sessions={sessions}
-                    loading={loading}
-                    error={error}
-                    onEditSession={handleEditSession}
-                    onDeleteSession={handleDeleteSession}
-                    onEnableCheckIn={handleEnableCheckIn}
-                    onDisableCheckIn={handleDisableCheckIn}
-                    userRole={userRole}
-                />
-                </ScrollArea>
+                
+                <div className="flex-1 overflow-hidden">
+                    <ScrollArea className="h-full">
+                        <SessionList
+                            sessions={sessions}
+                            loading={loading}
+                            error={error}
+                            onEditSession={handleEditSession}
+                            onDeleteSession={handleDeleteSession}
+                            onEnableCheckIn={handleEnableCheckIn}
+                            onDisableCheckIn={handleDisableCheckIn}
+                            userRole={userRole}
+                        />
+                    </ScrollArea>
+                </div>
             </Card>
 
             {/* Add Session Dialog */}
