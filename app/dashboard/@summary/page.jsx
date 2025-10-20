@@ -20,10 +20,10 @@ function Page() {
 
     const MetricCard = ({ icon: Icon, title, value, description, loading, error, iconColor, className }) => {
         return (
-            <div className={cn("transition-shadow p-0 h-full gap-0 border-0 rounded-none", className)}>
+            <div className={cn("transition-shadow p-0 h-full gap-0 border-0 rounded-none -space-y-2", className)}>
                 <div className="flex flex-row items-center justify-between">
                     <p className="text-sm font-medium">{title}</p>
-                    <Icon className={`h-4 w-4 ${iconColor || 'text-muted-foreground'}`} />
+                    {/* <Icon className={`h-4 w-4 ${iconColor || 'text-muted-foreground'}`} /> */}
                 </div>
 
                 <div>
@@ -44,7 +44,7 @@ function Page() {
                         <>
                             <div className="text-xl font-bold">{value}</div>
                             {description && (
-                                <p className="text-xs text-muted-foreground mt-1">{description}</p>
+                                <p className="text-xs text-muted-foreground">{description}</p>
                             )}
                         </>
                     )}
@@ -54,9 +54,9 @@ function Page() {
     }
 
     return (
-        <Card className="w-full h-full flex flex-row justify-between p-0 px-2 sm:px-2 pb-0">
+        <Card className="w-full h-full flex flex-col sm:flex-row justify-between p-0 px-2 sm:px-2 pb-0 items-center py-2">
             {/* Events Summary Section */}
-            <div className="w-full py-2">
+            <div className="w-full h-full">
                 <div className='pb-2'>
                     <h2 className="text-2xl font-semibold tracking-tight">Event Overview</h2>
                     <p className="text-sm text-muted-foreground -mt-2">
@@ -65,7 +65,7 @@ function Page() {
                 </div>
 
 
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+                <div className="grid grid-cols-2 gap-2 justify-between">
                     <MetricCard
                         icon={Activity}
                         title="Total Events"
@@ -105,10 +105,10 @@ function Page() {
                 </div>
             </div>
 
-            <Separator orientation='vertical' className={''} />
+            {/* <Separator orientation='vertical' className={''} /> */}
 
             {/* Revenue Summary Section */}
-            <div className="w-full py-2">
+            <div className="w-full">
                 <div className="pb-2">
                     <h2 className="text-2xl font-semibold tracking-tight">Revenue Overview</h2>
                     <p className="text-sm text-muted-foreground -mt-2">
@@ -116,7 +116,7 @@ function Page() {
                     </p>
                 </div>
 
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+                <div className="grid gap-2 grid-cols-2">
                     <MetricCard
                         icon={DollarSign}
                         title="Total Revenue"

@@ -6,9 +6,16 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function DashboardLayout({ children, event, payment, revenue, summary }) {
     return (
         <ProtectedRoute>
+            {/* Mobile: Single column stack */}
+            <div className="md:hidden flex flex-col min-h-dvh pt-16 gap-2 w-full">
+                <div className="">{summary}</div>
+                <div className="">{event}</div>
+                <div className="">{revenue}</div>
+                <div className="">{payment}</div>
+            </div>
 
-            <div className="grid grid-cols-6 grid-rows-6 gap-4 p-6 h-dvh">
-
+            {/* Tablet & Desktop: Original grid layout */}
+            <div className="hidden md:grid grid-cols-6 grid-rows-6 gap-4 p-6 h-screen">
                 {/* Better Now Closer */}
                 <div className="col-span-4 row-span-2">
                     {summary}
@@ -31,7 +38,6 @@ export default function DashboardLayout({ children, event, payment, revenue, sum
                     </CardContent>
                 </Card>
 
-
                 {/* Bring People Together */}
                 <Card className="col-span-2 row-span-1">
                     <CardContent className="p-0">
@@ -51,10 +57,7 @@ export default function DashboardLayout({ children, event, payment, revenue, sum
                 <div className="col-span-2 row-span-3">
                     {payment}
                 </div>
-
             </div>
-            {children}
-            {event}
         </ProtectedRoute>
     );
 }

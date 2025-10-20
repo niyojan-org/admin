@@ -59,7 +59,7 @@ function Page() {
     return (
         <Card className={'w-full h-full p-0 sm:px-0'}>
             <div className="flex items-center justify-between pt-4 px-4">
-                <div className="flex items-center space-x-3">
+                <div className="flex flex-col sm:flex-row items-center gap-1 sm:space-x-3">
                     <Select value={timeRange} onValueChange={(v) => setTimeRange(v)}>
                         <SelectTrigger className="w-[140px]">{timeRange}</SelectTrigger>
                         <SelectContent>
@@ -72,7 +72,7 @@ function Page() {
                     </Select>
 
                     <Select value={interval} onValueChange={(v) => setInterval(v)}>
-                        <SelectTrigger className="w-[120px]">{interval}</SelectTrigger>
+                        <SelectTrigger className="w-[140px]">{interval}</SelectTrigger>
                         <SelectContent>
                             <SelectItem value="day">Day</SelectItem>
                             <SelectItem value="week">Week</SelectItem>

@@ -8,11 +8,13 @@ import { useUserStore } from '@/store/userStore';
 import { toast } from 'sonner';
 import { IconEye, IconEyeOff, IconLoader2 } from '@tabler/icons-react';
 import GoogleAuthButton from '@/app/auth/GoogleAuthButton';
+import { useRouter } from 'next/navigation';
 
 export default function Login({ userEmail, setUserEmail, onViewChange }) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { login, loading, error } = useUserStore();
+  const router = useRouter();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +24,7 @@ export default function Login({ userEmail, setUserEmail, onViewChange }) {
 
     const success = await login({ email: userEmail, password, admin: true });
     if (success) {
+      router.replace("/dashboard");
       setUserEmail(''); // Clear email on successful login
       setPassword(''); // Clear password on successful login
     }

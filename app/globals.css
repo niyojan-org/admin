@@ -18,7 +18,7 @@
   --muted-foreground: #636c77;
   --accent: #7f9ee5;
   --accent-foreground: #000000;
-  --destructive: #6a777c;
+  --destructive: #f81d1d;
   --destructive-foreground: #ffffff;
   --border: #a3a7ad;
   --input: #eaeff6;
@@ -72,7 +72,7 @@
   --muted-foreground: #a2a9b3;
   --accent: #0f3475;
   --accent-foreground: #ffffff;
-  --destructive: #8a8f96;
+  --destructive: #924a3f;
   --destructive-foreground: #000000;
   --border: #263140;
   --input: #3f4b5b;
@@ -140,6 +140,10 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-serif: var(--font-serif);
 }
 
 @layer base {
@@ -149,12 +153,14 @@
 
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    letter-spacing: var(--letter-spacing);
   }
 }
 
 @theme {
-  --font-source-sans-3: "Source Sans 3", sans-serif;
-  --font-source-code-pro: "Source Code Pro", monospace;
+  --font-sans: "Source Sans 3", sans-serif;
+  --font-mono: "Source Code Pro", monospace;
 }
 
 table {

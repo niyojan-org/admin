@@ -7,14 +7,14 @@ import { ThemeProvider } from "@/components/theme-provider";
 
 
 const sourceCodePro = Source_Code_Pro({
-  variable: "--font-source-code-pro",
+  variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
 })
 
 const sourceSans3 = Source_Sans_3({
-  variable: "--font-source-sans-3",
+  variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
 })
@@ -36,6 +36,7 @@ export default function RootLayout({ children }) {
           <ClientLayout> {children}</ClientLayout>
           <Toaster />
         </ThemeProvider>
+        
       </body>
 
     </html>

@@ -389,7 +389,7 @@ export default function Step2({ goNext, goBack }) {
                   name="supportContact.email"
                   value={formData.supportContact?.email || ""}
                   onChange={handleChange}
-                  placeholder="Enter support contact email (optional)"
+                  placeholder="Enter support contact email"
                   className="h-11 border-border focus:border-primary focus:ring-primary"
                 />
                 {formData.supportContact?.email &&
@@ -410,6 +410,7 @@ export default function Step2({ goNext, goBack }) {
         <Button
           className="w-full sm:w-auto"
           onClick={() => {
+            console.log(formData);
             if (
               !formData.street ||
               formData.street.length < 3 ||
@@ -424,7 +425,7 @@ export default function Step2({ goNext, goBack }) {
               !/^\+?[\d\s-]{10,}$/.test(formData.supportContact.phone) ||
               (formData.supportContact?.email &&
                 formData.supportContact.email.length > 0 &&
-                !/^[^\s@]+@[^s@]+\.[^\s@]+$/.test(formData.supportContact.email))
+                !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.supportContact.email))
             ) {
               toast.error("Please fill all required fields correctly before proceeding.");
               return;

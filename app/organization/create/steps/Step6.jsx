@@ -68,7 +68,18 @@ export default function Step6({ goNext, goBack }) {
         ...prevData,
         maxEventsPerMonth: "", // Allow empty value for editing
       }));
+      return;
     }
+    // Normalize input to digits only and parse
+    const digitsOnly = String(inputValue).replace(/[^0-9]/g, "");
+    const parsed = parseInt(digitsOnly, 10);
+    if (Number.isNaN(parsed)) return;
+    // Clamp between allowed range
+    const clamped = Math.max(1, Math.min(20, parsed));
+    setFormData((prevData) => ({
+      ...prevData,
+      maxEventsPerMonth: clamped,
+    }));
   };
 
   // Handle event type selection
@@ -250,6 +261,9 @@ export default function Step6({ goNext, goBack }) {
                     name="maxEventsPerMonth"
                     value={formData.maxEventsPerMonth}
                     onChange={handleMaxEventsChange}
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    step="1"
                     min="1"
                     max="20"
                     className="h-11 border-border focus:border-primary focus:ring-primary w-32"

@@ -23,7 +23,7 @@ export default function Page() {
   const loading = !data && !error
 
   return (
-    <Card className="flex flex-col h-full p-0 py-2 px-0 sm:px-2 gap-0">
+    <Card className="flex flex-col h-full p-0 py-2 px-2 sm:px-2 gap-0">
       <div className="flex items-center justify-between pb-3">
         <h2 className="text-xl font-semibold">Events</h2>
         <div>

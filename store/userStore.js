@@ -18,7 +18,7 @@ export const useUserStore = create((set) => ({
 
   setToken: async ({ token }) => {
     try {
-      if (!token ) {
+      if (!token) {
         set({ isAuthenticated: false, user: null, token: null, organization: null });
         sessionStorage.clear();
         return false;
@@ -39,20 +39,21 @@ export const useUserStore = create((set) => ({
         headers: { Authorization: `Bearer ${token}` }
       });
       const user = resUser.data.data.user;
-
-      // Fetch organization separately
-      const resOrg = await api.get("/org/me", {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const organization = resOrg.data.org;
-
+      let organization = null;
+      try {
+        // Fetch organization separately
+        const resOrg = await api.get("/org/me", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        organization = resOrg.data.org;
+        useOrgStore.getState().setOrganization(organization);
+      } catch (error) {
+        toast.error(error?.response?.data?.message || "Session expired or organization not found. Please login again.");
+      }
       // Store in org store too
-      useOrgStore.getState().setOrganization(organization);
 
       set({ token, user, organization, isAuthenticated: true, error: null });
-      toast.success("Welcome to your dashboard!", {
-        description: `You can now access ${organization.name}`,
-      });
+      // toast.success("Welcome to your back..!!");
 
       return true;
     } catch (error) {
@@ -76,13 +77,12 @@ export const useUserStore = create((set) => ({
       const res = await api.post("/api/auth/login", { email, password });
 
       const { token } = res.data.data;
+      sessionStorage.setItem("token", token);
 
       // use token to fetch user + organization
       const ok = await useUserStore.getState().setToken({ token });
       if (ok) {
-        setTimeout(() => {
-          window.location.href = "/";
-        }, 100);
+        toast.success("Login successful..!!");
         return true;
       } else {
         return false;
