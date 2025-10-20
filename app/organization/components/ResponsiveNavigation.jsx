@@ -23,13 +23,18 @@ import {
   IconAlertCircle,
   IconShieldCheck,
   IconPencil,
+  IconHomeCog,
 } from "@tabler/icons-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
+import { useOrgStore } from "@/store/orgStore";
+import { useBanner } from "@/components/banner/banner";
 
 const ResponsiveNavigation = ({ activeSection, onSectionChange, organization }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const { organization: org, isVerified, isInfoComplete } = useOrgStore();
+  const banner = useBanner();
 
   const navigationItems = [
     {
@@ -83,10 +88,15 @@ const ResponsiveNavigation = ({ activeSection, onSectionChange, organization }) 
   const hasWarnings = stats.totalWarnings > 0;
   const hasBlockedEvents = stats.totalBlockedEvents > 0;
 
+  if (org && !isVerified) {
+    banner.info("Your organization is not verified. Please complete the verification process to access all features.", {
+      href: "/organization/verify",
+      label: "Verify Now"
+    });
+  }
+
   return (
     <>
-
-
       <div className="flex flex-row items-center justify-between gap-4">
         <div className="flex items-start sm:items-center gap-3 sm:gap-4">
           <Avatar className="h-12 w-12 sm:h-16 sm:w-16 flex-shrink-0">
@@ -134,8 +144,8 @@ const ResponsiveNavigation = ({ activeSection, onSectionChange, organization }) 
             className="sm:hidden"
             asChild
           >
-            <Link href="/organization/edit">
-              <IconPencil className="h-4 w-4" />
+            <Link href="/organization/members">
+              <IconHomeCog className="h-4 w-4" />
             </Link>
           </Button>
           {/* Desktop Edit Button */}
@@ -143,9 +153,9 @@ const ResponsiveNavigation = ({ activeSection, onSectionChange, organization }) 
             className="hidden sm:flex"
             asChild
           >
-            <Link href="/organization/edit">
-              <IconSettings className="mr-2 h-4 w-4" />
-              Edit Organization
+            <Link href="/organization/members" className="flex items-center">
+              <IconHomeCog className="mr-2 h-4 w-4" />
+              Manage Members
             </Link>
           </Button>
         </div>

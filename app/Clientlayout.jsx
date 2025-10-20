@@ -39,17 +39,21 @@ function ClientLayoutInner({ children }) {
   const [secondsLeft, setSecondsLeft] = useState(5)
   const secondsRef = useRef(null);
 
-  // Show organization incomplete warning after render (avoid setState during render)
-  useEffect(() => {
-    if (!isInfoComplete) {
-      // BannerProvider expects a link object with href and label
-      banner.warning(
-        "Please complete your organization profile to access all features.",
-        { href: '/organization/create', label: 'Complete Profile' }
-      );
-    }
-    // Intentionally only depend on isInfoComplete so this runs once when that value changes
-  }, [isInfoComplete]);
+
+  if (!isInfoComplete) {
+    // BannerProvider expects a link object with href and label
+    banner.warning(
+      "Please complete your organization profile to access all features.",
+      { href: '/organization/create', label: 'Complete Profile' }
+    );
+  }
+
+  if (organization && !isVerified && isInfoComplete) {
+    banner.info("Your organization is not verified. Please complete the verification process to access all features.", {
+      href: "/organization/verify",
+      label: "Verify Now"
+    });
+  }
 
   // Countdown + redirect logic
   useEffect(() => {

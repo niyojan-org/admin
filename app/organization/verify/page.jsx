@@ -135,7 +135,7 @@ export default function VerificationPage() {
   };
 
   return (
-    <div className="container mx-auto py-8 px-4 space-y-8 max-w-7xl">
+    <div className="container mx-auto px-4 space-y-8 pb-10 w-full">
       {/* Header with gradient background */}
       <div className="text-center space-y-4 py-8">
         <div className="flex items-center justify-center gap-3">

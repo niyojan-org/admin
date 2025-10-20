@@ -3,6 +3,7 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 const BankDetailsTab = ({ organization }) => {
   const bankDetails = organization.bankDetails || {};
@@ -44,7 +45,12 @@ const BankDetailsTab = ({ organization }) => {
           <Separator />
           <div>
             <p className="text-sm font-medium mb-1">Razorpay Account ID</p>
-            <p className="text-sm text-muted-foreground font-mono">{bankDetails.razorpayAccountId || "N/A"}</p>
+            <div className="">{bankDetails.razorpayAccountId ? <span className="text-sm text-muted-foreground font-mono">{bankDetails.razorpayAccountId}</span> :
+              <div>
+                <p className="">You are not allowed to create paid event</p>
+                <p className="text-xs text-muted-foreground"><Link href="/contact">Please visit our support page</Link> to set up your payment gateway.</p>
+              </div>
+            }</div>
           </div>
         </CardContent>
       </Card>

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, useMemo } from "react";
+import { createContext, useContext, useState, useCallback, useMemo, useRef } from "react";
 import { X, Info, CheckCircle2, AlertTriangle, XCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -15,11 +15,32 @@ export function useBanner() {
 export function BannerProvider({ children }) {
     const [banner, setBanner] = useState(null);
 
-    const showBanner = useCallback((type, message, link = null) => {
-        setBanner({ type, message, link });
+    // Use a queue so callers can call showBanner synchronously (even during render)
+    // without causing a setState during render. We schedule processing on a microtask
+    // so setBanner runs after the current render phase.
+    const queueRef = useRef([]);
+    const scheduledRef = useRef(false);
+
+    const processQueue = useCallback(() => {
+        scheduledRef.current = false;
+        const next = queueRef.current.shift();
+        if (next) {
+            setBanner(next);
+        }
     }, []);
 
+    const showBanner = useCallback((type, message, link = null) => {
+        queueRef.current.push({ type, message, link });
+        if (!scheduledRef.current) {
+            scheduledRef.current = true;
+            // schedule on microtask to run after render
+            Promise.resolve().then(processQueue);
+        }
+    }, [processQueue]);
+
     const hideBanner = useCallback(() => {
+        // clear queue and hide immediately
+        queueRef.current = [];
         setBanner(null);
     }, []);
 
@@ -91,6 +112,7 @@ export function BannerProvider({ children }) {
                                         banner.type === "error" && "text-destructive ",
                                         banner.type === "warning" && "text-yellow-700 dark:text-yellow-400 "
                                     )}
+                                    onClick={hideBanner}
                                     href={banner.link?.href || "/"}
                                 >
                                     {banner.link.label || "View"}
