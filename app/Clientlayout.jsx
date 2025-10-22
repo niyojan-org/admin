@@ -106,6 +106,9 @@ function ClientLayoutInner({ children }) {
   const protectedRoutes = ['/dashboard', '/event', '/messages', '/notifications', '/organization', '/organization/edit', '/contact'];
   const showSidebar = protectedRoutes.some(route => pathname.startsWith(route)) && isAuthenticated;
 
+  // Routes that should NOT use ScrollArea (they handle their own scrolling)
+  const noScrollAreaRoutes = ['/participants', '/organization/members'];
+  const useScrollArea = !noScrollAreaRoutes.some(route => pathname.includes(route));
 
   if (!isAuthenticated && userLoading || orgLoading) {
     return (
@@ -133,22 +136,34 @@ function ClientLayoutInner({ children }) {
     return (
       <div className="flex w-full">
         <AppSidebar />
-        <ScrollArea className="h-dvh w-full">
-          <div className="flex-1 min-h-dvh sm:pt-0 w-full font-source-sans-3 px-2 md:px-4 lg:px-6">
+        {useScrollArea ? (
+          <ScrollArea className="h-dvh w-full">
+            <div className="flex-1 min-h-dvh sm:pt-0 w-full font-source-sans-3 px-2 md:px-4 lg:px-6">
+              {children}
+            </div>
+          </ScrollArea>
+        ) : (
+          <div className="flex-1 h-dvh sm:pt-0 w-full font-source-sans-3 overflow-auto">
             {children}
           </div>
-        </ScrollArea>
+        )}
       </div>
     );
   }
 
   return (
     <div className="">
-      <ScrollArea className="h-dvh">
-        <div className="h-dvh sm:pt-0 w-full font-source-sans-3">
+      {useScrollArea ? (
+        <ScrollArea className="h-dvh">
+          <div className="h-dvh sm:pt-0 w-full font-source-sans-3">
+            {children}
+          </div>
+        </ScrollArea>
+      ) : (
+        <div className="h-dvh sm:pt-0 w-full font-source-sans-3 overflow-auto">
           {children}
         </div>
-      </ScrollArea>
+      )}
     </div>
   );
 }
