@@ -94,6 +94,85 @@ export const QuickActions = ({ event, setEventData }) => {
                     </>
                 )}
 
+                {/* Publishing and Registration Controls */}
+                {!event.isPublished ? (
+                    /* Event Not Published - Show Publish Button */
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button className="w-full" disabled={isPublishing}>
+                                <IconWorld className="w-4 h-4 mr-2" />
+                                {isPublishing ? "Publishing..." : "Publish Event"}
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Publish Event?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    This action will make your event visible to the public and open registration for attendees.
+                                    Once published, the event cannot be unpublished. Make sure all event details are correct before proceeding.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={handlePublish} disabled={isPublishing}>
+                                    {isPublishing ? "Publishing..." : "Publish Event"}
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                ) : (
+                    /* Event Published - Show Registration Toggle */
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button
+                                className="w-full"
+                                variant={event.isRegistrationOpen ? "destructive" : "default"}
+                                disabled={isTogglingRegistration}
+                            >
+                                {event.isRegistrationOpen ? (
+                                    <>
+                                        <IconEyeOff className="w-4 h-4 mr-2" />
+                                        {isTogglingRegistration ? "Closing..." : "Close Registration"}
+                                    </>
+                                ) : (
+                                    <>
+                                        <IconEye className="w-4 h-4 mr-2" />
+                                        {isTogglingRegistration ? "Opening..." : "Open Registration"}
+                                    </>
+                                )}
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                    {event.isRegistrationOpen ? "Close Registration?" : "Open Registration?"}
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    {event.isRegistrationOpen ? (
+                                        "This will prevent new users from registering for the event. Existing registrations will remain valid. You can reopen registration at any time."
+                                    ) : (
+                                        "This will allow users to register for the event. Make sure all event details and registration settings are configured correctly."
+                                    )}
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                    onClick={handleToggleRegistration}
+                                    disabled={isTogglingRegistration}
+                                    variant={event.isRegistrationOpen ? "destructive" : "default"}
+                                >
+                                    {isTogglingRegistration ? (
+                                        event.isRegistrationOpen ? "Closing..." : "Opening..."
+                                    ) : (
+                                        event.isRegistrationOpen ? "Close Registration" : "Open Registration"
+                                    )}
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                )}
+
 								{/* Event Status Display */}
 								<div className="space-y-3">
 										<div className="flex items-center justify-between p-2 bg-muted rounded-md">

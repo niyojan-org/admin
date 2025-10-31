@@ -41,9 +41,13 @@ function getDynamicFieldColumns(data, inputFields) {
   return Array.from(keys).map((key) => {
     const field = inputFields?.find((f) => f.name === key);
     return {
-      accessorKey: `dynamicFields.${key}`,
-      header: field?.label || key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase()),
-      cell: (info) => info.row.original.dynamicFields?.[key] || "-",
+        accessorKey: `dynamicFields.${key}`,
+        header: field?.label || key.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase()),
+        cell: (info) => (
+            <span className="block max-w-[140px] truncate text-xs">
+            {info.row.original.dynamicFields?.[key] || "-"}
+            </span>
+        ),
     };
   });
 }
@@ -294,8 +298,8 @@ const DataTable = ({ eventId }) => {
       />
 
       <Card className="w-full overflow-hidden">
-        <div className="overflow-x-auto h-96 border rounded">
-          <Table className="w-full">
+        <div className="w-full overflow-x-auto h-96 border rounded">
+  				<Table className="min-w-full">
             <TableHeader className="bg-card sticky top-0 z-10">
               <TableRow className="hover:bg-transparent border-b">
                 {table.getHeaderGroups()[0].headers.map((header) => (
@@ -360,7 +364,7 @@ const DataTable = ({ eventId }) => {
                       onClick={() => setDialogParticipant(participant)}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className="py-3 max-w-12 truncate">
+                        <TableCell key={cell.id} className="">
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                       ))}
@@ -372,14 +376,14 @@ const DataTable = ({ eventId }) => {
           </Table>
         </div>
 
-        <div className="border-t bg-muted/30 p-4">
+        {/* <div className="border-t bg-muted/30 p-4"> */}
           <DataTablePagination
             pagination={pagination}
             setPagination={setPagination}
             dataLength={data.length}
             total={pagination.total}
           />
-        </div>
+        {/* </div> */}
       </Card>
     </Card>
   )
