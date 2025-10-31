@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import api from '@/lib/api';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,6 +17,7 @@ import CheckInOTPDialog from './components/CheckInOTPDialog';
 const CheckInPage = () => {
     const params = useParams();
     const eventId = params.eventId;
+    const bottomRef = useRef(null);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -61,6 +62,13 @@ const CheckInPage = () => {
             fetchCheckInData();
         }
     }, [eventId]);
+
+    // Auto-scroll to bottom when checkInResult changes
+    useEffect(() => {
+        if (checkInResult && bottomRef.current) {
+            bottomRef.current.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+    }, [checkInResult]);
 
     // Handle session change
     const handleSessionChange = (sessionId) => {
@@ -294,6 +302,9 @@ const CheckInPage = () => {
                     sessionTitle={selectedSessionDetails?.title}
                     onSuccess={handleOTPSuccess}
                 />
+
+                {/* Bottom reference for auto-scroll */}
+                <div ref={bottomRef} className="h-1" />
             </div>
         </div>
     );

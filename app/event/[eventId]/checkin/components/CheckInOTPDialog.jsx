@@ -212,12 +212,12 @@ export default function CheckInOTPDialog({
                     </div>
 
                     {/* Error Alert */}
-                    {error && (
+                    {/* {error && (
                         <Alert variant="destructive">
                             <AlertCircle className="h-4 w-4" />
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>
-                    )}
+                    )} */}
 
                     {/* Success Alert */}
                     {verified && (
