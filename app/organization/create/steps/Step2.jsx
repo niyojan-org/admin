@@ -410,7 +410,6 @@ export default function Step2({ goNext, goBack }) {
         <Button
           className="w-full sm:w-auto"
           onClick={() => {
-            console.log(formData);
             if (
               !formData.street ||
               formData.street.length < 3 ||

@@ -32,8 +32,6 @@ function Page() {
         revalidateOnFocus: true, // refresh when window gets focused
     })
 
-    console.log(data)
-
     // Transform API trends -> chart data shape expected by RevenueChart
     const chartData = useMemo(() => {
         if (!data || !data.data || !Array.isArray(data.data.trends)) return null

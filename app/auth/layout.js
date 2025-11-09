@@ -13,7 +13,7 @@ export default function AuthLayout({ children }) {
   const router = useRouter();
   const setToken = useUserStore((state) => state.setToken);
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
-  const logOut = useUserStore((state) => state.logOut);
+  const logout = useUserStore((state) => state.logout);
   const loading = useUserStore((state) => state.loading);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function AuthLayout({ children }) {
               size="lg"
               variant="outline"
               className="w-full group"
-              onClick={() => logOut()}
+              onClick={async () => await logout()}
             >
               <IconLogout2 className="w-4 h-4 mr-2 transition-transform group-hover:-translate-x-1" />
               Log Out

@@ -25,6 +25,7 @@ import RecentRegistrations from "@/components/dashboard/RecentRegistrations";
 import { useOrgStore } from "@/store/orgStore";
 import { useUserStore } from "@/store/userStore";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import Page from "@/components/InstallPrompt";
 
 export default function Dashboard() {
   const { organization, events, loading } = useOrgStore();
@@ -246,6 +247,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      <Page />
     </div>
   );
 }

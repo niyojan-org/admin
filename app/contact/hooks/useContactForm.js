@@ -222,7 +222,6 @@ export const useContactForm = () => {
       setFiles([]);
       setErrors({});
     } catch (error) {
-      console.error("Contact form submission error:", error);
       toast.error(error.response?.data?.message || "Failed to submit form. Please try again.");
     } finally {
       setLoading(false);

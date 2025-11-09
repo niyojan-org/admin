@@ -25,7 +25,6 @@ export function useRegistrationManagement(eventId) {
     } catch (err) {
       const errorMessage = err.response?.data?.message || 'Failed to load registration data';
       setError(errorMessage);
-      console.error('Error fetching registration data:', err);
     } finally {
       setIsLoading(false);
     }
@@ -39,7 +38,6 @@ export function useRegistrationManagement(eventId) {
       const result = await registrationApi.validateRequirements(eventId);
       setRequirements(result.data);
     } catch (err) {
-      console.error('Error fetching requirements:', err);
       // Requirements are optional, don't set error
     }
   }, [eventId]);

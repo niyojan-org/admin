@@ -17,7 +17,6 @@ export const SuccessModal = ({ open, onClose, data, onSendAnother }) => {
     const [copied, setCopied] = useState(false);
 
     if (!data) return null;
-    console.log(data)
 
     const handleCopy = () => {
         navigator.clipboard.writeText(data.id);

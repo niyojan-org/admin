@@ -192,7 +192,6 @@ export default function Step6({ goNext, goBack }) {
             "An error occurred while saving your event preferences.",
         }
       );
-      console.log("Error saving event preferences:", error);
     }
   };
   return (

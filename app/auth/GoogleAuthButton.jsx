@@ -15,7 +15,6 @@ export default function GoogleAuthButton({ variant = "outline", className = "", 
             const baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5050';
             window.location.href = `${baseUrl}/auth/google`;
         } catch (error) {
-            console.error('Google auth error:', error);
             toast.error('Failed to authenticate with Google');
             setIsLoading(false);
         }

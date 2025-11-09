@@ -84,7 +84,7 @@ export default function OrganizationWizard() {
               </p>
               <button
                 onClick={() => {
-                  router.push("/register/verify");
+                  router.push("/organization/verify");
                 }}
                 className="px-6 py-3 cursor-pointer bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors font-medium"
               >

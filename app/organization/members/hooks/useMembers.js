@@ -30,7 +30,6 @@ export const useMembers = () => {
         throw new Error(response.data.message || 'Failed to fetch members');
       }
     } catch (err) {
-      console.error('Error fetching members:', err);
       setError(err.response?.data?.message || err.message || 'Failed to fetch members');
       setMembers([]);
       setSummary(null);
@@ -55,7 +54,6 @@ export const useMembers = () => {
         throw new Error(response.data.message || 'Failed to add member');
       }
     } catch (err) {
-      console.error('Error adding member:', err);
       const errorMessage = err.response?.data?.message || err.message || 'Failed to add member';
       setError(errorMessage);
       throw new Error(errorMessage);
@@ -85,7 +83,6 @@ export const useMembers = () => {
         throw new Error(response.data.message || 'Failed to update member role');
       }
     } catch (err) {
-      console.error('Error updating member role:', err);
       const errorMessage = err.response?.data?.message || err.message || 'Failed to update member role';
       setError(errorMessage);
       throw new Error(errorMessage);
@@ -109,7 +106,6 @@ export const useMembers = () => {
         throw new Error(response.data.message || 'Failed to remove member');
       }
     } catch (err) {
-      console.error('Error removing member:', err);
       const errorMessage = err.response?.data?.message || err.message || 'Failed to remove member';
       setError(errorMessage);
       throw new Error(errorMessage);
@@ -131,7 +127,6 @@ export const useMembers = () => {
         throw new Error(response.data.message || 'Failed to resend invitation');
       }
     } catch (err) {
-      console.error('Error resending invitation:', err);
       const errorMessage = err.response?.data?.message || err.message || 'Failed to resend invitation';
       setError(errorMessage);
       throw new Error(errorMessage);
@@ -155,7 +150,6 @@ export const useMembers = () => {
         throw new Error(response.data.message || 'Failed to cancel invitation');
       }
     } catch (err) {
-      console.error('Error cancelling invitation:', err);
       const errorMessage = err.response?.data?.message || err.message || 'Failed to cancel invitation';
       setError(errorMessage);
       throw new Error(errorMessage);
@@ -177,7 +171,6 @@ export const useMembers = () => {
         throw new Error(response.data.message || 'Failed to get member details');
       }
     } catch (err) {
-      console.error('Error getting member details:', err);
       const errorMessage = err.response?.data?.message || err.message || 'Failed to get member details';
       setError(errorMessage);
       throw new Error(errorMessage);
@@ -200,7 +193,6 @@ export const useMembers = () => {
         throw new Error(response.data.message || 'Failed to get available members');
       }
     } catch (err) {
-      console.error('Error getting available members:', err);
       const errorMessage = err.response?.data?.message || err.message || 'Failed to get available members';
       setError(errorMessage);
       throw new Error(errorMessage);

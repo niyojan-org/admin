@@ -1,15 +1,11 @@
 "use client";
 import { useUserStore } from "@/store/userStore";
-import { useSearchParams, usePathname, useRouter } from "next/navigation";
-import { useEffect, Suspense, useState, useRef } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, Suspense } from "react";
 import AppSidebar from "@/components/layout/AppSidebar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useOrgStore } from "@/store/orgStore";
-import { StickyBanner } from "@/components/ui/sticky-banner";
-import { IconHome, IconLoader2, IconLogin2 } from "@tabler/icons-react";
 import { IconLoader } from "@tabler/icons-react";
-import { toast } from "sonner";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BannerProvider, useBanner } from "@/components/banner/banner";
 
@@ -25,19 +21,11 @@ export default function ClientLayout({ children }) {
 }
 
 function ClientLayoutInner({ children }) {
-  const searchParams = useSearchParams();
   const pathname = usePathname();
   const banner = useBanner();
-  const token =
-    searchParams.get("auth") ||
-    (typeof window !== "undefined" ? sessionStorage.getItem("token") : null);
 
   const { isAuthenticated, setToken, organization, loading: userLoading } = useUserStore();
   const { isInfoComplete, isVerified, loading: orgLoading } = useOrgStore();
-  const router = useRouter();
-
-  const [secondsLeft, setSecondsLeft] = useState(5)
-  const secondsRef = useRef(null);
 
 
   if (!isInfoComplete) {
@@ -56,51 +44,7 @@ function ClientLayoutInner({ children }) {
   }
 
   // Countdown + redirect logic
-  useEffect(() => {
-    let intervalId
-    let timeoutId
-
-    // Unauthenticated -> redirect to /auth
-    // if (!organization && isAuthenticated === false) {
-    //   if (secondsRef.current === null) { secondsRef.current = 5; setSecondsLeft(5) }
-    //   // toast('You will be redirected to login shortly', { duration: 3000 })
-    //   intervalId = setInterval(() => {
-    //     secondsRef.current = Math.max(0, (secondsRef.current || 0) - 1)
-    //     setSecondsLeft(secondsRef.current)
-    //     if (secondsRef.current === 0) {
-    //       clearInterval(intervalId)
-    //       router.replace('/auth')
-    //     }
-    //   }, 1000)
-    //   timeoutId = setTimeout(() => { clearInterval(intervalId); router.replace('/auth') }, 5000)
-    // }
-
-    // Authenticated but no organization -> redirect to organization registration
-    // if (isAuthenticated && !organization) {
-    //   if (secondsRef.current === null) { secondsRef.current = 5; setSecondsLeft(5) }
-    //   intervalId = setInterval(() => {
-    //     secondsRef.current = Math.max(0, (secondsRef.current || 0) - 1)
-    //     setSecondsLeft(secondsRef.current)
-    //     if (secondsRef.current === 0) {
-    //       clearInterval(intervalId)
-    //       router.replace('/org/register')
-    //     }
-    //   }, 1000)
-    //   timeoutId = setTimeout(() => { clearInterval(intervalId); router.replace('/org/register') }, 5000)
-    // }
-
-    return () => {
-      if (intervalId) clearInterval(intervalId)
-      if (timeoutId) clearTimeout(timeoutId)
-      // reset ref so future transitions restart countdown
-      secondsRef.current = null
-    }
-  }, [isAuthenticated, organization, router])
-
-
-  useEffect(() => {
-    setToken({ token });
-  }, [token, setToken]);
+  useEffect(() => { setToken() }, []);
 
   // Routes that should show the sidebar
   const protectedRoutes = ['/dashboard', '/event', '/messages', '/notifications', '/organization', '/organization/edit', '/contact'];

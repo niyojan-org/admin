@@ -199,7 +199,6 @@ const MembersPage = () => {
           onClearSelection={clearSelection}
           onBulkAction={(action, data) => {
             // Handle bulk actions here
-            console.log('Bulk action:', action, data);
           }}
         />
       )}

@@ -38,7 +38,6 @@ const OrganizationPage = () => {
         setError("Organization not found");
       }
     } catch (err) {
-      console.error("Error fetching organization:", err);
       if (err.response?.status === 404) {
         setError("not_found");
       } else {

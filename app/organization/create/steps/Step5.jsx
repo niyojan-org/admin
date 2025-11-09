@@ -131,7 +131,6 @@ export default function Step5({ goNext, goBack }) {
       }
     } catch (error) {
       toast.error("Failed to upload logo. Please try again.");
-      console.error("Logo upload error:", error);
     } finally {
       setIsUploadingLogo(false);
     }

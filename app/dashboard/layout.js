@@ -1,6 +1,7 @@
 "use client";
 
 import ProtectedRoute from "@/components/ProtectedRoute";
+import PushNotification from "@/components/PushNotification";
 import { Card, CardContent } from "@/components/ui/card";
 
 export default function DashboardLayout({ children, event, payment, revenue, summary }) {
@@ -58,6 +59,7 @@ export default function DashboardLayout({ children, event, payment, revenue, sum
                     {payment}
                 </div>
             </div>
+            <PushNotification />
         </ProtectedRoute>
     );
 }
