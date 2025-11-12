@@ -11,8 +11,11 @@ import SessionForm from './sessions/SessionForm';
 import DeleteSessionDialog from './sessions/DeleteSessionDialog';
 import ToggleMultipleSessionsDialog from './sessions/ToggleMultipleSessionsDialog';
 import { toast } from 'sonner';
+import { cn } from '@/lib/utils';
+import { IconAlertHexagon } from '@tabler/icons-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
-export default function Sessions({ eventId }) {
+export default function Sessions({ eventId, className, event }) {
     const { user } = useUserStore();
     const [mounted, setMounted] = useState(false);
     const userRole = user?.organization.role || 'volunteer';
@@ -26,7 +29,9 @@ export default function Sessions({ eventId }) {
         addSession,
         updateSession,
         deleteSession,
-        toggleMultipleSessions
+        toggleMultipleSessions,
+        enableCheckIn,
+        disableCheckIn
     } = useSessionData(eventId);
 
     // Dialog states
@@ -110,9 +115,45 @@ export default function Sessions({ eventId }) {
         }
     };
 
+    // Handle enable check-in
+    const handleEnableCheckIn = async (sessionId, checkInData) => {
+        try {
+            await enableCheckIn(sessionId, checkInData);
+        } catch (error) {
+            // Error is handled in the hook
+        }
+    };
+
+    // Handle disable check-in
+    const handleDisableCheckIn = async (sessionId) => {
+        try {
+            await disableCheckIn(sessionId);
+        } catch (error) {
+            // Error is handled in the hook
+        }
+    };
+
+    if (!eventId) {
+        return (
+            <Card className={cn("w-full h-full my-auto items-center flex-col justify-center", className)}>
+                <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
+                    <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-2">
+                        <IconAlertHexagon className='h-20 w-20' />
+                    </div>
+                    <div className="space-y-2">
+                        <h3 className="text-lg font-semibold text-foreground">No Event Selected</h3>
+                        <p className="text-sm text-muted-foreground max-w-sm">
+                            Please select an event to view and manage its sessions
+                        </p>
+                    </div>
+                </div>
+            </Card>
+        );
+    }
+
     return (
         <>
-            <Card className="w-full">
+            <Card className={cn("w-full h-[440px] flex flex-col", className)}>
                 <SessionHeader
                     sessionCount={sessions.length}
                     allowMultipleSessions={allowMultipleSessions}
@@ -121,15 +162,21 @@ export default function Sessions({ eventId }) {
                     userRole={userRole}
                     loading={loading}
                 />
-
-                <SessionList
-                    sessions={sessions}
-                    loading={loading}
-                    error={error}
-                    onEditSession={handleEditSession}
-                    onDeleteSession={handleDeleteSession}
-                    userRole={userRole}
-                />
+                
+                <div className="flex-1 overflow-hidden">
+                    <ScrollArea className="h-full">
+                        <SessionList
+                            sessions={sessions}
+                            loading={loading}
+                            error={error}
+                            onEditSession={handleEditSession}
+                            onDeleteSession={handleDeleteSession}
+                            onEnableCheckIn={handleEnableCheckIn}
+                            onDisableCheckIn={handleDisableCheckIn}
+                            userRole={userRole}
+                        />
+                    </ScrollArea>
+                </div>
             </Card>
 
             {/* Add Session Dialog */}
@@ -138,7 +185,7 @@ export default function Sessions({ eventId }) {
                 onOpenChange={setShowAddDialog}
                 onSubmit={handleAddSession}
                 loading={loading}
-                eventMode="online"
+                eventMode={event?.mode || "offline"}
             />
 
             {/* Edit Session Dialog */}
@@ -148,7 +195,7 @@ export default function Sessions({ eventId }) {
                 session={selectedSession}
                 onSubmit={handleUpdateSession}
                 loading={loading}
-                eventMode="online"
+                eventMode={event?.mode || "offline"}
             />
 
             {/* Delete Session Dialog */}

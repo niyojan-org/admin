@@ -20,6 +20,7 @@ import {
   IconTicket,
   IconBuilding,
   IconHeadset,
+  IconHomeCog,
 } from "@tabler/icons-react";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -70,13 +71,13 @@ const AppSidebar = ({ className }) => {
           label: "Create Event",
           href: "/event/create",
           icon: IconPlus,
-        },
-        {
-          id: "event-templates",
-          label: "Templates",
-          href: "/event/templates",
-          icon: IconTicket,
-        },
+        }
+        // {
+        //   id: "event-templates",
+        //   label: "Templates",
+        //   href: "/event/templates",
+        //   icon: IconTicket,
+        // },
       ],
     },
     {
@@ -92,19 +93,19 @@ const AppSidebar = ({ className }) => {
       href: "/dashboard/payments",
       badge: { text: "New", variant: "destructive" },
     },
-    {
-      id: "messages",
-      label: "Messages",
-      icon: IconMail,
-      href: "/messages",
-      badge: { text: "5", variant: "secondary" },
-    },
-    {
-      id: "notifications",
-      label: "Notifications",
-      icon: IconBell,
-      href: "/notifications",
-    },
+    // {
+    //   id: "messages",
+    //   label: "Messages",
+    //   icon: IconMail,
+    //   href: "/messages",
+    //   badge: { text: "5", variant: "secondary" },
+    // },
+    // {
+    //   id: "notifications",
+    //   label: "Notifications",
+    //   icon: IconBell,
+    //   href: "/notifications",
+    // },
   ];
 
   const settingsItems = [
@@ -113,6 +114,12 @@ const AppSidebar = ({ className }) => {
       label: "Organization",
       icon: IconBuilding,
       href: "/organization",
+    },
+    {
+      id: "member-management",
+      label: "Members",
+      icon: IconHomeCog,
+      href: "/organization/members",
     },
     {
       id: "contact-support",

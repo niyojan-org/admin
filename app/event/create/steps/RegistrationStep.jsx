@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { IconInfoSquareRounded } from "@tabler/icons-react";
 import { toast } from "sonner";
-import { DateTimeInput } from "@/components/ui/date-time-input";
+// import { DateTimeInput } from "@/components/ui/date-time-input";
 import { Badge } from "@/components/ui/badge";
 
 export default function RegistrationStep({
@@ -312,7 +312,7 @@ export default function RegistrationStep({
         </div>
 
         {/* Registration Dates */}
-        <div className="space-y-4">
+        {/* <div className="space-y-4">
           <div>
             <Label className={"mb-2 text-base"}>Registration Start Date</Label>
             <DateTimeInput
@@ -329,7 +329,7 @@ export default function RegistrationStep({
               minDateTime={eventData.registrationStart}
             />
           </div>
-        </div>
+        </div> */}
       </CardContent>
     </Card>
   );

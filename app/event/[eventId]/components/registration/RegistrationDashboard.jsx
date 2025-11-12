@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   BarChart3, 
   Settings, 
@@ -128,9 +129,9 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
   }
 
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={`space-y-4 h-[850px] sm:h-[600px] flex flex-col ${className}`}>
       {/* Header with Status */}
-      <Card>
+      <Card className="flex-shrink-0">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -159,37 +160,37 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="destructive">
+        <Alert variant="destructive" className="flex-shrink-0">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
       {/* Main Content Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-4">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
+        <TabsList className="grid w-full grid-cols-4 flex-shrink-0">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
-            Overview
+            <span className="hidden sm:inline">Overview</span>
           </TabsTrigger>
           <TabsTrigger value="timeline" className="flex items-center gap-2">
             <Calendar className="w-4 h-4" />
-            Timeline
+            <span className="hidden sm:inline">Timeline</span>
           </TabsTrigger>
           <TabsTrigger value="statistics" className="flex items-center gap-2">
             <Users className="w-4 h-4" />
-            Statistics
+            <span className="hidden sm:inline">Statistics</span>
           </TabsTrigger>
           <TabsTrigger value="settings" className="flex items-center gap-2">
             <Settings className="w-4 h-4" />
-            Settings
+            <span className="hidden sm:inline">Settings</span>
           </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
-        <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 gap-6">
-            <div className="space-y-6">
+        <TabsContent value="overview" className="flex-1 overflow-hidden mt-4 ">
+          <ScrollArea className="h-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pr-2 pb-2">
               <QuickActions
                 eventId={eventId}
                 isRegistrationOpen={registrationData?.isRegistrationOpen}
@@ -198,61 +199,70 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
                 requirements={requirements}
                 onStatusChange={handleStatusChange}
               />
-            </div>
-            <div className="space-y-6">
               <TimelineDisplay
                 registrationStart={registrationData?.registrationStart}
                 registrationEnd={registrationData?.registrationEnd}
                 isRegistrationOpen={registrationData?.isRegistrationOpen}
               />
             </div>
-          </div>
+          </ScrollArea>
         </TabsContent>
 
         {/* Timeline Tab */}
-        <TabsContent value="timeline" className="space-y-6">
-          <div className="grid grid-cols-1 gap-6">
-            <TimelineDisplay
-              registrationStart={registrationData?.registrationStart}
-              registrationEnd={registrationData?.registrationEnd}
-              isRegistrationOpen={registrationData?.isRegistrationOpen}
-            />
-            <Card>
-              <CardHeader>
-                <CardTitle>Timeline Management</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Configure when participants can register for this event. 
-                  The timeline automatically manages registration status.
-                </p>
-                <Button 
-                  onClick={() => setShowTimelineDialog(true)}
-                  className="w-full"
-                >
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Edit Timeline
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+        <TabsContent value="timeline" className="flex-1 overflow-hidden mt-4">
+          <ScrollArea className="h-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pr-2 pb-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Timeline Management</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    Configure when participants can register for this event. 
+                    The timeline automatically manages registration status.
+                  </p>
+                  <Button 
+                    onClick={() => setShowTimelineDialog(true)}
+                    className="w-full"
+                  >
+                    <Calendar className="w-4 h-4 mr-2" />
+                    Edit Timeline
+                  </Button>
+                </CardContent>
+              </Card>
+              <TimelineDisplay
+                registrationStart={registrationData?.registrationStart}
+                registrationEnd={registrationData?.registrationEnd}
+                isRegistrationOpen={registrationData?.isRegistrationOpen}
+              />
+            </div>
+          </ScrollArea>
         </TabsContent>
 
         {/* Statistics Tab */}
-        <TabsContent value="statistics" className="space-y-6">
-          <RegistrationStats
-            statistics={registrationData?.statistics}
-            tickets={registrationData?.tickets}
-          />
+        <TabsContent value="statistics" className="flex-1 overflow-hidden mt-4">
+          <ScrollArea className="h-full">
+            <div className="grid grid-cols-1 gap-6 pr-2 pb-2">
+              <RegistrationStats
+                statistics={registrationData?.statistics}
+                tickets={registrationData?.tickets}
+                eventId={eventId}
+              />
+            </div>
+          </ScrollArea>
         </TabsContent>
 
         {/* Settings Tab */}
-        <TabsContent value="settings" className="space-y-6">
-          <RegistrationSettings
-            eventId={eventId}
-            currentSettings={registrationData?.features}
-            onUpdate={handleSettingsUpdate}
-          />
+        <TabsContent value="settings" className="flex-1 overflow-hidden mt-4">
+          <ScrollArea className="h-full">
+            <div className="pr-2 pb-2">
+              <RegistrationSettings
+                eventId={eventId}
+                currentSettings={registrationData?.features}
+                onUpdate={handleSettingsUpdate}
+              />
+            </div>
+          </ScrollArea>
         </TabsContent>
       </Tabs>
 

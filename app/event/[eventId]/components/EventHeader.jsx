@@ -15,7 +15,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-const EventHeader = ({ event, organization }) => {
+const EventHeader = ({ event, organization, setEventData }) => {
   const getStatusBadge = (status, isPublished, isBlocked) => {
     if (isBlocked) return { variant: "destructive", label: "Blocked" };
     if (!isPublished) return { variant: "secondary", label: "Draft" };
@@ -69,65 +69,72 @@ const EventHeader = ({ event, organization }) => {
         </div>
       )}
 
-      <CardContent className="p-6">
-        {/* Status and Mode Badges */}
-        <div className="flex flex-wrap gap-2 mb-4">
-          <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
-          <Badge variant={modeBadge.variant}>
-            <ModeIcon className="w-3 h-3 mr-1" />
-            {modeBadge.label}
-          </Badge>
-          {event.featured && <Badge variant="warning">Featured</Badge>}
-          {event.fraudulent && <Badge variant="destructive">Fraudulent</Badge>}
-          <Badge variant="outline">{event.type}</Badge>
-        </div>
-
-        {/* Title and Organization */}
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold">{event.title}</h1>
-          <p className="text-muted-foreground">
-            by <span className="font-medium text-primary">{organization.name}</span>
-            {organization.verified && (
-              <span className="ml-1 text-blue-500">✓</span>
-            )}
-          </p>
-        </div>
-
-        {/* Description */}
-        {event.description && (
-          <p className="text-muted-foreground mt-4 text-base leading-relaxed">
-            {event.description}
-          </p>
-        )}
-
-        {/* Tags */}
-        {event.tags && event.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-4">
-            {event.tags.map((tag, index) => (
-              <Badge key={index} variant="outline" className="text-xs">
-                #{tag}
+      <CardContent className="p-2 md:p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left: Event Info (2 columns on large screens) */}
+          <div className="lg:col-span-2 space-y-4 order-1">
+            {/* Status and Mode Badges */}
+            <div className="flex flex-wrap gap-2">
+              <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
+              <Badge variant={modeBadge.variant}>
+                <ModeIcon className="w-3 h-3 mr-1" />
+                {modeBadge.label}
               </Badge>
-            ))}
-          </div>
-        )}
+              {event.featured && <Badge variant="warning">Featured</Badge>}
+              {event.fraudulent && <Badge variant="destructive">Fraudulent</Badge>}
+              <Badge variant="outline">{event.type}</Badge>
+            </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6 pt-4 border-t">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Users className="w-4 h-4" />
-            <span>{event.totalRegistrations} registered</span>
+            {/* Title and Organization */}
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold">{event.title}</h1>
+              <p className="text-muted-foreground">
+                by <span className="font-medium text-primary">{organization.name}</span>
+                {organization.verified && (
+                  <span className="ml-1 text-blue-500">✓</span>
+                )}
+              </p>
+            </div>
+
+            {/* Description */}
+            {event.description && (
+              <p className="text-muted-foreground text-base leading-relaxed">
+                {event.description}
+              </p>
+            )}
+
+            {/* Tags */}
+            {event.tags && event.tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {event.tags.map((tag, index) => (
+                  <Badge key={index} variant="outline" className="text-xs">
+                    #{tag}
+                  </Badge>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Eye className="w-4 h-4" />
-            <span>{event.viewCount} views</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Calendar className="w-4 h-4" />
-            <span>{event.sessions?.length || 0} sessions</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Clock className="w-4 h-4" />
-            <span>Created {new Date(event.createdAt).toLocaleDateString()}</span>
+
+          {/* Quick Stats - Always at bottom (spans full width, appears last) */}
+          <div className="lg:col-span-3 order-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Users className="w-4 h-4" />
+                <span>{event.totalRegistrations} registered</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Eye className="w-4 h-4" />
+                <span>{event.viewCount} views</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Calendar className="w-4 h-4" />
+                <span>{event.sessions?.length || 0} sessions</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Clock className="w-4 h-4" />
+                <span>Created {new Date(event.createdAt).toLocaleDateString()}</span>
+              </div>
+            </div>
           </div>
         </div>
       </CardContent>

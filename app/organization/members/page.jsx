@@ -18,6 +18,7 @@ import ExportMembers from './components/ExportMembers';
 import { useMembers } from './hooks/useMembers';
 import { useMemberFilters } from './hooks/useMemberFilters';
 import { useBulkSelection } from './hooks/useBulkSelection';
+import Error404 from '@/app/not-found';
 
 const MembersPage = () => {
   const [showAddModal, setShowAddModal] = useState(false);
@@ -123,30 +124,20 @@ const MembersPage = () => {
   };
 
   if (error) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-center">
-          <h3 className="text-lg font-medium text-gray-900">Error Loading Members</h3>
-          <p className="text-gray-500 mt-2">{error}</p>
-          <Button onClick={() => fetchMembers(filters)} className="mt-4">
-            Try Again
-          </Button>
-        </div>
-      </div>
-    );
+    return <Error404 />
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 w-full h-full max-w-screen pb-10">
       {/* Page Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex justify-between flex-col sm:flex-row">
         <div>
           <h1 className="text-2xl font-bold">Members</h1>
           <p className="text-muted-foreground">Manage your organization members and invitations</p>
         </div>
         <div className="flex items-center gap-3">
-          <ExportMembers 
-            members={members} 
+          <ExportMembers
+            members={members}
             filters={filters}
             summary={summary}
           />
@@ -161,8 +152,8 @@ const MembersPage = () => {
       <MemberStatsCards summary={summary} loading={loading} />
 
       {/* Search and Filter Controls */}
-      <Card>
-        <CardContent className="p-4">
+      <Card className={'p-0'}>
+        <CardContent className="p-2">
           <div className="flex items-center gap-4">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -208,13 +199,12 @@ const MembersPage = () => {
           onClearSelection={clearSelection}
           onBulkAction={(action, data) => {
             // Handle bulk actions here
-            console.log('Bulk action:', action, data);
           }}
         />
       )}
 
       {/* Members Table */}
-      <Card>
+      <Card className={'w-full'}>
         <CardContent className="p-0">
           <MemberTable
             members={members}

@@ -22,8 +22,7 @@ export const fieldTypes = [
   { value: "date", label: "Date" },
   { value: "dropdown", label: "Dropdown" },
   { value: "radio", label: "Radio Group" },
-  { value: "checkbox", label: "Checkbox" },
-  { value: "file", label: "File Upload" },
+  { value: "checkbox", label: "Checkbox" }
 ];
 
 export const getFieldTypeIcon = (type) => {

@@ -70,7 +70,7 @@ export const QuickActions = ({ event, setEventData }) => {
     }
 
     return (
-        <Card>
+        <Card className={' py-4 gap-2'}>
             <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                     <IconSettings2 className="w-5 h-5" />
@@ -173,42 +173,53 @@ export const QuickActions = ({ event, setEventData }) => {
                     </AlertDialog>
                 )}
 
-                {/* Event Status Display */}
-                <div className="flex items-center justify-between p-2 bg-muted rounded-md">
-                    <span className="text-sm text-muted-foreground">Status:</span>
-                    <div className="flex items-center gap-2">
-                        {event.isPublished ? (
-                            <>
-                                <IconWorld className="w-4 h-4 text-green-600" />
-                                <span className="text-sm font-medium text-green-600">Published</span>
-                            </>
-                        ) : (
-                            <>
-                                <IconLock className="w-4 h-4 text-gray-500" />
-                                <span className="text-sm font-medium text-gray-500">Draft</span>
-                            </>
-                        )}
-                    </div>
-                </div>
-
-                {event.isPublished && (
-                    <div className="flex items-center justify-between p-2 bg-muted rounded-md">
-                        <span className="text-sm text-muted-foreground">Registration:</span>
-                        <div className="flex items-center gap-2">
-                            {event.isRegistrationOpen ? (
-                                <>
-                                    <IconEye className="w-4 h-4 text-green-600" />
-                                    <span className="text-sm font-medium text-green-600">Open</span>
-                                </>
-                            ) : (
-                                <>
-                                    <IconEyeOff className="w-4 h-4 text-red-600" />
-                                    <span className="text-sm font-medium text-red-600">Closed</span>
-                                </>
-                            )}
-                        </div>
-                    </div>
-                )}
+								{/* Event Status Display */}
+								<div className="space-y-3">
+										<div className="flex items-center justify-between p-2 bg-muted rounded-md">
+												<span className="text-sm text-muted-foreground">Status:</span>
+												<div className="flex items-center gap-2">
+														{event.isPublished ? (
+																<>
+																		<IconWorld className="w-4 h-4 text-green-600" />
+																		<span className="text-sm font-medium text-green-600">Published</span>
+																</>
+														) : (
+																<>
+																		<IconLock className="w-4 h-4 text-gray-500" />
+																		<span className="text-sm font-medium text-gray-500">Draft</span>
+																</>
+														)}
+												</div>
+										</div>
+								
+										{event.isPublished && (
+												<div className="flex items-center justify-between p-2 bg-muted rounded-md">
+														<span className="text-sm text-muted-foreground">Registration:</span>
+														<div className="flex items-center gap-2">
+																{event.isRegistrationOpen ? (
+																		<>
+																				<IconEye className="w-4 h-4 text-green-600" />
+																				<span className="text-sm font-medium text-green-600">Open</span>
+																		</>
+																) : (
+																		<>
+																				<IconEyeOff className="w-4 h-4 text-red-600" />
+																				<span className="text-sm font-medium text-red-600">Closed</span>
+																		</>
+																)}
+														</div>
+												</div>
+										)}
+								</div>
+								
+								{/* Show participant details button if registration has started */}
+								{event.isPublished && (
+										<Button variant="outline" className="w-full" asChild>
+												<Link href={`/event/${event._id}/participants`}>
+														View Participant Details
+												</Link>
+										</Button>
+								)}
 
                 <Separator />
 

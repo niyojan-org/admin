@@ -113,11 +113,9 @@ export default function SocialShareCard({ organization, event, referral, coupon,
                             <div className="space-y-4">
                                 {event?.sessions && (
                                     <div className="flex items-center space-x-3">
-                                        <Card className="p-0 border-0">
-                                            <CardContent>
-                                                <IconCalendar className="w-6 h-6" />
-                                            </CardContent>
-                                        </Card>
+                                        <div>
+                                            <IconCalendar className="w-6 h-6 text-primary" />
+                                        </div>
                                         <div>
                                             <p className="font-semibold ">{moment(event.sessions[0].startTime).format("MMMM Do YYYY, h:mm A")}</p>
                                             <p className="text-sm text-muted-foreground">{moment(event.sessions[event.sessions.length - 1].endTime).format("MMMM Do YYYY, h:mm A")}</p>

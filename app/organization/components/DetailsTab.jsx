@@ -1,167 +1,145 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import React from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  IconCreditCard,
+  IconBuilding,
+  IconMail,
+  IconPhone,
+  IconWorld,
+  IconFileText,
+  IconMapPin,
   IconBrandFacebook,
-  IconBrandInstagram
-} from '@tabler/icons-react';
+  IconBrandInstagram,
+} from "@tabler/icons-react";
 
-export default function DetailsTab({ orgData }) {
-  if (!orgData) return null;
-
+const DetailsTab = ({ organization }) => {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      {/* Bank Details */}
+    <div className="space-y-4 sm:space-y-6">
+      {/* Basic Information */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <IconCreditCard className="h-5 w-5" />
-            Bank Details
-          </CardTitle>
+          <CardTitle className="text-lg sm:text-xl">Basic Information</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">Core organization details</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
+            <div className="flex items-start gap-3">
+              <IconBuilding className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">Organization Name</p>
+                <p className="text-sm text-muted-foreground">{organization.name}</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <IconMail className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">Email</p>
+                <p className="text-sm text-muted-foreground">{organization.email}</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <IconPhone className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">Phone</p>
+                <p className="text-sm text-muted-foreground">{organization.phone}</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <IconWorld className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">Website</p>
+                <a
+                  href={organization.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-primary hover:underline"
+                >
+                  {organization.website || "N/A"}
+                </a>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <IconFileText className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">Category</p>
+                <p className="text-sm text-muted-foreground capitalize">
+                  {organization.category} - {organization.subCategory}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <IconFileText className="h-5 w-5 text-muted-foreground mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium">Slug</p>
+                <p className="text-sm text-muted-foreground">{organization.slug}</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Address */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg sm:text-xl">Address</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">Physical location details</CardDescription>
         </CardHeader>
         <CardContent>
-          {orgData.bankDetails ? (
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span>Account Holder</span>
-                <span className="font-medium">{orgData.bankDetails.accountHolderName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Bank Name</span>
-                <span className="font-medium">{orgData.bankDetails.bankName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Account Number</span>
-                <span className="font-mono">****{orgData.bankDetails.accountNumber?.slice(-4)}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>IFSC Code</span>
-                <span className="font-mono">{orgData.bankDetails.ifscCode}</span>
-              </div>
-              {orgData.bankDetails.upiId && (
-                <div className="flex justify-between">
-                  <span>UPI ID</span>
-                  <span className="font-mono">{orgData.bankDetails.upiId}</span>
-                </div>
-              )}
+          <div className="flex items-start gap-3">
+            <IconMapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
+            <div className="flex-1 space-y-1">
+              <p className="text-sm">{organization.address?.street}</p>
+              <p className="text-sm text-muted-foreground">
+                {organization.address?.city}, {organization.address?.state} {organization.address?.zipCode}
+              </p>
+              <p className="text-sm text-muted-foreground">{organization.address?.country}</p>
             </div>
-          ) : (
-            <p className="text-sm">Bank details not provided</p>
-          )}
+          </div>
         </CardContent>
       </Card>
 
       {/* Social Links */}
       <Card>
         <CardHeader>
-          <CardTitle>Social Links</CardTitle>
+          <CardTitle className="text-lg sm:text-xl">Social Media</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">Connect with us on social platforms</CardDescription>
         </CardHeader>
         <CardContent>
-          {orgData.socialLinks && (Object.keys(orgData.socialLinks).length > 0) ? (
-            <div className="space-y-3">
-              {orgData.socialLinks.facebook && (
-                <div className="flex items-center gap-3">
-                  <IconBrandFacebook className="h-4 w-4 text-primary" />
-                  <a 
-                    href={orgData.socialLinks.facebook} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-sm text-primary hover:underline"
-                  >
-                    Facebook
-                  </a>
+          <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
+            {organization.socialLinks?.facebook && (
+              <a
+                href={organization.socialLinks.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 rounded-lg border hover:bg-accent transition-colors"
+              >
+                <IconBrandFacebook className="h-5 w-5 text-blue-600" />
+                <div>
+                  <p className="text-sm font-medium">Facebook</p>
+                  <p className="text-xs text-muted-foreground">Visit our page</p>
                 </div>
-              )}
-              {orgData.socialLinks.instagram && (
-                <div className="flex items-center gap-3">
-                  <IconBrandInstagram className="h-4 w-4 text-pink-600" />
-                  <a 
-                    href={orgData.socialLinks.instagram} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="text-sm text-pink-600 hover:underline"
-                  >
-                    Instagram
-                  </a>
+              </a>
+            )}
+            {organization.socialLinks?.instagram && (
+              <a
+                href={organization.socialLinks.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 p-3 rounded-lg border hover:bg-accent transition-colors"
+              >
+                <IconBrandInstagram className="h-5 w-5 text-pink-600" />
+                <div>
+                  <p className="text-sm font-medium">Instagram</p>
+                  <p className="text-xs text-muted-foreground">Follow us</p>
                 </div>
-              )}
-            </div>
-          ) : (
-            <p className="text-sm text-gray-500">No social links provided</p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Support Contact */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Support Contact</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {orgData.supportContact ? (
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span>Name</span>
-                <span className="font-medium">{orgData.supportContact.name}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Email</span>
-                <span className="font-medium">{orgData.supportContact.email}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Phone</span>
-                <span className="font-medium">{orgData.supportContact.phone}</span>
-              </div>
-            </div>
-          ) : (
-            <p className="text-sm">Support contact not provided</p>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Event Preferences */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Event Preferences</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {orgData.eventPreferences ? (
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between">
-                <span>Max Events/Month</span>
-                <span className="font-medium">{orgData.eventPreferences.maxEventsPerMonth}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Paid Events</span>
-                <Badge variant={orgData.eventPreferences.allowsPaidEvents ? "default" : "secondary"}>
-                  {orgData.eventPreferences.allowsPaidEvents ? "Allowed" : "Not Allowed"}
-                </Badge>
-              </div>
-              <div className="flex justify-between">
-                <span>Auto Approve</span>
-                <Badge variant={orgData.eventPreferences.autoApproveEvents ? "default" : "secondary"}>
-                  {orgData.eventPreferences.autoApproveEvents ? "Enabled" : "Disabled"}
-                </Badge>
-              </div>
-              <div className="space-y-2">
-                <span>Preferred Event Types</span>
-                <div className="flex flex-wrap gap-1">
-                  {orgData.eventPreferences.preferredEventTypes?.map((type, index) => (
-                    <Badge key={index} variant="outline" className="text-xs capitalize">
-                      {type.replace(/-/g, ' ')}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ) : (
-            <p className="text-sm">Event preferences not set</p>
-          )}
+              </a>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>
   );
-}
+};
+
+export default DetailsTab;

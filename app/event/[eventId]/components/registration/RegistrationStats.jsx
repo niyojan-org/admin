@@ -5,12 +5,14 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { Users, Ticket, TrendingUp, Target } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 /**
  * Registration Statistics Component
  * Displays registration progress and ticket breakdown
  */
-export default function RegistrationStats({ statistics, tickets = [] }) {
+export default function RegistrationStats({ statistics, tickets = [], eventId }) {
   if (!statistics) {
     return (
       <Card>
@@ -50,9 +52,10 @@ export default function RegistrationStats({ statistics, tickets = [] }) {
   const { label: statusLabel, variant: statusVariant } = getAvailabilityStatus();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 h-full">
+			<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 h-full">
       {/* Overall Statistics */}
-      <Card>
+      <Card className={'gap-4 h-full'}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="w-5 h-5" />
@@ -109,7 +112,7 @@ export default function RegistrationStats({ statistics, tickets = [] }) {
 
       {/* Ticket Breakdown */}
       {tickets.length > 0 && (
-        <Card>
+        <Card className={'h-full'}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Ticket className="w-5 h-5" />
@@ -147,6 +150,7 @@ export default function RegistrationStats({ statistics, tickets = [] }) {
           </CardContent>
         </Card>
       )}
+			</div>
     </div>
   );
 }

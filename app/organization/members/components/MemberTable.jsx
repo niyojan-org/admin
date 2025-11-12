@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,14 +21,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { 
-  MoreHorizontal, 
-  Edit, 
-  Trash2, 
-  Mail, 
-  MailX, 
-  Shield, 
-  ChevronLeft, 
+import {
+  MoreHorizontal,
+  Edit,
+  Trash2,
+  Mail,
+  MailX,
+  Shield,
+  ChevronLeft,
   ChevronRight,
   ArrowUpDown,
   ArrowUp,
@@ -77,7 +78,7 @@ const MemberTable = ({
   const getStatusBadgeVariant = (status) => {
     const variants = {
       active: 'default',
-      pending: 'secondary',
+      pending: 'destructive',
       inactive: 'outline'
     };
     return variants[status] || 'outline';
@@ -110,8 +111,8 @@ const MemberTable = ({
     if (sortConfig.field !== field) {
       return <ArrowUpDown className="w-4 h-4" />;
     }
-    return sortConfig.direction === 'asc' ? 
-      <ArrowUp className="w-4 h-4" /> : 
+    return sortConfig.direction === 'asc' ?
+      <ArrowUp className="w-4 h-4" /> :
       <ArrowDown className="w-4 h-4" />;
   };
 
@@ -156,169 +157,174 @@ const MemberTable = ({
   }
 
   return (
-    <div className="space-y-4">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-12">
-              <Checkbox
-                checked={isAllSelected()}
-                onCheckedChange={onSelectAll}
-                aria-label="Select all members"
-              />
-            </TableHead>
-            <TableHead>
-              <Button
-                variant="ghost"
-                onClick={() => handleSort('name')}
-                className="h-auto p-0 font-medium"
-              >
-                Member
-                {getSortIcon('name')}
-              </Button>
-            </TableHead>
-            <TableHead>
-              <Button
-                variant="ghost"
-                onClick={() => handleSort('organization.role')}
-                className="h-auto p-0 font-medium"
-              >
-                Role
-                {getSortIcon('organization.role')}
-              </Button>
-            </TableHead>
-            <TableHead>
-              <Button
-                variant="ghost"
-                onClick={() => handleSort('organization.status')}
-                className="h-auto p-0 font-medium"
-              >
-                Status
-                {getSortIcon('organization.status')}
-              </Button>
-            </TableHead>
-            <TableHead>
-              <Button
-                variant="ghost"
-                onClick={() => handleSort('isVerified')}
-                className="h-auto p-0 font-medium"
-              >
-                Verified
-                {getSortIcon('isVerified')}
-              </Button>
-            </TableHead>
-            <TableHead>
-              <Button
-                variant="ghost"
-                onClick={() => handleSort('createdAt')}
-                className="h-auto p-0 font-medium"
-              >
-                Joined
-                {getSortIcon('createdAt')}
-              </Button>
-            </TableHead>
-            <TableHead className="w-12">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {members.map((member) => (
-            <TableRow key={member._id}>
-              <TableCell>
-                <Checkbox
-                  checked={isSelected(member._id)}
-                  onCheckedChange={() => onSelectMember(member._id)}
-                  aria-label={`Select ${member.name}`}
-                />
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-3">
-                  <Avatar className="w-8 h-8">
-                    <AvatarImage src={member.avatar} alt={member.name} />
-                    <AvatarFallback>{getInitials(member.name)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <div className="font-medium">{member.name}</div>
-                    <div className="text-sm text-gray-500">{member.email}</div>
-                    {member.phone_number && (
-                      <div className="text-xs text-gray-400">{member.phone_number}</div>
-                    )}
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <Badge variant={getRoleBadgeVariant(member.organization.role)}>
-                  {member.organization.role}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <Badge variant={getStatusBadgeVariant(member.organization.status)}>
-                  {member.organization.status}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                <Badge variant={member.isVerified ? 'default' : 'secondary'}>
-                  {member.isVerified ? 'Verified' : 'Unverified'}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                {member.organization.joinedAt ? 
-                  formatDate(member.organization.joinedAt) : 
-                  formatDate(member.createdAt)
-                }
-              </TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <MoreHorizontal className="w-4 h-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    {canManageMember(member) && (
-                      <>
-                        <DropdownMenuItem onClick={() => handleEditRole(member)}>
-                          <Shield className="w-4 h-4 mr-2" />
-                          Change Role
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                      </>
-                    )}
-                    
-                    {member.organization.status === 'pending' && (
-                      <>
-                        <DropdownMenuItem onClick={() => onResendInvitation(member._id)}>
-                          <Mail className="w-4 h-4 mr-2" />
-                          Resend Invitation
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => onCancelInvitation(member._id)}
-                          className="text-destructive"
-                        >
-                          <MailX className="w-4 h-4 mr-2" />
-                          Cancel Invitation
-                        </DropdownMenuItem>
-                      </>
-                    )}
-                    
-                    {canManageMember(member) && member.organization.status !== 'pending' && (
-                      <>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem 
-                          onClick={() => handleRemoveMember(member)}
-                          className="text-destructive"
-                        >
-                          <Trash2 className="w-4 h-4 mr-2" />
-                          Remove Member
-                        </DropdownMenuItem>
-                      </>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="space-y-4 w-full">
+      <div className="rounded-md border">
+        <ScrollArea className="h-96">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-12">
+                  <Checkbox
+                    checked={isAllSelected()}
+                    onCheckedChange={onSelectAll}
+                    aria-label="Select all members"
+                  />
+                </TableHead>
+                <TableHead className="min-w-[250px]">
+                  <Button
+                    variant="ghost"
+                    onClick={() => handleSort('name')}
+                    className="h-auto p-0 font-medium"
+                  >
+                    Member
+                    {getSortIcon('name')}
+                  </Button>
+                </TableHead>
+                <TableHead className="min-w-[120px]">
+                  <Button
+                    variant="ghost"
+                    onClick={() => handleSort('organization.role')}
+                    className="h-auto p-0 font-medium"
+                  >
+                    Role
+                    {getSortIcon('organization.role')}
+                  </Button>
+                </TableHead>
+                <TableHead className="min-w-[120px]">
+                  <Button
+                    variant="ghost"
+                    onClick={() => handleSort('organization.status')}
+                    className="h-auto p-0 font-medium"
+                  >
+                    Status
+                    {getSortIcon('organization.status')}
+                  </Button>
+                </TableHead>
+                <TableHead className="min-w-[120px]">
+                  <Button
+                    variant="ghost"
+                    onClick={() => handleSort('isVerified')}
+                    className="h-auto p-0 font-medium"
+                  >
+                    Verified
+                    {getSortIcon('isVerified')}
+                  </Button>
+                </TableHead>
+                <TableHead className="min-w-[150px]">
+                  <Button
+                    variant="ghost"
+                    onClick={() => handleSort('createdAt')}
+                    className="h-auto p-0 font-medium"
+                  >
+                    Joined
+                    {getSortIcon('createdAt')}
+                  </Button>
+                </TableHead>
+                <TableHead className="w-12">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {members.map((member) => (
+                <TableRow key={member._id}>
+                  <TableCell>
+                    <Checkbox
+                      checked={isSelected(member._id)}
+                      onCheckedChange={() => onSelectMember(member._id)}
+                      aria-label={`Select ${member.name}`}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      <Avatar className="w-8 h-8">
+                        <AvatarImage src={member.avatar} alt={member.name} />
+                        <AvatarFallback>{getInitials(member.name)}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium">{member.name}</div>
+                        <div className="text-sm text-muted-foreground">{member.email}</div>
+                        {member.phone_number && (
+                          <div className="text-xs text-muted-foreground">{member.phone_number}</div>
+                        )}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={getRoleBadgeVariant(member.organization.role)} className={'capitalize'}>
+                      {member.organization.role}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={getStatusBadgeVariant(member.organization.status)} className={'capitalize'}>
+                      {member.organization.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant={member.isVerified ? 'default' : 'destructive'}>
+                      {member.isVerified ? 'Verified' : 'Unverified'}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {member.organization.joinedAt ?
+                      formatDate(member.organization.joinedAt) :
+                      formatDate(member.createdAt)
+                    }
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="w-4 h-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        {canManageMember(member) && (
+                          <>
+                            <DropdownMenuItem onClick={() => handleEditRole(member)}>
+                              <Shield className="w-4 h-4 mr-2" />
+                              Change Role
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                          </>
+                        )}
+
+                        {member.organization.status === 'pending' && (
+                          <>
+                            <DropdownMenuItem onClick={() => onResendInvitation(member._id)}>
+                              <Mail className="w-4 h-4 mr-2" />
+                              Resend Invitation
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => onCancelInvitation(member._id)}
+                              className="text-destructive"
+                            >
+                              <MailX className="w-4 h-4 mr-2" />
+                              Cancel Invitation
+                            </DropdownMenuItem>
+                          </>
+                        )}
+
+                        {canManageMember(member) && member.organization.status !== 'pending' && (
+                          <>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              onClick={() => handleRemoveMember(member)}
+                              className="text-destructive"
+                            >
+                              <Trash2 className="w-4 h-4 mr-2" />
+                              Remove Member
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
+      </div>
 
       {/* Pagination */}
       {pagination && (

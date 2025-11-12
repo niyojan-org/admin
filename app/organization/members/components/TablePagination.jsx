@@ -11,11 +11,11 @@ import { Label } from '@/components/ui/label';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Users } from 'lucide-react';
 
-const TablePagination = ({ 
-  pagination, 
-  onPageChange, 
-  onLimitChange, 
-  loading = false 
+const TablePagination = ({
+  pagination,
+  onPageChange,
+  onLimitChange,
+  loading = false
 }) => {
   if (!pagination) return null;
 
@@ -74,22 +74,21 @@ const TablePagination = ({
   };
 
   return (
-    <Card className="mt-4 py-1 px-0">
+    <Card className="mt-4 py-2 px-0">
       <CardContent className="">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="flex flex-col lg:flex-row items-center lg:justify-between gap-4">
           {/* Members Info Section */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <div className="flex flex-row sm:items-center gap-4">
+            <div className="flex items-center text-sm text-muted-foreground">
               <Users className="h-4 w-4" />
               <span>
                 Showing{' '}
                 <Badge variant="secondary" className="mx-1">
                   {startItem}
-                </Badge>
-                to{' '}
-                <Badge variant="secondary" className="mx-1">
+                  {' - '}
                   {endItem}
                 </Badge>
+
                 of{' '}
                 <Badge variant="outline" className="mx-1">
                   {totalMembers}
@@ -97,9 +96,9 @@ const TablePagination = ({
                 members
               </span>
             </div>
-            
+
             <Separator orientation="vertical" className="hidden sm:block h-6" />
-            
+
             {/* Items per page selector */}
             <div className="flex items-center gap-2">
               <Label htmlFor="items-per-page" className="text-sm text-muted-foreground whitespace-nowrap">
@@ -133,9 +132,7 @@ const TablePagination = ({
                   </Tooltip>
                 </TooltipProvider>
               )}
-              <Label className="text-sm text-muted-foreground whitespace-nowrap">
-                per page
-              </Label>
+
             </div>
           </div>
 

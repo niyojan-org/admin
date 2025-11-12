@@ -12,6 +12,8 @@ export function SessionList({
     error = null,
     onEditSession,
     onDeleteSession,
+    onEnableCheckIn,
+    onDisableCheckIn,
     userRole
 }) {
     const sortedSessions = sortSessionsByTime(sessions);
@@ -84,10 +86,12 @@ export function SessionList({
             <div className="space-y-4">
                 {sortedSessions.map((session) => (
                     <SessionCard
-                        key={session._id}
+                        key={session?._id || session || Math.random().toString(36).substr(2, 9)}
                         session={session}
                         onEdit={onEditSession}
                         onDelete={onDeleteSession}
+                        onEnableCheckIn={onEnableCheckIn}
+                        onDisableCheckIn={onDisableCheckIn}
                         userRole={userRole}
                         loading={loading}
                     />

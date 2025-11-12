@@ -44,10 +44,10 @@ const BulkActions = ({
   };
 
   return (
-    <Card>
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+    <Card className={'p-2 w-full'}>
+      <CardContent className="p-0">
+        <div className="flex flex-col space-y-2 items-center w-full justify-between">
+          <div className="flex items-center gap-3 justify-between w-full">
             <Badge variant="secondary" className="flex items-center gap-1">
               <Users className="w-3 h-3" />
               {selectedCount} selected

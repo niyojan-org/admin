@@ -3,251 +3,293 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useEventStore } from "@/store/eventStore";
 import { useRouter } from "next/navigation";
-import { useEventForm } from "./hooks/useEventForm";
-import {
-  EVENT_CATEGORIES,
-  EVENT_TYPES,
-  EVENT_MODES,
-  FIELD_TYPES,
-} from "./constants/eventConstants";
+import { CheckCircle, Circle, Lock } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 // Step Components
 import BasicDetailsStep from "./steps/BasicDetailsStep";
-import RegistrationStep from "./steps/RegistrationStep";
 import SessionsStep from "./steps/SessionsStep";
 import TicketsStep from "./steps/TicketsStep";
 import CustomFieldsStep from "./steps/CustomFieldsStep";
-import SettingsStep from "./steps/SettingsStep";
+import { IconCircleCheck, IconCurrentLocation, IconLock, IconLockOpen2, IconSquareRoundedCheck } from "@tabler/icons-react";
+import GuestStep from "./steps/GuestStep";
+import BenefitsStep from "./steps/BenefitsStep";
 
 export default function CreateEventPage() {
   const router = useRouter();
   const { createEvent, loading: storeLoading } = useEventStore();
-  const [step, setStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
   const [loading, setLoading] = useState(false);
-
-  // Use the custom hook for event form management
-  const {
-    eventData,
-    setEventData,
-    handleInputChange,
-    // Session methods
-    addSession,
-    updateSession,
-    updateSessionVenue,
-    removeSession,
-    // Ticket methods
-    addTicket,
-    updateTicket,
-    removeTicket,
-    // Input field methods
-    addInputField,
-    updateInputField,
-    addFieldOption,
-    removeFieldOption,
-    removeInputField,
-    // Validation methods
-    validateBasicDetails,
-    validateRegistration,
-    validateSessions,
-    validateTickets,
-  } = useEventForm();
-
-  // Handle form submission
-  const handleSubmit = async () => {
-    // Validate all sections
-    if (
-      !validateBasicDetails() ||
-      !validateRegistration() ||
-      !validateSessions() ||
-      !validateTickets()
-    ) {
-      return;
-    }
-
-    setLoading(true);
-    try {
-      // Prepare event data
-      const formattedEventData = {
-        ...eventData,
-        registrationStart: new Date(eventData.registrationStart).toISOString(),
-        registrationEnd: new Date(eventData.registrationEnd).toISOString(),
-        sessions: eventData.sessions.map((session) => ({
-          ...session,
-          startTime: new Date(session.startTime).toISOString(),
-          endTime: new Date(session.endTime).toISOString(),
-        })),
-      };
-
-      // Submit event data using store
-      const createdEvent = await createEvent(formattedEventData);
-
-      if (createdEvent) {
-        router.push("/event");
-      }
-    } catch (error) {
-      console.error("Event creation error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [event, setEvent] = useState(null);
+  const [completedSteps, setCompletedSteps] = useState(new Set());
+  const [visitedSteps, setVisitedSteps] = useState(new Set([0])); // Track visited steps, start with step 0
 
   // Step configuration
   const steps = [
     {
       key: "basicDetails",
       label: "Basic Details",
-      validate: validateBasicDetails,
-    },
-    {
-      key: "registration",
-      label: "Registration",
-      validate: validateRegistration,
+      required: true,
+      description: "Event information and details"
     },
     {
       key: "sessions",
       label: "Sessions",
-      validate: validateSessions,
+      required: false,
+      description: "Event sessions and schedule"
     },
     {
       key: "tickets",
       label: "Tickets",
-      validate: validateTickets,
+      required: false,
+      description: "Ticket types and pricing"
     },
     {
       key: "customFields",
       label: "Custom Fields",
-      validate: () => true,
+      required: false,
+      description: "Additional registration fields"
     },
     {
-      key: "settings",
-      label: "Settings",
-      validate: () => true,
+      key: "guest",
+      label: "Guest List",
+      required: false,
+      description: "Manage your event guest list"
     },
+    {
+      key: "benefits",
+      label: "Benefits",
+      required: false,
+      description: "Add benefits for your event attendees"
+    }
   ];
 
-  const goToStep = (stepIndex) => {
-    // Validate current step before moving
-    if (stepIndex > step && steps[step]?.validate && !steps[step].validate()) {
+  // Check if a step is accessible
+  const isStepAccessible = (stepIndex) => {
+    if (stepIndex === 0) return true; // Basic details always accessible
+    return event && event._id; // Other steps require event to be created
+  };
+
+  // Check if a step is completed
+  const isStepCompleted = (stepIndex) => {
+    return completedSteps.has(stepIndex);
+  };
+
+  // Check if a step has been visited
+  const isStepVisited = (stepIndex) => {
+    return visitedSteps.has(stepIndex);
+  };
+
+  // Handle step completion (called from BasicDetailsStep when event is created)
+  const handleStepComplete = (stepIndex) => {
+    setCompletedSteps(prev => new Set([...prev, stepIndex]));
+  };
+
+  // Handle step click
+  const handleStepClick = (stepIndex) => {
+    if (!isStepAccessible(stepIndex)) {
+      toast.error("Please complete Basic Details first to access this step");
       return;
     }
-    setStep(stepIndex);
+
+    // Mark step as visited
+    setVisitedSteps(prev => new Set([...prev, stepIndex]));
+    setCurrentStep(stepIndex);
   };
 
-  const goNext = () => {
-    if (step < steps.length - 1) {
-      goToStep(step + 1);
-    } else {
-      handleSubmit();
+  // Handle next step
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      const nextStep = currentStep + 1;
+      if (isStepAccessible(nextStep)) {
+        // Mark next step as visited
+        setVisitedSteps(prev => new Set([...prev, nextStep]));
+        setCurrentStep(nextStep);
+      }
     }
   };
 
-  const goBack = () => {
-    if (step > 0) {
-      setStep(step - 1);
+  // Handle previous step
+  const handlePrevious = () => {
+    if (currentStep > 0) {
+      const prevStep = currentStep - 1;
+      // Mark previous step as visited (it should already be visited, but ensure it)
+      setVisitedSteps(prev => new Set([...prev, prevStep]));
+      setCurrentStep(prevStep);
+    }
+  };
+
+  // Handle form submission
+  const handleSubmit = async () => {
+    try {
+      setLoading(true);
+      // Final submission logic here
+      toast.success("Event created successfully!");
+      router.push(`/event/${event._id}`);
+    } catch (error) {
+      toast.error("Failed to create event");
+      console.error("Submit error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="mx-auto px-10 justify-between min-h-screen pr-20 flex flex-col py-5 ">
+    <div className="mx-auto justify-between flex flex-col w-full h-full">
       {/* Header */}
-      <div className="mb-1 flex flex-col">
+      <div className="flex flex-col">
         <h1 className="text-2xl font-bold text-navy">Create New Event</h1>
-        <p className="text-gray">
+        <p className="text-gray-600">
           Fill in the details below to create your event and start accepting registrations
         </p>
       </div>
 
       {/* Progress Steps */}
-      <div className="mb-2 flex flex-wrap gap-2">
-        {steps.map((s, index) => (
-          <Button
-            key={s.key}
-            onClick={() => goToStep(index)}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${index === step ? "" : index < step ? " text-accent" : "  "
-              }`}
-          >
-            {index + 1}. {s.label}
-          </Button>
-        ))}
+      <div className="">
+        <div className="flex flex-wrap gap-2 mb-4">
+          {steps.map((step, index) => {
+            const isAccessible = isStepAccessible(index);
+            const isCompleted = isStepCompleted(index);
+            const isVisited = isStepVisited(index);
+            const isCurrent = index === currentStep;
+            const isBasicStepCompleted = isStepCompleted(0);
+
+            // Determine button variant
+            let variant = "outline";
+            if (isCurrent) {
+              variant = "default";
+            } else if (isCompleted) {
+              variant = "secondary";
+            } else if (isVisited && isBasicStepCompleted && index > 0) {
+              variant = "secondary";
+            }
+
+            return (
+              <Button
+                key={step.key}
+                onClick={() => handleStepClick(index)}
+                disabled={!isAccessible}
+                variant={variant}
+                className={cn(
+                  "flex transition-all",
+                  !isAccessible && "opacity-50 cursor-not-allowed",
+                  isCurrent && "ring-2 ring-primary ring-offset-2",
+                  isVisited && !isCurrent && !isCompleted && isBasicStepCompleted && index > 0 && "bg-secondary/50"
+                )}
+              >
+                <span className="flex items-center gap-2">
+                  {!isAccessible ? (
+                    <IconLock className="w-4 h-4" />
+                  ) : isCompleted ? (
+                    <IconCircleCheck className="w-4 h-4" />
+                  ) : isVisited ? (
+                    <IconSquareRoundedCheck className="w-4 h-4" />
+                  ) : (
+                    <IconLockOpen2 className="w-4 h-4" />
+                  )}
+                  <span>{index + 1}. {step.label}</span>
+                  {step.required && <span className="text-red-500">*</span>}
+                </span>
+              </Button>
+            );
+          })}
+        </div>
+
+        {/* Current step description */}
+        <p className="text-sm text-gray-500">
+          {steps[currentStep].description}
+        </p>
       </div>
+
       {/* Form Content */}
-      <>
+      <div className="flex-1">
         {/* Step 0: Basic Details */}
-        {step === 0 && (
-          <BasicDetailsStep eventData={eventData} handleInputChange={handleInputChange} />
-        )}
-
-        {/* Step 1: Registration Details */}
-        {step === 1 && (
-          <RegistrationStep
-            eventData={eventData}
-            handleInputChange={handleInputChange}
-            eventCategories={EVENT_CATEGORIES}
-            eventTypes={EVENT_TYPES}
-            eventModes={EVENT_MODES}
+        {currentStep === 0 && (
+          <BasicDetailsStep
+            event={event}
+            setEvent={(eventData) => {
+              setEvent(eventData);
+              console.log(eventData);
+              if (eventData && eventData._id) {
+                handleStepComplete(0);
+                // Mark next step as visited when automatically moving to it
+                setVisitedSteps(prev => new Set([...prev, 1]));
+                setCurrentStep(1); // Move to next step automatically
+              }
+            }}
           />
         )}
 
-        {/* Step 2: Sessions */}
-        {step === 2 && (
+        {/* Step 1: Sessions */}
+        {currentStep === 1 && (
           <SessionsStep
-            eventData={eventData}
-            updateSession={updateSession}
-            updateSessionVenue={updateSessionVenue}
-            addSession={addSession}
-            removeSession={removeSession}
+            event={event}
+            setEvent={setEvent}
+            onComplete={() => handleStepComplete(1)}
           />
         )}
 
-        {/* Step 3: Tickets */}
-        {step === 3 && (
+        {/* Step 2: Tickets */}
+        {currentStep === 2 && (
           <TicketsStep
-            eventData={eventData}
-            updateTicket={updateTicket}
-            addTicket={addTicket}
-            removeTicket={removeTicket}
+            event={event}
+            setEvent={setEvent}
+            onComplete={() => handleStepComplete(2)}
           />
         )}
 
-        {/* Step 4: Custom Input Fields */}
-        {step === 4 && (
+        {/* Step 3: Custom Fields */}
+        {currentStep === 3 && (
           <CustomFieldsStep
-            eventData={eventData}
-            fieldTypes={FIELD_TYPES}
-            addInputField={addInputField}
-            updateInputField={updateInputField}
-            removeInputField={removeInputField}
-            addFieldOption={addFieldOption}
-            removeFieldOption={removeFieldOption}
+            event={event}
+            setEvent={setEvent}
+            onComplete={() => handleStepComplete(3)}
           />
         )}
 
-        {/* Step 5: Event Settings */}
-        {step === 5 && <SettingsStep eventData={eventData} handleInputChange={handleInputChange} />}
-      </>
+        {/* Step 4: Guest List */}
+        {currentStep === 4 && (
+          <GuestStep event={event} setEvent={setEvent} onComplete={() => handleStepComplete(4)} />
+        )}
 
-      {/* Navigation Buttons */}
-      <div className="flex justify-between pt-3">
+        {/* Step 5: Benefits */}
+        {currentStep === 5 && (
+          <BenefitsStep
+            event={event}
+            setEvent={setEvent}
+            onComplete={() => handleStepComplete(5)}
+          />
+        )}
+      </div>
+
+      {/* Navigation Controls */}
+      <div className="mt-6 flex justify-between">
         <Button
-          onClick={goBack}
           variant="outline"
-          className={"cursor-pointer"}
-          disabled={step === 0}
+          onClick={handlePrevious}
+          disabled={currentStep === 0}
         >
-          Back
+          Previous
         </Button>
 
-        <Button
-          onClick={goNext}
-          disabled={loading || storeLoading}
-          className="cursor-pointer"
-        >
-          {loading || storeLoading
-            ? "Creating..."
-            : step === steps.length - 1
-              ? "Create Event"
-              : "Next"}
-        </Button>
+        <div className="flex gap-2">
+          {currentStep < steps.length - 1 ? (
+            <Button
+              onClick={handleNext}
+              disabled={!isStepAccessible(currentStep + 1)}
+            >
+              Next Step
+            </Button>
+          ) : (
+            <Button
+              onClick={handleSubmit}
+              disabled={loading || !event || !event._id}
+            >
+              {loading ? "Creating..." : "Complete Event Creation"}
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   );

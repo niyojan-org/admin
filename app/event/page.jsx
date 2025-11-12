@@ -35,6 +35,7 @@ export default function EventsPage() {
         setEvents(data.data.events);
         setLoading(false);
       } catch (error) {
+        console.log(error.response)
         toast.error(error.response?.data?.message || "Failed to fetch events. Please try again later.");
         setLoading(false);
       }
@@ -176,7 +177,7 @@ export default function EventsPage() {
               {filteredEvents.map((event, index) => (
                 <div
                   key={event._id}
-                  className="transition hover:scale-[1.02] hover:shadow-xl"
+                  className=""
                 >
                   <EventCard event={event} index={index} />
                 </div>

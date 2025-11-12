@@ -26,7 +26,7 @@ export function TicketStats({ ticket, userRole }) {
     const canSeeCapacity = ['owner', 'admin', 'manager'].includes(userRole);
 
     return (
-        <div className="space-y-3">
+        <div className="space-y-1">
             {/* Sales Progress - Only show if we have capacity data */}
             {ticket.sold !== undefined && ticket.capacity !== undefined && (
                 <div className="space-y-2">
@@ -46,7 +46,7 @@ export function TicketStats({ ticket, userRole }) {
             )}
 
             {/* Stats Grid - Responsive */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4">
                 {ticket.sold !== undefined && (
                     <div className="space-y-1">
                         <div className="flex items-center gap-1 text-muted-foreground">
@@ -78,7 +78,7 @@ export function TicketStats({ ticket, userRole }) {
                 )}
 
                 {canSeeRevenue && ticket.sold !== undefined && ticket.price !== undefined && (
-                    <div className="space-y-1">
+                    <div className="space-y-0">
                         <div className="flex items-center gap-1 text-muted-foreground">
                             <IconTrendingUp className="w-3 h-3 flex-shrink-0" />
                             <span className="text-xs truncate">Net Revenue</span>

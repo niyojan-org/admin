@@ -1,138 +1,73 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { CalendarIcon } from "lucide-react";
-import { format, parseISO, isSameDay, isBefore } from "date-fns";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { Label } from "./label";
-import { Calendar } from "./calendar";
-import { Input } from "./input";
-import { Button } from "./button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
-
+import { useState, useEffect } from "react";
+import { format, parseISO } from "date-fns";
+import { CalendarIcon, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Label } from "./label";
 
-export function DateTimeInput({ value, onChange, minDateTime, className }) {
-  const minDate = minDateTime ? parseISO(minDateTime) : undefined;
-  const initialDate = value ? parseISO(value) : minDate || new Date();
-
-  const [date, setDate] = useState(initialDate);
-  // Store time as { hour, minute, period }
-  const initialHour = format(initialDate, "hh");
-  const initialMinute = format(initialDate, "mm");
-  const initialPeriod = format(initialDate, "a");
-  const [hour, setHour] = useState(initialHour);
-  const [minute, setMinute] = useState(initialMinute);
-  const [period, setPeriod] = useState(initialPeriod);
-
-  const isSameAsMinDate = useMemo(
-    () => (minDate ? isSameDay(date, minDate) : false),
-    [date, minDate]
-  );
-
-  // Disable past time if same day
-  const isTimeDisabled = useMemo(() => {
-    if (!minDate || !isSameAsMinDate) return false;
-    let h = Number(hour);
-    if (period === "PM" && h !== 12) h += 12;
-    if (period === "AM" && h === 12) h = 0;
-    const m = Number(minute);
-    const selected = new Date(date);
-    selected.setHours(h, m, 0, 0);
-    return isBefore(selected, minDate);
-  }, [hour, minute, period, date, minDate]);
+export function DateTimeInput({ value, onChange, minDateTime, className, label }) {
+  // Convert ISO string to datetime-local format (YYYY-MM-DDTHH:mm)
+  const [localValue, setLocalValue] = useState(() => {
+    if (value) {
+      const date = parseISO(value);
+      return format(date, "yyyy-MM-dd'T'HH:mm");
+    }
+    return "";
+  });
 
   useEffect(() => {
-    let hours = Number(hour);
-    if (period === "PM" && hours !== 12) hours += 12;
-    if (period === "AM" && hours === 12) hours = 0;
-    const minutes = Number(minute);
-    const updated = new Date(date);
-    updated.setHours(hours, minutes, 0, 0);
-    onChange(updated.toISOString());
-  }, [date, hour, minute, period]);
+    if (value) {
+      const date = parseISO(value);
+      setLocalValue(format(date, "yyyy-MM-dd'T'HH:mm"));
+    }
+  }, [value]);
+
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+    setLocalValue(newValue);
+    
+    if (newValue && onChange) {
+      // Convert datetime-local format to ISO string
+      const date = new Date(newValue);
+      onChange(date.toISOString());
+    }
+  };
+
+  // Convert minDateTime to datetime-local format
+  const minValue = minDateTime ? format(parseISO(minDateTime), "yyyy-MM-dd'T'HH:mm") : undefined;
 
   return (
-    <div className={cn("grid grid-cols-1 sm:grid-cols-2 gap-4 items-end", className)}>
-      {/* Date Picker */}
-      <div className="space-y-2">
-        <Label>Date</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="outline" className="w-full justify-start text-left font-normal">
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {format(date, "PPP")}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0">
-            <Calendar
-              mode="single"
-              selected={date}
-              onSelect={(d) => d && setDate(d)}
-              disabled={(d) => {
-                if (!minDate) return false;
-                // Only disable days before minDate, not the same day
-                return isBefore(d, minDate) && !isSameDay(d, minDate);
-              }}
-            />
-          </PopoverContent>
-        </Popover>
+    <div className={cn("w-full space-y-2", className)}>
+      {label && (
+        <Label className="text-sm font-medium flex items-center gap-2">
+          <CalendarIcon className="h-4 w-4 text-primary" />
+          {label}
+        </Label>
+      )}
+      <div className="relative">
+        <input
+          type="datetime-local"
+          value={localValue}
+          onChange={handleChange}
+          min={minValue}
+          className={cn(
+            "flex h-11 w-full rounded-md border border-input bg-background px-3 py-2 text-sm",
+            "ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium",
+            "placeholder:text-muted-foreground",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            "transition-all duration-200"
+          )}
+        />
+        <Clock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground pointer-events-none" />
       </div>
-
-      {/* Time Picker */}
-      <div className="space-y-2">
-        <Label>Time</Label>
-        <div className="flex gap-2 items-center">
-          <Select value={hour} onValueChange={setHour}>
-            <SelectTrigger className="w-20">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: 12 }, (_, i) => {
-                const h = (i + 1).toString().padStart(2, "0");
-                return (
-                  <SelectItem key={h} value={h}>
-                    {h}
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
-          
-          <span className="text-muted-foreground">:</span>
-          
-          <Select value={minute} onValueChange={setMinute}>
-            <SelectTrigger className="w-20">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: 60 }, (_, i) => {
-                const m = i.toString().padStart(2, "0");
-                return (
-                  <SelectItem key={m} value={m}>
-                    {m}
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
-          
-          <Select value={period} onValueChange={setPeriod}>
-            <SelectTrigger className="w-20">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="AM">AM</SelectItem>
-              <SelectItem value="PM">PM</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        {isTimeDisabled && (
-          <p className="text-xs text-destructive mt-1">
-            Time must be after {format(minDate, "hh:mm a")}
-          </p>
-        )}
-      </div>
+      {value && (
+        <p className="text-xs text-muted-foreground flex items-center gap-1">
+          <CalendarIcon className="h-3 w-3" />
+          {format(parseISO(value), "EEEE, MMMM d, yyyy 'at' h:mm a")}
+        </p>
+      )}
     </div>
   );
 }

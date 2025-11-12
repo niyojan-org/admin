@@ -1,7 +1,7 @@
 import api from "@/lib/api";
 import { toast } from "sonner";
 
-export async function fetchParticipants({ eventId, page = 1, limit = 10, search = "", status = "", ticketType = "", paymentStatus = "", sortField = "createdAt", sortOrder = "desc" }) {
+export async function fetchParticipants({ eventId, page = 1, limit = 10, search = "", status = "", ticketType = "", paymentStatus = "", sortField = "createdAt", sortOrder = "desc", isGroupRegisteration = undefined, groupId = undefined, isGroupLeader = undefined }) {
   const params = { page, limit, search, status, ticketType, paymentStatus, sortField, sortOrder }
   const { data } = await api.get(`/event/admin/participant/${eventId}`, { params });
   return data;
