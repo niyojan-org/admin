@@ -31,26 +31,7 @@ function Page() {
         refreshInterval: 180000, // Refresh every 5 minutes
         revalidateOnFocus: true, // refresh when window gets focused
     })
-
-    // Transform API trends -> chart data shape expected by RevenueChart
-    const chartData = useMemo(() => {
-        if (!data || !data.data || !Array.isArray(data.data.trends)) return null
-        return data.data.trends.map((t) => ({
-            date: typeof t.period === 'string' ? t.period.split('T')[0] : (t.period?.period || ''),
-            revenue: t.totalRevenue || 0,
-        }))
-    }, [data])
-
-    // total revenue: prefer server summary if present, otherwise sum chartData
-    const totalRevenue = useMemo(() => {
-        if (data && data.data && data.data.summary && typeof data.data.summary.totalRevenue === 'number') {
-            return data.data.summary.totalRevenue
-        }
-        if (chartData && Array.isArray(chartData)) {
-            return chartData.reduce((s, i) => s + (i.revenue || 0), 0)
-        }
-        return 0
-    }, [data, chartData])
+    console.log(data?.data);
 
     const summary = data && data.data ? data.data.summary : null
 
@@ -79,7 +60,7 @@ function Page() {
                     </Select>
                 </div>
 
-                <div className="flex items-center justify-between h-full">
+                {/* <div className="flex items-center justify-between h-full">
                     <div className="flex items-baseline space-x-3">
                         <div>
                             <div className="text-2xl font-bold">₹{totalRevenue.toLocaleString()}</div>
@@ -96,7 +77,7 @@ function Page() {
                             </div>
                         )}
                     </div>
-                </div>
+                </div> */}
 
                 <div className="flex items-center space-x-2">
                     <Button size="sm" variant="outline" onClick={() => mutate()}>
@@ -109,9 +90,9 @@ function Page() {
                 {/* Top summary row: total revenue + trend */}
                 {error && <div className="p-4 text-red-600">Failed to load revenue trends</div>}
                 {!data && !error && <div className="p-4">Loading...</div>}
-                {data && (
+                {/* {data && (
                     <RevenueChart timeRange={timeRange} remoteData={chartData} />
-                )}
+                )} */}
             </div>
         </Card>
     )
