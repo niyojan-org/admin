@@ -29,7 +29,7 @@ export default function useShareManagement(eventId) {
             setOrganization(response.data.data.organization);
             // Generate share URL based on event data
             const baseUrl = 'https://orgatick.in';
-            setShareUrl(`${baseUrl}/event/${eventId}/register`);
+            setShareUrl(`${baseUrl}/events/${eventId}/registration`);
         } catch (err) {
             toast.error(err.response?.data?.message || 'Failed to load event data. Please try again later.');
             setError(err.response?.data?.message || 'Failed to fetch event');
@@ -79,7 +79,7 @@ export default function useShareManagement(eventId) {
         // Update URL with coupon code
         if (selected && selected.code) {
             const baseUrl = 'https://orgatick.in';
-            const currentUrl = new URL(`${baseUrl}/event/${eventId}/register`);
+            const currentUrl = new URL(`${baseUrl}/events/${eventId}/registration`);
 
             // Remove existing referral if any
             currentUrl.searchParams.delete('ref');
@@ -97,7 +97,7 @@ export default function useShareManagement(eventId) {
         // Update URL with referral code
         if (selected && selected.code) {
             const baseUrl = 'https://orgatick.in';
-            const currentUrl = new URL(`${baseUrl}/event/${eventId}/register`);
+            const currentUrl = new URL(`${baseUrl}/events/${eventId}/registration`);
 
             // Remove existing coupon if any
             currentUrl.searchParams.delete('coupon');
@@ -114,7 +114,7 @@ export default function useShareManagement(eventId) {
 
         // Reset URL to base URL without parameters
         const baseUrl = 'https://orgatick.in';
-        setShareUrl(`${baseUrl}/event/${eventId}/register`);
+        setShareUrl(`${baseUrl}/events/${eventId}/registration`);
     };
 
     useEffect(() => {
