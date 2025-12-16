@@ -41,34 +41,31 @@ const EventHeader = ({ event, organization, setEventData }) => {
   return (
     <Card className="overflow-hidden">
       {/* Banner Image */}
-      {event.bannerImage && (
-        <div className="relative h-64 w-full">
-          <Image
-            src={event.bannerImage}
-            alt={event.title}
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-black/20" />
+      <div className="relative h-64 w-full">
+        <Image
+          src={event?.bannerImage || 'https://res.cloudinary.com/ddk9qhmit/image/upload/v1761138208/orgatickBanner_vdyzdk.png'}
+          alt={event.title}
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-black/20" />
 
-          {/* Action Buttons Overlay */}
-          <div className="absolute top-4 right-4 flex gap-2">
-            <Button size="sm" variant="outline" asChild>
-              <Link href={`/event/share/${event._id}`}>
-                <Share2 className="w-4 h-4 mr-1" />
-                Share
-              </Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link href={`/event/edit/${event._id}`}>
-                <Edit className="w-4 h-4 mr-1" />
-                Edit
-              </Link>
-            </Button>
-          </div>
+        {/* Action Buttons Overlay */}
+        <div className="absolute top-4 right-4 flex gap-2">
+          <Button size="sm" variant="outline" asChild>
+            <Link href={`/event/${event._id}/share`}>
+              <Share2 className="w-4 h-4 mr-1" />
+              Share
+            </Link>
+          </Button>
+          <Button size="sm" asChild>
+            <Link href={`/event/${event._id}/edit`}>
+              <Edit className="w-4 h-4 mr-1" />
+              Edit
+            </Link>
+          </Button>
         </div>
-      )}
-
+      </div>
       <CardContent className="p-2 md:p-6">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left: Event Info (2 columns on large screens) */}

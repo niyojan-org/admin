@@ -156,6 +156,18 @@
     font-family: var(--font-sans);
     letter-spacing: var(--letter-spacing);
   }
+
+  /* Add padding at bottom of forms/containers for mobile keyboard */
+  @media (max-width: 768px) {
+    form, main, [role="main"] {
+      padding-bottom: max(env(safe-area-inset-bottom, 0px), 120px);
+    }
+    
+    /* Ensure smooth scrolling when keyboard appears */
+    html {
+      scroll-behavior: smooth;
+    }
+  }
 }
 
 @theme {
