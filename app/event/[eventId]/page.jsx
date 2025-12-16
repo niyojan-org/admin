@@ -18,6 +18,7 @@ import { Benefits } from "./components/Benefits";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { QuickActions } from "./components/QuickActions";
+import { useEventStore } from "@/store/eventStore";
 
 const EventPage = () => {
   const params = useParams();
@@ -25,6 +26,7 @@ const EventPage = () => {
   const [eventData, setEventData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { setCurrentEvent } = useEventStore();
 
   useEffect(() => {
     const fetchEventData = async () => {
@@ -33,6 +35,7 @@ const EventPage = () => {
         const data = await response.data;
         if (data.success) {
           setEventData(data.data);
+          setCurrentEvent(data.data.event);
         } else {
           setError("Failed to fetch event data");
         }
@@ -89,7 +92,7 @@ const EventPage = () => {
   const { event, organization } = eventData;
 
   return (
-    <div className="container mx-auto py-6 h-full">
+    <div className="container mx-auto py-6 h-full pb-6">
       {/* Event Header */}
       <div className="mb-8">
         <EventHeader event={event} organization={organization} setEventData={setEventData} />
@@ -102,7 +105,6 @@ const EventPage = () => {
 
       {/* Bento Grid Layout */}
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 auto-rows-min">
-
         {/* Registration Dashboard */}
         <ProtectedComp roles={["admin", "owner", "manager"]}>
           <div className="md:col-span-3 lg:col-span-4 lg:row-span-2">
@@ -132,7 +134,7 @@ const EventPage = () => {
             <Card className="shadow-sm hover:shadow-md transition-shadow gap-2 p-4">
               <CardHeader className="">
                 <CardTitle className="text-lg">Announcements</CardTitle>
-                <CardDescription className="text-sm">	
+                <CardDescription className="text-sm">
                   Keep attendees informed in real time.
                 </CardDescription>
               </CardHeader>
@@ -168,7 +170,7 @@ const EventPage = () => {
             <Card className="shadow-sm hover:shadow-md transition-shadow gap-2 p-4">
               <CardHeader className="">
                 <CardTitle className="text-lg">Announcements</CardTitle>
-                <CardDescription className="text-sm">	
+                <CardDescription className="text-sm">
                   Keep attendees informed in real time.
                 </CardDescription>
               </CardHeader>
@@ -183,27 +185,27 @@ const EventPage = () => {
 
         {/* Tickets */}
         <div className="md:col-span-3 lg:col-span-4">
-          <Ticket eventId={event._id} className={'h-[600px]'}/>
+          <Ticket eventId={event._id} className={"h-[600px]"} />
         </div>
 
         {/* Custom Fields */}
         <div className="md:col-span-3 lg:col-span-2">
-          <InputField eventId={event._id} className={'h-[600px]'}/>
+          <InputField eventId={event._id} className={"h-[600px]"} />
         </div>
 
         {/* Sessions */}
         <div className="md:col-span-3 lg:col-span-4">
-          <Sessions eventId={event._id} className={'h-[600px]'}/>
+          <Sessions eventId={event._id} className={"h-[600px]"} />
         </div>
 
         {/* Benefits */}
         <div className="md:col-span-3 lg:col-span-2">
-          <Benefits eventId={event._id} className={'h-[600px]'}/>
+          <Benefits eventId={event._id} className={"h-[600px]"} />
         </div>
 
         {/* Guest Speakers */}
         <div className="md:col-span-3 lg:col-span-3 h-full">
-            <GuestSpeaker eventId={event._id} />
+          <GuestSpeaker eventId={event._id} />
         </div>
 
         {/* Referrals */}

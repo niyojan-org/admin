@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,7 +26,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { DateTimeInput } from "@/components/ui/date-time-input";
 import { EVENT_CATEGORIES, EVENT_MODES, EVENT_TYPES } from "../constants/eventConstants";
 
-export default function BasicDetailsStep({ event, setEvent }) {
+export default function BasicDetailsStep({ eventId, setEvent, onNext }) {
   // Form state - manage internally
   const [formData, setFormData] = useState({
     title: "",
@@ -43,6 +43,36 @@ export default function BasicDetailsStep({ event, setEvent }) {
   const [bannerFile, setBannerFile] = useState(null);
   const [bannerPreview, setBannerPreview] = useState("");
   const [uploadingBanner, setUploadingBanner] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const fetchEventData = async (eventId) => {
+    try {
+      const response = await api.get(`/event/admin/${eventId}`);
+      if (response.data) {
+        const event = response.data.data.event;
+        // Populate form data with fetched event details
+        setFormData({
+          title: event.title || "",
+          mode: event.mode || "",
+          type: event.type || "",
+          category: event.category || "",
+          description: event.description || "",
+          registrationStart: event.registrationStart || new Date().toISOString(),
+          registrationEnd: event.registrationEnd || new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
+          bannerImage: event.bannerImage || ""
+        });
+      }
+    } catch (error) {
+      toast.error("Failed to fetch event details");
+      console.error("Fetch event error:", error.response.data);
+    }
+  };
+
+  useEffect(() => {
+    if (eventId) {
+      fetchEventData(eventId);
+    }
+  }, [eventId]);
 
   // Handle form input changes
   const handleInputChange = (field, value) => {
@@ -107,6 +137,7 @@ export default function BasicDetailsStep({ event, setEvent }) {
 
   // Submit form data to API
   const handleSubmit = async () => {
+    setIsSubmitting(true);
     try {
       // Validate required fields
       if (!formData.title || !formData.mode || !formData.type || !formData.category ||
@@ -115,16 +146,29 @@ export default function BasicDetailsStep({ event, setEvent }) {
         return;
       }
 
-      const response = await api.post("/event/admin/create", formData);
+      let response;
+      if (eventId) {
+        // Update existing event
+        response = await api.put(`/event/admin/${eventId}`, formData);
+      } else {
+        // Create new event
+        response = await api.post("/event/admin/create", formData);
+        setEvent(response.data.data.event);
+      }
 
       if (response.data) {
         // Only call setEvent after successful API call
-        setEvent(response.data.data.event);
-        toast.success("Event details saved successfully!");
+        // setEvent(response.data.data.event);
+        toast.success(response.data.message || "Event details saved successfully!");
+        if (onNext) {
+          onNext();
+        }
       }
     } catch (error) {
       toast.error("Failed to save event details");
       console.error("Submit error:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -302,8 +346,8 @@ export default function BasicDetailsStep({ event, setEvent }) {
         </CardContent>
       </ScrollArea>
       <div className="">
-        <Button onClick={handleSubmit} className="w-full">
-          Save Event Details
+        <Button onClick={handleSubmit} className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? "Saving..." : "Save Event Details"}
         </Button>
       </div>
     </Card>

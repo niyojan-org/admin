@@ -118,8 +118,8 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br px-4 py-6">
-      <div className="w-full max-w-5xl mx-auto h-auto md:h-[600px] flex flex-col md:flex-row rounded-2xl shadow-xl overflow-hidden border">
+    <div className="h-dvh flex items-center justify-center bg-gradient-to-br px-4 ">
+      <div className="w-full max-w-5xl mx-auto h-fit md:h-[600px] flex flex-col md:flex-row rounded-2xl shadow-xl overflow-hidden border">
 
         {/* Carousel Section */}
         <div className="w-full md:w-1/2 relative">
@@ -138,7 +138,7 @@ export default function Auth() {
         </div>
 
         {/* Form Section */}
-        <Card className="w-full md:w-1/2 flex flex-col justify-between rounded-none border-none shadow-none gap-0">
+        <Card className="w-full md:w-1/2 flex flex-col rounded-none border-none shadow-none gap-0">
 
           {/* Header with back button */}
           <div className="flex flex-col gap-2">
@@ -153,20 +153,18 @@ export default function Auth() {
             )}
 
             {/* Title and Form */}
-            <Card className="border-none shadow-none bg-transparent p-0 gap-2">
-              <CardHeader className="text-center space-y-0 sm:space-y-3 px-0">
-                <CardTitle className="text-2xl md:text-3xl font-bold">
-                  {pageContent.title}
-                </CardTitle>
-                <p className="text-muted-foreground text-sm md:text-base">
-                  {pageContent.subtitle}
-                </p>
-              </CardHeader>
-
-              <CardContent className="px-0 space-y-6">
-                {renderForm()}
-              </CardContent>
-            </Card>
+            <div className="text-center space-y-2 sm:space-y-3">
+              <div className="text-2xl md:text-3xl font-bold">
+                {pageContent.title}
+              </div>
+              <p className="text-muted-foreground text-sm md:text-base">
+                {pageContent.subtitle}
+              </p>
+            </div>
+            
+            <div>
+              {renderForm()}
+            </div>
           </div>
 
           {/* Footer */}

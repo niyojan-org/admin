@@ -59,7 +59,7 @@ export default function DashboardLayout({ children, event, payment, revenue, sum
                     {payment}
                 </div>
             </div>
-            <PushNotification />
+            {/* <PushNotification /> */}
         </ProtectedRoute>
     );
 }

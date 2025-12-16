@@ -189,7 +189,7 @@ export default function RegistrationStep({
       setEndTime(time);
     }
   };
-  
+
   return (
     <Card className={"flex-1"}>
       <CardContent className="p-6 space-y-6">

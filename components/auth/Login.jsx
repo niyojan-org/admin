@@ -31,10 +31,11 @@ export default function Login({ userEmail, setUserEmail, onViewChange }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="flex flex-col gap-4">
       <GoogleAuthButton />
-      <div className="space-y-4">
-        <div className="space-y-2">
+      
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-1.5">
           <Label htmlFor="email" className="text-sm font-medium">
             Email
           </Label>
@@ -50,7 +51,7 @@ export default function Login({ userEmail, setUserEmail, onViewChange }) {
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="flex flex-col gap-1.5">
           <Label htmlFor="password" className="text-sm font-medium">
             Password
           </Label>
@@ -89,11 +90,12 @@ export default function Login({ userEmail, setUserEmail, onViewChange }) {
         </div>
       )}
 
-      <div className="space-y-3">
+      <div className="flex flex-col gap-2">
         <Button
           type="submit"
           disabled={loading}
-          className="w-full "
+          className="w-full"
+          onClick={handleSubmit}
         >
           {loading ? (
             <>
@@ -114,6 +116,6 @@ export default function Login({ userEmail, setUserEmail, onViewChange }) {
           Forgot password?
         </Button>
       </div>
-    </form>
+    </div>
   );
 }

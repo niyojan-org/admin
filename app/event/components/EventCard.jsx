@@ -91,7 +91,7 @@ export default function EventCard({ event, index = 0 }) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={`/event/edit/${event.slug}`} className="flex items-center w-full">
+                <Link href={`/event/${event.slug}/edit`} className="flex items-center w-full">
                   <IconEdit className="h-4 w-4 mr-2" />
                   Edit Event
                 </Link>
@@ -206,7 +206,7 @@ export default function EventCard({ event, index = 0 }) {
             </Link>
           </Button>
           <Button asChild variant="outline" size="sm">
-            <Link href={`/event/edit/${event.slug}`}>
+            <Link href={`/event/${event.slug}/edit`}>
               <IconEdit className="h-4 w-4" />
             </Link>
           </Button>
