@@ -2,7 +2,7 @@
 
 ## Base URL
 ```
-/event/admin/guest
+/events/admin/guest
 ```
 
 ## Overview
@@ -91,7 +91,7 @@ interface EventContext {
 Creates a new guest speaker for an event.
 
 ```http
-POST /event/admin/guest/:eventId
+POST /events/admin/guest/:eventId
 ```
 
 #### Request Body
@@ -140,7 +140,7 @@ POST /event/admin/guest/:eventId
 Retrieves all guest speakers for an event.
 
 ```http
-GET /event/admin/guest/:eventId
+GET /events/admin/guest/:eventId
 ```
 
 #### Success Response (200)
@@ -172,7 +172,7 @@ GET /event/admin/guest/:eventId
 Retrieves a specific guest speaker by ID or name.
 
 ```http
-GET /event/admin/guest/:eventId/:speakerId
+GET /events/admin/guest/:eventId/:speakerId
 ```
 
 #### Parameters
@@ -205,7 +205,7 @@ GET /event/admin/guest/:eventId/:speakerId
 Updates an existing guest speaker.
 
 ```http
-PUT /event/admin/guest/:eventId/:speakerId
+PUT /events/admin/guest/:eventId/:speakerId
 ```
 
 #### Request Body
@@ -253,7 +253,7 @@ PUT /event/admin/guest/:eventId/:speakerId
 Removes a guest speaker from an event.
 
 ```http
-DELETE /event/admin/guest/:eventId/:speakerId
+DELETE /events/admin/guest/:eventId/:speakerId
 ```
 
 #### Success Response (200)
@@ -387,7 +387,7 @@ export const useGuestSpeakers = ({ eventId }: UseGuestSpeakersProps) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get(`/event/admin/guest/${eventId}`);
+      const response = await api.get(`/events/admin/guest/${eventId}`);
       setSpeakers(response.data.guests);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to fetch guest speakers');
@@ -400,7 +400,7 @@ export const useGuestSpeakers = ({ eventId }: UseGuestSpeakersProps) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.post(`/event/admin/guest/${eventId}`, speakerData);
+      const response = await api.post(`/events/admin/guest/${eventId}`, speakerData);
       setSpeakers(prev => [...prev, response.data.guest]);
       return response.data;
     } catch (err: any) {
@@ -415,7 +415,7 @@ export const useGuestSpeakers = ({ eventId }: UseGuestSpeakersProps) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.put(`/event/admin/guest/${eventId}/${speakerId}`, updates);
+      const response = await api.put(`/events/admin/guest/${eventId}/${speakerId}`, updates);
       setSpeakers(prev => prev.map(s => 
         s._id === speakerId ? response.data.guest : s
       ));
@@ -432,7 +432,7 @@ export const useGuestSpeakers = ({ eventId }: UseGuestSpeakersProps) => {
     try {
       setLoading(true);
       setError(null);
-      await api.delete(`/event/admin/guest/${eventId}/${speakerId}`);
+      await api.delete(`/events/admin/guest/${eventId}/${speakerId}`);
       setSpeakers(prev => prev.filter(s => s._id !== speakerId));
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to delete guest speaker');
@@ -921,7 +921,7 @@ const updateSpeakerOptimistically = async (speakerId: string, updates: Partial<G
   ));
 
   try {
-    const response = await api.put(`/event/admin/guest/${eventId}/${speakerId}`, updates);
+    const response = await api.put(`/events/admin/guest/${eventId}/${speakerId}`, updates);
     // Confirm with server response
     setSpeakers(prev => prev.map(s => 
       s._id === speakerId ? response.data.guest : s
@@ -972,19 +972,19 @@ class GuestSpeakerAPI {
   constructor(private baseURL: string) {}
 
   async addSpeaker(eventId: string, speakerData: Omit<GuestSpeaker, '_id'>) {
-    return this.request('POST', `/event/admin/guest/${eventId}`, speakerData);
+    return this.request('POST', `/events/admin/guest/${eventId}`, speakerData);
   }
 
   async getSpeakers(eventId: string) {
-    return this.request('GET', `/event/admin/guest/${eventId}`);
+    return this.request('GET', `/events/admin/guest/${eventId}`);
   }
 
   async updateSpeaker(eventId: string, speakerId: string, updates: Partial<GuestSpeaker>) {
-    return this.request('PUT', `/event/admin/guest/${eventId}/${speakerId}`, updates);
+    return this.request('PUT', `/events/admin/guest/${eventId}/${speakerId}`, updates);
   }
 
   async deleteSpeaker(eventId: string, speakerId: string) {
-    return this.request('DELETE', `/event/admin/guest/${eventId}/${speakerId}`);
+    return this.request('DELETE', `/events/admin/guest/${eventId}/${speakerId}`);
   }
 
   private async request(method: string, url: string, data?: any) {

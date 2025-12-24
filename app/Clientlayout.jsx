@@ -47,7 +47,7 @@ function ClientLayoutInner({ children }) {
   useEffect(() => { setToken() }, []);
 
   // Routes that should show the sidebar
-  const protectedRoutes = ['/dashboard', '/event', '/messages', '/notifications', '/organization', '/organization/edit', '/contact'];
+  const protectedRoutes = ['/dashboard', '/events', '/messages', '/notifications', '/organization', '/organization/edit', '/contact'];
   const showSidebar = protectedRoutes.some(route => pathname.startsWith(route)) && isAuthenticated;
 
   // Routes that should NOT use ScrollArea (they handle their own scrolling)

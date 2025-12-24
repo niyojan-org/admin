@@ -49,7 +49,7 @@ export const useEventStore = create((set, get) => ({
       }
 
       // Proceed with API call using component formatted data
-      const response = await api.post("/event/admin/create", eventData);
+      const response = await api.post("/events/admin/create", eventData);
       if (response.data) {
         const newEvent = response.data.event || response.data;
         set((state) => ({
@@ -83,7 +83,7 @@ export const useEventStore = create((set, get) => ({
       // }
 
       // Proceed with API call using component formatted data
-      const response = await api.put(`/event/admin/${eventId}`, eventData);
+      const response = await api.put(`/events/admin/${eventId}`, eventData);
       if (response.data) {
         const updatedEvent = response.data.event;
         set((state) => ({
@@ -108,7 +108,7 @@ export const useEventStore = create((set, get) => ({
   deleteEvent: async (eventId) => {
     set({ loading: true, error: null });
     try {
-      await api.delete(`/event/admin/${eventId}`);
+      await api.delete(`/events/admin/${eventId}`);
       set((state) => ({
         events: state.events.filter(event => event._id !== eventId),
         currentEvent: state.currentEvent?._id === eventId ? null : state.currentEvent,
@@ -127,7 +127,7 @@ export const useEventStore = create((set, get) => ({
   fetchEvents: async () => {
     set({ loading: true, error: null });
     try {
-      const response = await api.get("/event/admin/my-events");
+      const response = await api.get("/events/admin/my-events");
       if (response.data) {
         const events = response.data.events || response.data.data?.events || [];
         set({ events, loading: false });
@@ -145,7 +145,7 @@ export const useEventStore = create((set, get) => ({
   fetchEvent: async (eventId) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.get(`/event/admin/${eventId}`);
+      const response = await api.get(`/events/admin/${eventId}`);
       if (response.data) {
         const eventData = response.data.data.event || response.data;
         set({ currentEvent: eventData, loading: false });
@@ -163,7 +163,7 @@ export const useEventStore = create((set, get) => ({
   addCoupon: async (eventId, couponData) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.post(`/event/admin/${eventId}/coupons`, couponData);
+      const response = await api.post(`/events/admin/${eventId}/coupons`, couponData);
       if (response.data) {
         const coupon = response.data.data.coupon;
         set((state) => ({
@@ -187,7 +187,7 @@ export const useEventStore = create((set, get) => ({
   updateCoupon: async (eventId, couponId, couponData) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.put(`/event/admin/${eventId}/coupons/${couponId}`, couponData);
+      const response = await api.put(`/events/admin/${eventId}/coupons/${couponId}`, couponData);
       if (response.data) {
         const updatedCoupon = response.data.data.coupon;
         set((state) => ({
@@ -213,7 +213,7 @@ export const useEventStore = create((set, get) => ({
   deleteCoupon: async (eventId, couponId) => {
     set({ loading: true, error: null });
     try {
-      await api.delete(`/event/admin/${eventId}/coupons/${couponId}`);
+      await api.delete(`/events/admin/${eventId}/coupons/${couponId}`);
       set((state) => ({
         currentEvent: state.currentEvent ? {
           ...state.currentEvent,
@@ -234,7 +234,7 @@ export const useEventStore = create((set, get) => ({
 
   toggleCouponStatus: async (eventId, couponId) => {
     try {
-      const response = await api.patch(`/event/admin/${eventId}/coupons/${couponId}/toggle`);
+      const response = await api.patch(`/events/admin/${eventId}/coupons/${couponId}/toggle`);
       if (response.data) {
         const updatedCoupon = response.data.data.coupon;
         set((state) => ({

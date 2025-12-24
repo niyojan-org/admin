@@ -103,8 +103,8 @@ const NavigationItem = ({
                   <div
                     className={cn(
                       "w-full flex justify-start h-9 text-sm items-center px-3 relative group transition-all duration-200 rounded-md",
-                      (child.href === "/event" && pathname === "/event") ||
-                        (child.href !== "/event" && pathname.startsWith(child.href))
+                      (child.href === "/events" && pathname === "/events") ||
+                        (child.href !== "/events" && pathname.startsWith(child.href))
                         ? "text-foreground font-bold bg-accent"
                         : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
                     )}

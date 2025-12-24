@@ -31,7 +31,7 @@ function page() {
                     <CardTitle className="">
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Link href={'/event'} className='text-2xl font-semibold cursor-pointer flex items-center gap-2'>
+                                <Link href={'/events'} className='text-2xl font-semibold cursor-pointer flex items-center gap-2'>
                                     <IconUsers className="h-6 w-6" />
                                     Participants
                                 </Link>

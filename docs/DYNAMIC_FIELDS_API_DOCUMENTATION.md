@@ -5,7 +5,7 @@ The Dynamic Fields API allows you to manage custom input fields for events. Thes
 
 ## Base URL
 ```
-/event/admin/dynamic-field/{eventId}
+/events/admin/dynamic-field/{eventId}
 ```
 
 ## Authentication
@@ -24,7 +24,7 @@ Authorization: Bearer <your-jwt-token>
 ## Endpoints
 
 ### 1. Add Dynamic Field
-**POST** `/event/admin/dynamic-field/{eventId}`
+**POST** `/events/admin/dynamic-field/{eventId}`
 
 Adds a new dynamic field to an event.
 
@@ -101,7 +101,7 @@ Adds a new dynamic field to an event.
 ---
 
 ### 2. Get All Dynamic Fields
-**GET** `/event/admin/dynamic-field/{eventId}`
+**GET** `/events/admin/dynamic-field/{eventId}`
 
 Retrieves all dynamic fields for an event.
 
@@ -139,7 +139,7 @@ Retrieves all dynamic fields for an event.
 ---
 
 ### 3. Get Dynamic Field by ID
-**GET** `/event/admin/dynamic-field/{eventId}/{fieldId}`
+**GET** `/events/admin/dynamic-field/{eventId}/{fieldId}`
 
 Retrieves a specific dynamic field by its ID.
 
@@ -178,7 +178,7 @@ Retrieves a specific dynamic field by its ID.
 ---
 
 ### 4. Update Dynamic Field
-**PUT** `/event/admin/dynamic-field/{eventId}/{fieldId}`
+**PUT** `/events/admin/dynamic-field/{eventId}/{fieldId}`
 
 Updates an existing dynamic field.
 
@@ -220,7 +220,7 @@ Same as Add Dynamic Field, but all fields are optional. Only provided fields wil
 ---
 
 ### 5. Delete Dynamic Field
-**DELETE** `/event/admin/dynamic-field/{eventId}/{fieldId}`
+**DELETE** `/events/admin/dynamic-field/{eventId}/{fieldId}`
 
 Deletes a dynamic field from an event.
 
@@ -247,7 +247,7 @@ Deletes a dynamic field from an event.
 ---
 
 ### 6. Arrange Dynamic Fields
-**POST** `/event/admin/dynamic-field/{eventId}/arrange`
+**POST** `/events/admin/dynamic-field/{eventId}/arrange`
 
 Reorders the dynamic fields for an event.
 
@@ -347,7 +347,7 @@ Reorders the dynamic fields for an event.
 
 ### Example 1: Adding a Text Field
 ```json
-POST /event/admin/dynamic-field/64a7b8c9d1e2f3a4b5c6d7e8
+POST /events/admin/dynamic-field/64a7b8c9d1e2f3a4b5c6d7e8
 {
   "label": "Company Name",
   "name": "company_name",
@@ -360,7 +360,7 @@ POST /event/admin/dynamic-field/64a7b8c9d1e2f3a4b5c6d7e8
 
 ### Example 2: Adding a Dropdown Field
 ```json
-POST /event/admin/dynamic-field/64a7b8c9d1e2f3a4b5c6d7e8
+POST /events/admin/dynamic-field/64a7b8c9d1e2f3a4b5c6d7e8
 {
   "label": "T-Shirt Size",
   "name": "tshirt_size",
@@ -377,7 +377,7 @@ POST /event/admin/dynamic-field/64a7b8c9d1e2f3a4b5c6d7e8
 
 ### Example 3: Arranging Fields
 ```json
-POST /event/admin/dynamic-field/64a7b8c9d1e2f3a4b5c6d7e8/arrange
+POST /events/admin/dynamic-field/64a7b8c9d1e2f3a4b5c6d7e8/arrange
 {
   "order": [
     "64a7b8c9d1e2f3a4b5c6d7e9",

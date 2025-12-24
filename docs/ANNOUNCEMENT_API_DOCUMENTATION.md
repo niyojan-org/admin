@@ -5,7 +5,7 @@ The Announcement API allows you to create, manage, and track announcements sent 
 
 ## Base URL
 ```
-/event/admin/announcement
+/events/admin/announcement
 ```
 
 ## Authentication
@@ -24,7 +24,7 @@ Authorization: Bearer <your-jwt-token>
 ## Core Announcement Endpoints
 
 ### 1. Create Announcement
-**POST** `/event/admin/announcement/{eventId}`
+**POST** `/events/admin/announcement/{eventId}`
 
 Creates a new announcement and queues it for delivery.
 
@@ -92,7 +92,7 @@ Available placeholders for personalization:
 ---
 
 ### 2. Get All Announcements
-**GET** `/event/admin/announcement/{eventId}`
+**GET** `/events/admin/announcement/{eventId}`
 
 Retrieves all announcements for an event with pagination and filtering.
 
@@ -162,7 +162,7 @@ Retrieves all announcements for an event with pagination and filtering.
 ---
 
 ### 3. Get Announcement by ID
-**GET** `/event/admin/announcement/{eventId}/{announcementId}`
+**GET** `/events/admin/announcement/{eventId}/{announcementId}`
 
 Retrieves a specific announcement with detailed information.
 
@@ -225,7 +225,7 @@ Retrieves a specific announcement with detailed information.
 ---
 
 ### 4. Update Announcement
-**PUT** `/event/admin/announcement/{eventId}/{announcementId}`
+**PUT** `/events/admin/announcement/{eventId}/{announcementId}`
 
 Updates an existing announcement. Only pending or cancelled announcements can be updated.
 
@@ -286,7 +286,7 @@ All fields are optional. Only provided fields will be updated.
 ---
 
 ### 5. Cancel Scheduled Announcement
-**DELETE** `/event/admin/announcement/{eventId}/{announcementId}`
+**DELETE** `/events/admin/announcement/{eventId}/{announcementId}`
 
 Cancels a scheduled announcement and removes it from the delivery queue.
 
@@ -317,7 +317,7 @@ Cancels a scheduled announcement and removes it from the delivery queue.
 ## Extended Features Endpoints
 
 ### 6. Get Announcement Status
-**GET** `/event/admin/announcement/{eventId}/{announcementId}/status`
+**GET** `/events/admin/announcement/{eventId}/{announcementId}/status`
 
 Gets detailed status information including job progress and delivery statistics.
 
@@ -365,7 +365,7 @@ Gets detailed status information including job progress and delivery statistics.
 ---
 
 ### 7. Retry Failed Announcement
-**POST** `/event/admin/announcement/{eventId}/{announcementId}/retry`
+**POST** `/events/admin/announcement/{eventId}/{announcementId}/retry`
 
 Retries a failed or partially failed announcement.
 
@@ -405,7 +405,7 @@ Retries a failed or partially failed announcement.
 ---
 
 ### 8. Get Delivery Analytics
-**GET** `/event/admin/announcement/{eventId}/delivery-analytics`
+**GET** `/events/admin/announcement/{eventId}/delivery-analytics`
 
 Retrieves comprehensive analytics and statistics for announcements.
 
@@ -471,7 +471,7 @@ Retrieves comprehensive analytics and statistics for announcements.
 ---
 
 ### 9. Get Announcement Templates
-**GET** `/event/admin/announcement/{eventId}/templates`
+**GET** `/events/admin/announcement/{eventId}/templates`
 
 Retrieves pre-defined announcement templates categorized by use case.
 
@@ -524,7 +524,7 @@ Retrieves pre-defined announcement templates categorized by use case.
 ---
 
 ### 10. Preview Announcement
-**POST** `/event/admin/announcement/{eventId}/preview`
+**POST** `/events/admin/announcement/{eventId}/preview`
 
 Generates a preview of how the announcement will look for sample participants.
 
@@ -581,7 +581,7 @@ Generates a preview of how the announcement will look for sample participants.
 ---
 
 ### 11. Get Anti-Spam Status
-**GET** `/event/admin/announcement/{eventId}/anti-spam/status`
+**GET** `/events/admin/announcement/{eventId}/anti-spam/status`
 
 Retrieves current anti-spam limits and usage statistics.
 
@@ -709,7 +709,7 @@ async function loadAnnouncements(eventId, page = 1, filters = {}) {
     ...filters
   });
   
-  const response = await fetch(`/event/admin/announcement/${eventId}?${queryParams}`, {
+  const response = await fetch(`/events/admin/announcement/${eventId}?${queryParams}`, {
     headers: {
       'Authorization': `Bearer ${getAuthToken()}`,
       'Content-Type': 'application/json'
@@ -741,7 +741,7 @@ function startStatusPolling(eventId, announcementId) {
   const interval = setInterval(async () => {
     try {
       const response = await fetch(
-        `/event/admin/announcement/${eventId}/${announcementId}/status`,
+        `/events/admin/announcement/${eventId}/${announcementId}/status`,
         {
           headers: { 'Authorization': `Bearer ${getAuthToken()}` }
         }
@@ -768,7 +768,7 @@ function startStatusPolling(eventId, announcementId) {
 // Load and apply templates
 async function loadTemplates(eventId, category = 'all') {
   const response = await fetch(
-    `/event/admin/announcement/${eventId}/templates?category=${category}`,
+    `/events/admin/announcement/${eventId}/templates?category=${category}`,
     {
       headers: { 'Authorization': `Bearer ${getAuthToken()}` }
     }
@@ -795,7 +795,7 @@ async function previewAnnouncement() {
     participantIds: Array.from(formData.getAll('participantIds'))
   };
   
-  const response = await fetch(`/event/admin/announcement/${eventId}/preview`, {
+  const response = await fetch(`/events/admin/announcement/${eventId}/preview`, {
     method: 'POST',
     headers: {
       'Authorization': `Bearer ${getAuthToken()}`,
@@ -813,7 +813,7 @@ async function previewAnnouncement() {
 ```javascript
 async function loadAnalytics(eventId, period = '7d') {
   const response = await fetch(
-    `/event/admin/announcement/${eventId}/delivery-analytics?period=${period}`,
+    `/events/admin/announcement/${eventId}/delivery-analytics?period=${period}`,
     {
       headers: { 'Authorization': `Bearer ${getAuthToken()}` }
     }

@@ -34,7 +34,7 @@ const ActivityItem = ({ activity, compact = false }) => {
     }
 
     return (
-        <Link href={`/event/${activity.eventSlug}`} className="block group">
+        <Link href={`/events/${activity.eventSlug}`} className="block group">
             <div className={`flex items-center gap-2.5 ${compact ? 'p-1.5' : 'p-3'} hover:bg-accent/50 rounded-lg transition-all border border-transparent hover:border-border/50 hover:shadow-sm`}>
                 <Badge
                     variant={activity.status === 'confirmed' ? 'default' : 'destructive'}

@@ -82,7 +82,7 @@ export default function Page() {
 
                       <div className="flex items-center space-x-2">
                         {showParticipants ? (
-                          <Link href={`/event/${slug}/participants`} className="">
+                          <Link href={`/events/${slug}/participants`} className="">
                             <Button size="sm">View Participants</Button>
                           </Link>
                         ) : (
