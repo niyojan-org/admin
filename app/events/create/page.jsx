@@ -141,7 +141,7 @@ export default function CreateEventPage() {
       <div className="flex flex-col">
         <h1 className="text-2xl font-bold text-navy">Create New Event</h1>
         <p className="text-gray-600">
-          Fill in the details below to create your event and start accepting registrations
+          Fill the details below to create your event and start accepting registrations
         </p>
       </div>
 

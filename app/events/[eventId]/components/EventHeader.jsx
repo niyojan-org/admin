@@ -39,7 +39,7 @@ const EventHeader = ({ event, organization, setEventData }) => {
   const ModeIcon = modeBadge.icon;
 
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden border-none shadow-sm dark:bg-card/60 hover:shadow-md transition-shadow">
       {/* Banner Image */}
       <div className="relative h-64 w-full">
         <Image
@@ -66,10 +66,10 @@ const EventHeader = ({ event, organization, setEventData }) => {
           </Button>
         </div>
       </div>
-      <CardContent className="p-2 md:p-6">
+      <CardContent className="p-2">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left: Event Info (2 columns on large screens) */}
-          <div className="lg:col-span-2 space-y-4 order-1">
+          <div className="lg:col-span-2 space-y-2 order-1">
             {/* Status and Mode Badges */}
             <div className="flex flex-wrap gap-2">
               <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
@@ -86,9 +86,9 @@ const EventHeader = ({ event, organization, setEventData }) => {
             <div className="space-y-2">
               <h1 className="text-3xl font-bold">{event.title}</h1>
               <p className="text-muted-foreground">
-                by <span className="font-medium text-primary">{organization.name}</span>
+                by <span className="font-semibold text-primary">{organization.name}</span>
                 {organization.verified && (
-                  <span className="ml-1 text-blue-500">✓</span>
+                  <span className="ml-1 text-blue-500 font-bold">✓</span>
                 )}
               </p>
             </div>
@@ -114,7 +114,7 @@ const EventHeader = ({ event, organization, setEventData }) => {
 
           {/* Quick Stats - Always at bottom (spans full width, appears last) */}
           <div className="lg:col-span-3 order-3">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2 border-t">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Users className="w-4 h-4" />
                 <span>{event.totalRegistrations} registered</span>

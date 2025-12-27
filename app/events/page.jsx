@@ -56,7 +56,7 @@ export default function EventsPage() {
 
   if (loading) {
     return (
-      <div className="p-6 space-y-6 bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-[80vh]">
+      <div className="p-6 space-y-6 bg-linear-to-br from-blue-50 via-white to-purple-50 min-h-[80vh]">
         {/* Header Skeleton */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="space-y-2">

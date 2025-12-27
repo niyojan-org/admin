@@ -57,7 +57,8 @@
   --shadow-2xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.25);
 }
 
-.dark {
+/* previous dark mode */
+/* .dark {
   --background: #040a15;
   --foreground: #ecfaff;
   --card: #01050e;
@@ -109,7 +110,91 @@
   --shadow-lg: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 4px 6px -1px hsl(0 0% 0% / 0.10);
   --shadow-xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 8px 10px -1px hsl(0 0% 0% / 0.10);
   --shadow-2xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.25);
+} */
+
+/* /* new dark class, remove this if you dont want but see the difference, because our dark class not following our brand color, * */
+
+.dark {
+  --background: #0b1220;          /* deep navy for calm dark UI */
+  --foreground: #e6edf6;          /* soft white for readability */
+
+
+  --card: #111a2e;
+  --card-foreground: #e6edf6;
+
+  --popover: #111a2e;
+  --popover-foreground: #e6edf6;
+
+  /* 🔵 Brand primary */
+  /* Was: #69a8ff (neon) */
+  --primary: #4f7fd9;             /* brand blue, toned down */
+  --primary-foreground: #ffffff;
+
+  /* 🟠 Secondary (Draft / warning states) */
+  /* Was: #dab067 (too bright yellow) */
+  --secondary: #c08a3a;           /* muted amber = professional */
+  --secondary-foreground: #1a1205;
+
+  /* ⚪ Muted / neutral UI */
+  --muted: #1a2436;               /* subtle surface */
+  --muted-foreground: #9aa6b6;    /* soft gray text */
+
+  /* 💠 Accent (supporting blue) */
+  /* Was: heavy saturated blue */
+  --accent: #1c2f5c;              /* deep navy accent */
+  --accent-foreground: #e6edf6;
+
+  /* 🔴 Destructive */
+  /* Was: muddy brown-red */
+  --destructive: #c74a4a;         /* clean, modern red */
+  --destructive-foreground: #ffffff;
+
+  /* 🧱 Borders & inputs */
+  --border: #26334d;
+  --input: #1a2436;
+
+  /* 🎯 Focus ring */
+  --ring: #4f7fd9;
+
+  /* 📊 Charts – harmonized with brand blues */
+  --chart-1: #4f7fd9;
+  --chart-2: #3b64b5;
+  --chart-3: #7fa2e8;
+  --chart-4: #2a4a8a;
+  --chart-5: #1f3a6d;
+
+  /* 📁 Sidebar */
+  --sidebar: #0b1220;
+  --sidebar-foreground: #e6edf6;
+  --sidebar-primary: #4f7fd9;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #111a2e;
+  --sidebar-accent-foreground: #e6edf6;
+  --sidebar-border: #26334d;
+  --sidebar-ring: #4f7fd9;
+ 
+  --radius: 10px;
+  --letter-spacing: 0em;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono: JetBrains Mono, ui-monospace, SFMono-Regular, monospace;
+  --font-serif: Georgia, Cambria, "Times New Roman", serif;
+  --shadow-color: hsl(0 0% 0%);
+  --shadow-opacity: 0.1;
+  --shadow-blur: 4px;
+  --shadow-spread: 0px;
+  --shadow-offset-x: 0px;
+  --shadow-offset-y: 2px;
+  --shadow-2xs: 0px 2px 4px 0px hsl(0 0% 0% / 0.05);
+  --shadow-xs: 0px 2px 4px 0px hsl(0 0% 0% / 0.05);
+  --shadow-sm: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 1px 2px -1px hsl(0 0% 0% / 0.10);
+  --shadow-md: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 2px 4px -1px hsl(0 0% 0% / 0.10);
+  --shadow-lg: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 4px 6px -1px hsl(0 0% 0% / 0.10);
+  --shadow-xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 8px 10px -1px hsl(0 0% 0% / 0.10);
+  --shadow-2xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.25);
+  
 }
+
 
 @theme inline {
   --color-background: var(--background);

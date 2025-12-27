@@ -173,9 +173,9 @@ export default function BasicDetailsStep({ eventId, setEvent, onNext }) {
   };
 
   return (
-    <Card className={"flex-1"}>
-      <ScrollArea className="h-[500px]">
-        <CardContent className="px-6 space-y-2 h-full">
+    <Card className="flex-1 py-2">
+      <ScrollArea className="h-[500px] pl-4">
+        <CardContent className="space-y-2 h-full">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-navy">Basic Event Details</h2>
             <Dialog >
@@ -214,7 +214,7 @@ export default function BasicDetailsStep({ eventId, setEvent, onNext }) {
 
           {/* Event Mode */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="w-full">
+            <div className="w-full space-y-2">
               <Label htmlFor="mode">Event Mode *</Label>
               <Select value={formData.mode} onValueChange={(value) => handleInputChange("mode", value)}>
                 <SelectTrigger className={'w-full'}>
@@ -231,7 +231,7 @@ export default function BasicDetailsStep({ eventId, setEvent, onNext }) {
             </div>
 
             {/* Event Type */}
-            <div className="w-full">
+            <div className="w-full space-y-2">
               <Label htmlFor="type">Event Type *</Label>
               <Select value={formData.type} onValueChange={(value) => handleInputChange("type", value)}>
                 <SelectTrigger className={'w-full'}>
@@ -248,7 +248,7 @@ export default function BasicDetailsStep({ eventId, setEvent, onNext }) {
             </div>
 
             {/* Event Category */}
-            <div className="w-full">
+            <div className="w-full space-y-2">
               <Label htmlFor="category">Event Category *</Label>
               <Select value={formData.category} onValueChange={(value) => handleInputChange("category", value)}>
                 <SelectTrigger className={'w-full'}>

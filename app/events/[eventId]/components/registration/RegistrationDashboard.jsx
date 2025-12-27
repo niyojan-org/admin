@@ -24,6 +24,7 @@ import RegistrationStats from './RegistrationStats';
 import RegistrationSettings from './RegistrationSettings';
 import QuickActions from './QuickActions';
 import { registrationApi } from '@/lib/api/registration';
+import { Spinner } from '@/components/ui/spinner';
 
 /**
  * Main Registration Dashboard Component
@@ -103,6 +104,7 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
           <div className="flex items-center justify-center space-x-2">
             <RefreshCw className="w-5 h-5 animate-spin" />
             <span>Loading registration data...</span>
+            <Spinner />
           </div>
         </CardContent>
       </Card>
@@ -131,7 +133,7 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
   return (
     <div className={`space-y-4 h-[850px] sm:h-[600px] flex flex-col ${className}`}>
       {/* Header with Status */}
-      <Card className="flex-shrink-0">
+      <Card className="shrink-0">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
