@@ -1,101 +1,132 @@
 "use client"
 
-"use client"
-
-import { useState, useMemo } from 'react'
-import { Card } from '@/components/ui/card'
-import { fetcher } from '@/lib/api'
+import { useState, useEffect, useMemo } from "react"
+import { Card } from "@/components/ui/card"
+import { RevenueHeader } from "./RevenueHeader"
+import { RevenueChart } from "./RevenueChart"
 import useSWR from 'swr'
-import RevenueChart from '@/components/dashboard/RevenueChart'
-import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
-import { IconRefresh, IconArrowUp, IconArrowDown, IconMinus } from '@tabler/icons-react'
+import { fetcher } from "@/lib/api"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { IconInfoCircle } from "@tabler/icons-react"
+import { CardContent, CardHeader } from "@/components/ui/card"
 
-const timeRangeToDays = {
-    '7days': 7,
-    '14days': 14,
-    '30days': 30,
-    '90days': 90,
-    '1year': 365,
-}
+// Helper to convert paisa to rupees
+const paisaToRupees = (paisa) => paisa / 100
 
-function Page() {
-    const [timeRange, setTimeRange] = useState('7days')
-    const [interval, setInterval] = useState('day')
+function Revenue() {
+    const [selectedDays, setSelectedDays] = useState("auto")
+    const [isMobile, setIsMobile] = useState(false)
 
-    const lastDays = timeRangeToDays[timeRange] || 30
-
-    const swrKey = `/org/dashboard/revenue/trends?lastDays=${lastDays}&interval=${interval}`
-
-    const { data, error, isLoading, mutate } = useSWR(swrKey, fetcher, {
-        refreshInterval: 180000, // Refresh every 5 minutes
-        revalidateOnFocus: true, // refresh when window gets focused
+    // Fetch revenue data using SWR
+    const { data, error, isLoading } = useSWR('/organization/dashboard/revenue', fetcher, {
+        refreshInterval: 300000, // Refresh every 5 minutes
+        revalidateOnFocus: true
     })
-    console.log(data?.data);
 
-    const summary = data && data.data ? data.data.summary : null
+    const revenueData = data?.data || []
+    const meta = data?.meta
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768)
+        }
+
+        checkMobile()
+        window.addEventListener('resize', checkMobile)
+        return () => window.removeEventListener('resize', checkMobile)
+    }, [])
+
+    const daysToShow = useMemo(() => {
+        if (selectedDays === "auto") {
+            return isMobile ? 7 : 15
+        }
+        return parseInt(selectedDays)
+    }, [selectedDays, isMobile])
+
+    // Transform API data to chart format
+    const chartData = useMemo(() => {
+        if (!revenueData.length) return []
+        
+        return revenueData
+            .slice(-daysToShow)
+            .map(item => ({
+                date: item.date,
+                fullDate: new Date(item.date).toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric' 
+                }),
+                revenue: paisaToRupees(item.revenue) // Convert paisa to rupees
+            }))
+    }, [revenueData, daysToShow])
+
+    if (isLoading) {
+        return (
+            <Card className="h-full flex flex-col border-0 sm:px-3">
+                <CardHeader className="shrink-0">
+                    <Skeleton className="h-7 w-32 mb-2" />
+                    <Skeleton className="h-4 w-48" />
+                </CardHeader>
+                <CardContent className="flex-1">
+                    <Skeleton className="w-full h-full" />
+                </CardContent>
+            </Card>
+        )
+    }
+
+    if (error) {
+        return (
+            <Card className="h-full flex flex-col border-0 sm:px-3">
+                <CardHeader className="shrink-0">
+                    <Skeleton className="h-7 w-32" />
+                </CardHeader>
+                <CardContent className="flex-1 flex items-center justify-center">
+                    <Alert variant="destructive">
+                        <IconInfoCircle className="h-4 w-4" />
+                        <AlertDescription>
+                            Failed to load revenue data. Please try again later.
+                        </AlertDescription>
+                    </Alert>
+                </CardContent>
+            </Card>
+        )
+    }
+
+    if (!chartData.length) {
+        return (
+            <Card className="h-full flex flex-col border-0 sm:px-3">
+                <RevenueHeader 
+                    daysToShow={daysToShow}
+                    selectedDays={selectedDays}
+                    setSelectedDays={setSelectedDays}
+                    isMobile={isMobile}
+                    totalRevenue={0}
+                    meta={meta}
+                />
+                <CardContent className="flex-1 flex items-center justify-center">
+                    <div className="text-center text-muted-foreground">
+                        <p>No revenue data available yet.</p>
+                        <p className="text-sm mt-2">Start creating events to track revenue.</p>
+                    </div>
+                </CardContent>
+            </Card>
+        )
+    }
 
     return (
-        <Card className={'w-full h-full p-0 sm:px-0'}>
-            <div className="flex items-center justify-between pt-4 px-4">
-                <div className="flex flex-col sm:flex-row items-center gap-1 sm:space-x-3">
-                    <Select value={timeRange} onValueChange={(v) => setTimeRange(v)}>
-                        <SelectTrigger className="w-[140px]">{timeRange}</SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="7days">Last 7 days</SelectItem>
-                            <SelectItem value="14days">Last 14 days</SelectItem>
-                            <SelectItem value="30days">Last 30 days</SelectItem>
-                            <SelectItem value="90days">Last 90 days</SelectItem>
-                            <SelectItem value="1year">Last year</SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    <Select value={interval} onValueChange={(v) => setInterval(v)}>
-                        <SelectTrigger className="w-[140px]">{interval}</SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="day">Day</SelectItem>
-                            <SelectItem value="week">Week</SelectItem>
-                            <SelectItem value="month">Month</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-
-                {/* <div className="flex items-center justify-between h-full">
-                    <div className="flex items-baseline space-x-3">
-                        <div>
-                            <div className="text-2xl font-bold">₹{totalRevenue.toLocaleString()}</div>
-                        </div>
-                        {summary && (
-                            <div className="flex items-center text-sm text-muted-foreground">
-                                {summary.overallTrend === 'up' && <IconArrowUp className="h-4 w-4 text-green-600 mr-1" />}
-                                {summary.overallTrend === 'down' && <IconArrowDown className="h-4 w-4 text-red-600 mr-1" />}
-                                {summary.overallTrend === 'same' && <IconMinus className="h-4 w-4 text-gray-500 mr-1" />}
-                                <div>
-                                    <div className="text-xs">{summary.overallChangePercent != null ? `${summary.overallChangePercent}%` : ''}</div>
-                                    <div className="text-xs">{summary.overallChangeAmount ? `₹${summary.overallChangeAmount.toLocaleString()}` : ''}</div>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div> */}
-
-                <div className="flex items-center space-x-2">
-                    <Button size="sm" variant="outline" onClick={() => mutate()}>
-                        <IconRefresh className="h-4 w-4 mr-2" /> Refresh
-                    </Button>
-                </div>
-            </div>
-
-            <div className="">
-                {/* Top summary row: total revenue + trend */}
-                {error && <div className="p-4 text-red-600">Failed to load revenue trends</div>}
-                {!data && !error && <div className="p-4">Loading...</div>}
-                {/* {data && (
-                    <RevenueChart timeRange={timeRange} remoteData={chartData} />
-                )} */}
-            </div>
+        <Card className="h-full flex flex-col border-0 sm:px-3">
+            <RevenueHeader 
+                daysToShow={daysToShow}
+                selectedDays={selectedDays}
+                setSelectedDays={setSelectedDays}
+                isMobile={isMobile}
+                totalRevenue={meta ? paisaToRupees(meta.totalRevenue) : 0}
+                averageRevenue={meta ? paisaToRupees(meta.averageRevenue) : 0}
+                meta={meta}
+            />
+            <RevenueChart chartData={chartData} />
         </Card>
     )
 }
 
-export default Page
+export default Revenue
