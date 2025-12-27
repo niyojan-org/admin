@@ -239,7 +239,7 @@ export default function Coupons({ eventId }) {
 
     return (
         <>
-            <Card>
+            <Card className="h-full">
                 <CardHeader className="">
                     <div className="flex flex-col gap-2 items-start justify-between">
                         <CardTitle className="flex flex-col gap-2">

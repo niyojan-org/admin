@@ -19,6 +19,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { QuickActions } from "./components/QuickActions";
 import { useEventStore } from "@/store/eventStore";
+import { FullPageLoader } from "@/components/ui/full-page-loader";
+import { LoaderFour, LoaderOne } from "@/components/ui/loader";
 
 const EventPage = () => {
   const params = useParams();
@@ -56,11 +58,9 @@ const EventPage = () => {
   }, [eventId]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <FullPageLoader>
+      <p className="font-medium text-primary flex items-center text-xl gap-3">Loading event data <LoaderOne size={2}/></p>
+    </FullPageLoader>;
   }
 
   if (error) {
@@ -92,7 +92,7 @@ const EventPage = () => {
   const { event, organization } = eventData;
 
   return (
-    <div className="container mx-auto py-6 h-full pb-6">
+    <div className="mx-auto py-6 mb-10">
       {/* Event Header */}
       <div className="mb-8">
         <EventHeader event={event} organization={organization} setEventData={setEventData} />

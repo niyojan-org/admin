@@ -259,8 +259,3 @@
   --font-sans: "Source Sans 3", sans-serif;
   --font-mono: "Source Code Pro", monospace;
 }
-
-table {
-  /* table-layout: fixed; */
-  width: 100%;
-}

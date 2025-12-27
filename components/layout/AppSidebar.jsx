@@ -80,19 +80,19 @@ const AppSidebar = ({ className }) => {
         // },
       ],
     },
-    {
-      id: "analytics",
-      label: "Analytics",
-      icon: IconChartBar,
-      href: "/dashboard/analytics",
-    },
-    {
-      id: "payments",
-      label: "Payments",
-      icon: IconCreditCard,
-      href: "/dashboard/payments",
-      badge: { text: "New", variant: "destructive" },
-    },
+    // {
+    //   id: "analytics",
+    //   label: "Analytics",
+    //   icon: IconChartBar,
+    //   href: "/dashboard/analytics",
+    // },
+    // {
+    //   id: "payments",
+    //   label: "Payments",
+    //   icon: IconCreditCard,
+    //   href: "/dashboard/payments",
+    //   badge: { text: "New", variant: "destructive" },
+    // },
     // {
     //   id: "messages",
     //   label: "Messages",
@@ -141,9 +141,12 @@ const AppSidebar = ({ className }) => {
           return false;
         });
       }
+      // For '/organization/members', require exact match
+      if (item.href === "/organization/members" && pathname === "/organization/members") return true;
+      if (item.href === "/organization" && pathname === "/organization") return true;
       // For items without children, exact match or starts with (but not for /events base)
       if (item.href === "/events" && pathname === "/events") return true;
-      if (item.href !== "/events" && pathname.startsWith(item.href)) return true;
+      // if (item.href !== "/events" && item.href !== "/organization/members" && pathname.startsWith(item.href)) return true;
     }
     return false;
   };
