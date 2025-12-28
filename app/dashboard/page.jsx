@@ -41,7 +41,7 @@ export default function Dashboard() {
       title: "Create Event",
       description: "Set up a new event",
       icon: IconPlus,
-      href: "/event/create",
+      href: "/events/create",
       color: "bg-blue-500",
     },
     {

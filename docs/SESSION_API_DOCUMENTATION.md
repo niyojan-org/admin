@@ -2,7 +2,7 @@
 
 ## Base URL
 ```
-/event/admin/session
+/events/admin/session
 ```
 
 ## Overview
@@ -82,7 +82,7 @@ interface EventContext {
 Creates a new session for an event.
 
 ```http
-POST /event/admin/session/:eventId
+POST /events/admin/session/:eventId
 ```
 
 #### Request Body
@@ -137,7 +137,7 @@ POST /event/admin/session/:eventId
 Retrieves all sessions for an event.
 
 ```http
-GET /event/admin/session/:eventId
+GET /events/admin/session/:eventId
 ```
 
 #### Success Response (200)
@@ -171,7 +171,7 @@ GET /event/admin/session/:eventId
 Retrieves a specific session by ID or title.
 
 ```http
-GET /event/admin/session/:eventId/:sessionId
+GET /events/admin/session/:eventId/:sessionId
 ```
 
 #### Parameters
@@ -206,7 +206,7 @@ GET /event/admin/session/:eventId/:sessionId
 Updates an existing session.
 
 ```http
-PUT /event/admin/session/:eventId/:sessionId
+PUT /events/admin/session/:eventId/:sessionId
 ```
 
 #### Request Body
@@ -252,7 +252,7 @@ PUT /event/admin/session/:eventId/:sessionId
 Removes a session from an event.
 
 ```http
-DELETE /event/admin/session/:eventId/:sessionId
+DELETE /events/admin/session/:eventId/:sessionId
 ```
 
 #### Success Response (200)
@@ -279,7 +279,7 @@ DELETE /event/admin/session/:eventId/:sessionId
 Enables or disables multiple sessions for an event.
 
 ```http
-PUT /event/admin/session/:eventId/toggle-multiple-sessions
+PUT /events/admin/session/:eventId/toggle-multiple-sessions
 ```
 
 #### Success Response (200)
@@ -386,7 +386,7 @@ export const useSessions = ({ eventId }: UseSessionsProps) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get(`/event/admin/session/${eventId}`);
+      const response = await api.get(`/events/admin/session/${eventId}`);
       setSessions(response.data.sessions);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to fetch sessions');
@@ -399,7 +399,7 @@ export const useSessions = ({ eventId }: UseSessionsProps) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.post(`/event/admin/session/${eventId}`, sessionData);
+      const response = await api.post(`/events/admin/session/${eventId}`, sessionData);
       setSessions(prev => [...prev, response.data.session]);
       return response.data;
     } catch (err: any) {
@@ -414,7 +414,7 @@ export const useSessions = ({ eventId }: UseSessionsProps) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.put(`/event/admin/session/${eventId}/${sessionId}`, updates);
+      const response = await api.put(`/events/admin/session/${eventId}/${sessionId}`, updates);
       setSessions(prev => prev.map(s => 
         s._id === sessionId ? response.data.session : s
       ));
@@ -431,7 +431,7 @@ export const useSessions = ({ eventId }: UseSessionsProps) => {
     try {
       setLoading(true);
       setError(null);
-      await api.delete(`/event/admin/session/${eventId}/${sessionId}`);
+      await api.delete(`/events/admin/session/${eventId}/${sessionId}`);
       setSessions(prev => prev.filter(s => s._id !== sessionId));
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to delete session');
@@ -445,7 +445,7 @@ export const useSessions = ({ eventId }: UseSessionsProps) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.put(`/event/admin/session/${eventId}/toggle-multiple-sessions`);
+      const response = await api.put(`/events/admin/session/${eventId}/toggle-multiple-sessions`);
       return response.data;
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to toggle multiple sessions');
@@ -780,7 +780,7 @@ const updateSessionOptimistically = async (sessionId: string, updates: Partial<S
   ));
 
   try {
-    const response = await api.put(`/event/admin/session/${eventId}/${sessionId}`, updates);
+    const response = await api.put(`/events/admin/session/${eventId}/${sessionId}`, updates);
     // Confirm with server response
     setSessions(prev => prev.map(s => 
       s._id === sessionId ? response.data.session : s
@@ -858,23 +858,23 @@ class SessionAPI {
   constructor(private baseURL: string) {}
 
   async addSession(eventId: string, sessionData: Omit<Session, '_id'>) {
-    return this.request('POST', `/event/admin/session/${eventId}`, sessionData);
+    return this.request('POST', `/events/admin/session/${eventId}`, sessionData);
   }
 
   async getSessions(eventId: string) {
-    return this.request('GET', `/event/admin/session/${eventId}`);
+    return this.request('GET', `/events/admin/session/${eventId}`);
   }
 
   async updateSession(eventId: string, sessionId: string, updates: Partial<Session>) {
-    return this.request('PUT', `/event/admin/session/${eventId}/${sessionId}`, updates);
+    return this.request('PUT', `/events/admin/session/${eventId}/${sessionId}`, updates);
   }
 
   async deleteSession(eventId: string, sessionId: string) {
-    return this.request('DELETE', `/event/admin/session/${eventId}/${sessionId}`);
+    return this.request('DELETE', `/events/admin/session/${eventId}/${sessionId}`);
   }
 
   async toggleMultipleSessions(eventId: string) {
-    return this.request('PUT', `/event/admin/session/${eventId}/toggle-multiple-sessions`);
+    return this.request('PUT', `/events/admin/session/${eventId}/toggle-multiple-sessions`);
   }
 
   private async request(method: string, url: string, data?: any) {

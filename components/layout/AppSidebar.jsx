@@ -57,42 +57,42 @@ const AppSidebar = ({ className }) => {
       id: "events",
       label: "Events",
       icon: IconCalendarEvent,
-      href: "/event",
+      href: "/events",
       badge: { text: "3", variant: "secondary" },
       children: [
         {
           id: "all-events",
           label: "All Events",
-          href: "/event",
+          href: "/events",
           icon: IconCalendarEvent,
         },
         {
           id: "create-event",
           label: "Create Event",
-          href: "/event/create",
+          href: "/events/create",
           icon: IconPlus,
         }
         // {
         //   id: "event-templates",
         //   label: "Templates",
-        //   href: "/event/templates",
+        //   href: "/events/templates",
         //   icon: IconTicket,
         // },
       ],
     },
-    {
-      id: "analytics",
-      label: "Analytics",
-      icon: IconChartBar,
-      href: "/dashboard/analytics",
-    },
-    {
-      id: "payments",
-      label: "Payments",
-      icon: IconCreditCard,
-      href: "/dashboard/payments",
-      badge: { text: "New", variant: "destructive" },
-    },
+    // {
+    //   id: "analytics",
+    //   label: "Analytics",
+    //   icon: IconChartBar,
+    //   href: "/dashboard/analytics",
+    // },
+    // {
+    //   id: "payments",
+    //   label: "Payments",
+    //   icon: IconCreditCard,
+    //   href: "/dashboard/payments",
+    //   badge: { text: "New", variant: "destructive" },
+    // },
     // {
     //   id: "messages",
     //   label: "Messages",
@@ -136,14 +136,17 @@ const AppSidebar = ({ className }) => {
       // For items with children, check if any child is active
       if (item.children) {
         return item.children.some(child => {
-          if (child.href === "/event" && pathname === "/event") return true;
-          if (child.href !== "/event" && pathname.startsWith(child.href)) return true;
+          if (child.href === "/events" && pathname === "/events") return true;
+          if (child.href !== "/events" && pathname.startsWith(child.href)) return true;
           return false;
         });
       }
-      // For items without children, exact match or starts with (but not for /event base)
-      if (item.href === "/event" && pathname === "/event") return true;
-      if (item.href !== "/event" && pathname.startsWith(item.href)) return true;
+      // For '/organization/members', require exact match
+      if (item.href === "/organization/members" && pathname === "/organization/members") return true;
+      if (item.href === "/organization" && pathname === "/organization") return true;
+      // For items without children, exact match or starts with (but not for /events base)
+      if (item.href === "/events" && pathname === "/events") return true;
+      // if (item.href !== "/events" && item.href !== "/organization/members" && pathname.startsWith(item.href)) return true;
     }
     return false;
   };

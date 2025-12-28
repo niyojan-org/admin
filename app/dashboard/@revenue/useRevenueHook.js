@@ -1,4 +1,0 @@
-
-const useRevenueHook = () =>{
-    // const {data}
-}

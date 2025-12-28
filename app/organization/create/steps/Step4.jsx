@@ -10,6 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useOrgStore } from "@/store/orgStore";
 import api from "@/lib/api";
 import { toast } from "sonner";
@@ -251,19 +258,22 @@ export default function Step4({ goNext, goBack }) {
                       {/* Document Type */}
                       <div className="space-y-2">
                         <Label className="text-foreground font-semibold text-base">Document Type *</Label>
-                        <select
+                        <Select
                           value={document.type}
-                          onChange={(e) => handleDocumentTypeChange(index, e.target.value)}
-                          className="w-full h-11 px-3 border border-border rounded-md focus:border-primary focus:ring-primary"
+                          onValueChange={(value) => handleDocumentTypeChange(index, value)}
                           required
                         >
-                          <option value="">Select Document Type</option>
-                          {documentTypes.map((type) => (
-                            <option key={type} value={type}>
-                              {type}
-                            </option>
-                          ))}
-                        </select>
+                          <SelectTrigger className="w-full h-11">
+                            <SelectValue placeholder="Select Document Type" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {documentTypes.map((type) => (
+                              <SelectItem key={type} value={type}>
+                                {type}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
 
                       {/* File Upload */}
