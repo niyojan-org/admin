@@ -59,7 +59,7 @@ const EventPage = () => {
 
   if (loading) {
     return <FullPageLoader>
-      <p className="font-medium text-primary flex items-center text-xl gap-3">Loading event data <LoaderOne size={2}/></p>
+      <div className="font-medium text-primary flex items-center text-xl gap-3">Loading event data <LoaderOne size={2} /></div>
     </FullPageLoader>;
   }
 
