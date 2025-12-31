@@ -92,7 +92,7 @@ const GuestSpeaker = ({ eventId, className }) => {
   }
 
   return (
-    <Card className={cn("overflow-hidden shadow-sm border-border/50 h-full", className)}>
+    <Card className={cn("overflow-hidden border-none shadow-sm hover:shadow-md transition-shadow dark:bg-card/80 h-full", className)}>
       {/* Header Section */}
       <GuestSpeakerHeader
         speakerCount={speakers.length}

@@ -198,12 +198,12 @@ export function GuestSpeakerForm({
                         <div className="space-y-4">
                             <Label className="text-sm font-medium">Speaker Photo</Label>
                             <div className="flex flex-col sm:flex-row items-start gap-4">
-                                <div className="flex-shrink-0 mx-auto sm:mx-0">
+                                <div className="shrink-0 mx-auto sm:mx-0">
                                     <Avatar className="w-24 h-24 sm:w-20 sm:h-20 border-2 border-border/50">
                                         {formData.photoUrl && formData.photoUrl.trim() && (
                                             <AvatarImage src={formData.photoUrl} alt="Speaker photo" className="object-cover" />
                                         )}
-                                        <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10">
+                                        <AvatarFallback className="bg-linear-to-br from-primary/20 to-primary/10">
                                             <IconUser className="w-12 h-12 sm:w-10 sm:h-10 text-primary" />
                                         </AvatarFallback>
                                     </Avatar>

@@ -94,7 +94,7 @@ export const Benefits = ({ eventId, className }) => {
 
     return (
         <>
-            <Card className={cn("w-full h-[440px] flex flex-col", className)}>
+            <Card className={cn("w-full h-[440px] flex flex-col border-0 shadow-sm hover:shadow-md transition-shadow dark:bg-card/80", className)}>
                 <BenefitsHeader
                     benefitCount={benefits.length}
                     onAddBenefit={() => setShowAddDialog(true)}

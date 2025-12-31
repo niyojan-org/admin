@@ -30,12 +30,12 @@ const BenefitForm = ({
 
         if (!formData.title.trim()) {
             newErrors.title = 'Title is required';
-        } else if (formData.title.length > 100) {
-            newErrors.title = 'Title must be 100 characters or less';
+        } else if (formData.title.length > 50) {
+            newErrors.title = 'Title must be 40 t0 50 characters or less';
         }
 
-        if (formData.description && formData.description.length > 500) {
-            newErrors.description = 'Description must be 500 characters or less';
+        if (formData.description && formData.description.length > 150) {
+            newErrors.description = 'Description must be 120 to 150 characters or less';
         }
 
         setErrors(newErrors);
@@ -85,7 +85,7 @@ const BenefitForm = ({
                     id="title"
                     value={formData.title}
                     onChange={(e) => handleInputChange('title', e.target.value)}
-                    placeholder="e.g., Professional Certificate"
+                    placeholder="e.g., Certificate of Participation"
                     maxLength={100}
                     className={errors.title ? 'border-destructive' : ''}
                 />
@@ -93,7 +93,7 @@ const BenefitForm = ({
                     <p className="text-sm text-destructive">{errors.title}</p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                    {formData.title.length}/100 characters
+                    {formData.title.length}/50 characters
                 </p>
             </div>
 
@@ -113,12 +113,12 @@ const BenefitForm = ({
                     <p className="text-sm text-destructive">{errors.description}</p>
                 )}
                 <p className="text-xs text-muted-foreground">
-                    {formData.description.length}/500 characters
+                    {formData.description.length}/150 characters
                 </p>
             </div>
 
             {/* Icon URL */}
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
                 <Label htmlFor="icon">Icon URL</Label>
                 <Input
                     id="icon"
@@ -130,10 +130,10 @@ const BenefitForm = ({
                 <p className="text-xs text-muted-foreground">
                     Optional: Provide a URL for a custom icon
                 </p>
-            </div>
+            </div> */}
 
             {/* Icon Preview */}
-            {formData.icon && (
+            {/* {formData.icon && (
                 <div className="space-y-2">
                     <Label>Icon Preview</Label>
                     <div className="flex items-center space-x-3">
@@ -151,7 +151,7 @@ const BenefitForm = ({
                         </div>
                     </div>
                 </div>
-            )}
+            )} */}
 
             {/* Active Status */}
             <div className="flex items-center space-x-2">

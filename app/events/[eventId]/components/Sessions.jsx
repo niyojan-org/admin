@@ -155,7 +155,7 @@ export default function Sessions({ eventId, className }) {
 
   return (
     <>
-      <Card className={cn("w-full h-[440px] flex flex-col", className)}>
+      <Card className={cn("w-full h-[440px] flex flex-col border-0 p-4 shadow-sm hover:shadow-md transition-shadow dark:bg-card/80", className)}>
         <SessionHeader
           sessionCount={sessions.length}
           allowMultipleSessions={allowMultipleSessions}
@@ -165,8 +165,8 @@ export default function Sessions({ eventId, className }) {
           loading={loading}
         />
 
-        <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full">
+        <div className="flex-1 overflow-hidden  ">
+          <ScrollArea className="h-full pr-3">
             <SessionList
               sessions={sessions}
               loading={loading}

@@ -13,10 +13,10 @@ import { IconAlertCircle, IconPlus, IconEdit } from '@tabler/icons-react';
 const ticketTypes = [
     { value: "Regular", label: "Regular" },
     { value: "VIP", label: "VIP" },
-    { value: "VVIP", label: "VVIP" },
+    // { value: "VVIP", label: "VVIP" },
     { value: "Student", label: "Student" },
     { value: "Early Bird", label: "Early Bird" },
-    { value: "Group", label: "Group" },
+    // { value: "Group", label: "Group" },
     { value: "Custom", label: "Custom" }
 ];
 

@@ -39,7 +39,7 @@ const EventHeader = ({ event, organization, setEventData }) => {
   const ModeIcon = modeBadge.icon;
 
   return (
-    <Card className="overflow-hidden border-none shadow-sm dark:bg-card/60 hover:shadow-md transition-shadow">
+    <Card className="overflow-hidden border-none dark:bg-card/80 shadow-sm transition-[box-shadow,transform] duration-200 ease-out hover:shadow-md">
       {/* Banner Image */}
       <div className="relative h-64 w-full">
         <Image
@@ -53,10 +53,10 @@ const EventHeader = ({ event, organization, setEventData }) => {
         {/* Action Buttons Overlay */}
         <div className="absolute top-4 right-4 flex gap-2">
           <Button size="sm" variant="outline" asChild>
-            <Link href={`/events/${event._id}/share`}>
+            {/* <Link href={`/events/${event._id}/share`}>
               <Share2 className="w-4 h-4 mr-1" />
               Share
-            </Link>
+            </Link> */}
           </Button>
           <Button size="sm" asChild>
             <Link href={`/events/${event._id}/edit`}>

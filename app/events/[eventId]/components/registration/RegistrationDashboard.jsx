@@ -26,13 +26,14 @@ import QuickActions from './QuickActions';
 import { registrationApi } from '@/lib/api/registration';
 import { Spinner } from '@/components/ui/spinner';
 
+
 /**
  * Main Registration Dashboard Component
  * Comprehensive registration management interface
  */
-export default function RegistrationDashboard({ eventId, className = "" }) {
+export default function RegistrationDashboard({ eventId, onStatusChange, className = "" }) {
   const [registrationData, setRegistrationData] = useState(null);
-  const [requirements, setRequirements] = useState(null);
+  const [requirements, setRequirements] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [showTimelineDialog, setShowTimelineDialog] = useState(false);
@@ -44,7 +45,7 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
       setError('');
       const [statusResult, requirementsResult] = await Promise.all([
         registrationApi.getStatus(eventId),
-        registrationApi.validateRequirements(eventId).catch(() => ({ data: null }))
+        registrationApi.validateRequirements(eventId).catch(() => ({ data: {} }))
       ]);
 
       setRegistrationData(statusResult.data);
@@ -77,6 +78,9 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
       ...prev,
       ...newData
     }));
+
+    // parent se data, and notify
+    onStatusChange?.(newData);
   };
 
   // Handle timeline updates
@@ -96,20 +100,6 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
       features: newSettings
     }));
   };
-
-  if (isLoading) {
-    return (
-      <Card className={className}>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-center space-x-2">
-            <RefreshCw className="w-5 h-5 animate-spin" />
-            <span>Loading registration data...</span>
-            <Spinner />
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
 
   if (error && !registrationData) {
     return (
@@ -133,7 +123,7 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
   return (
     <div className={`space-y-4 h-[850px] sm:h-[600px] flex flex-col ${className}`}>
       {/* Header with Status */}
-      <Card className="shrink-0">
+      <Card className="shrink-0 p-4 border-none shadow-sm dark:bg-card/80 hover:shadow-md transition-shadow">
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -147,22 +137,26 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
                 />
               )}
             </div>
-            <Button variant="outline" size="sm" onClick={handleRefresh}>
-              <RefreshCw className="w-4 h-4 mr-2" />
-              Refresh
+            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={isLoading}>
+              {isLoading ? (
+                <>
+                  <Spinner />
+                  Syncing...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="w-4 h-4 mr-2" />
+                  Refresh
+                </>
+              )}
             </Button>
           </div>
-          {registrationData?.eventTitle && (
-            <p className="text-sm text-muted-foreground">
-              {registrationData.eventTitle}
-            </p>
-          )}
         </CardHeader>
       </Card>
 
       {/* Error Alert */}
       {error && (
-        <Alert variant="destructive" className="flex-shrink-0">
+        <Alert variant="destructive" className="shrink-0">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
@@ -170,7 +164,7 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col overflow-hidden">
-        <TabsList className="grid w-full grid-cols-4 flex-shrink-0">
+        <TabsList className="grid w-full grid-cols-4 shrink-0">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <BarChart3 className="w-4 h-4" />
             <span className="hidden sm:inline">Overview</span>
@@ -214,7 +208,7 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
         <TabsContent value="timeline" className="flex-1 overflow-hidden mt-4">
           <ScrollArea className="h-full">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pr-2 pb-2">
-              <Card>
+              <Card className="border-none dark:bg-card/80 shadow-sm transition-[box-shadow,transform] duration-200 ease-out hover:shadow-md">
                 <CardHeader>
                   <CardTitle>Timeline Management</CardTitle>
                 </CardHeader>
@@ -256,7 +250,7 @@ export default function RegistrationDashboard({ eventId, className = "" }) {
 
         {/* Settings Tab */}
         <TabsContent value="settings" className="flex-1 overflow-hidden mt-4">
-          <ScrollArea className="h-full">
+          <ScrollArea className="h-full pr-1">
             <div className="pr-2 pb-2">
               <RegistrationSettings
                 eventId={eventId}

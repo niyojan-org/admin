@@ -55,7 +55,7 @@ export default function RegistrationStats({ statistics, tickets = [], eventId })
     <div className="space-y-6 h-full">
 			<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 h-full">
       {/* Overall Statistics */}
-      <Card className={'gap-4 h-full'}>
+      <Card className={'gap-4 h-full border-none dark:bg-card/80 shadow-sm transition-[box-shadow,transform] duration-200 ease-out hover:shadow-md'}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="w-5 h-5" />
@@ -112,7 +112,7 @@ export default function RegistrationStats({ statistics, tickets = [], eventId })
 
       {/* Ticket Breakdown */}
       {tickets.length > 0 && (
-        <Card className={'h-full'}>
+        <Card className={'h-full border-none dark:bg-card/80 shadow-sm transition-[box-shadow,transform] duration-200 ease-out hover:shadow-md'}>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Ticket className="w-5 h-5" />

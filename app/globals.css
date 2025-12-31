@@ -9,6 +9,7 @@
   --card: #fcffff;
   --card-foreground: #000000;
   --popover: #fcffff;
+  --success: #22C55E;
   --popover-foreground: #000000;
   --primary: #1c458f;
   --primary-foreground: #ffffff;
@@ -198,6 +199,7 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-success: var(--success);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);

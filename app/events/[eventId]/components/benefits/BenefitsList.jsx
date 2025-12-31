@@ -42,6 +42,45 @@ const BenefitsList = ({
         setDragOverItem(null);
     };
 
+    // const handleDrop = async (e, dropIndex) => {
+    //     e.preventDefault();
+    //     if (!canManageBenefits || !draggedItem || !onReorderBenefits) return;
+
+    //     const dragIndex = draggedItem.index;
+    //     if (dragIndex === dropIndex) {
+    //         setDraggedItem(null);
+    //         setDragOverItem(null);
+    //         return;
+    //     }
+
+    //     // Create new order array
+    //     const newBenefits = [...benefits];
+    //     const draggedBenefit = newBenefits[dragIndex];
+        
+    //     // Remove dragged item
+    //     newBenefits.splice(dragIndex, 1);
+    //     // Insert at new position
+    //     newBenefits.splice(dropIndex, 0, draggedBenefit);
+
+    //     // Update order values
+    //     const updatedBenefits = newBenefits.map((benefit, index) => ({
+    //         ...benefit,
+    //         order: index
+    //     }));
+
+    //     // Get benefit IDs in new order
+    //     const benefitIds = updatedBenefits.map(benefit => benefit._id);
+
+    //     try {
+    //         await onReorderBenefits(benefitIds);
+    //     } catch (error) {
+    //         console.error('Failed to reorder benefits:', error);
+    //     }
+
+    //     setDraggedItem(null);
+    //     setDragOverItem(null);
+    // };
+   
     const handleDrop = async (e, dropIndex) => {
         e.preventDefault();
         if (!canManageBenefits || !draggedItem || !onReorderBenefits) return;
@@ -53,23 +92,32 @@ const BenefitsList = ({
             return;
         }
 
-        // Create new order array
         const newBenefits = [...benefits];
         const draggedBenefit = newBenefits[dragIndex];
-        
-        // Remove dragged item
-        newBenefits.splice(dragIndex, 1);
-        // Insert at new position
-        newBenefits.splice(dropIndex, 0, draggedBenefit);
 
-        // Update order values
+        newBenefits.splice(dragIndex, 1);
+
+        let insertIndex = dropIndex;
+        if (dropIndex > dragIndex) insertIndex = dropIndex - 1;
+
+        newBenefits.splice(insertIndex, 0, draggedBenefit);
+
         const updatedBenefits = newBenefits.map((benefit, index) => ({
             ...benefit,
             order: index
         }));
 
-        // Get benefit IDs in new order
-        const benefitIds = updatedBenefits.map(benefit => benefit._id);
+        const benefitIds = updatedBenefits
+            .map(b => b?._id)
+            .filter(Boolean);
+
+        if (benefitIds.length !== updatedBenefits.length) {
+            console.error("Invalid benefit IDs in reorder:", updatedBenefits);
+            toast.error("Reordering failed due to invalid benefit IDs.");
+            return;
+        }
+
+        console.log("Reordering benefit IDs:", benefitIds);
 
         try {
             await onReorderBenefits(benefitIds);
@@ -79,7 +127,8 @@ const BenefitsList = ({
 
         setDraggedItem(null);
         setDragOverItem(null);
-    };
+        };
+
 
     const handleDragEnd = () => {
         setDraggedItem(null);
@@ -188,7 +237,7 @@ const BenefitsList = ({
                 </div>
 
                 {/* Benefits limit warning */}
-                {benefits.length >= 15 && canManageBenefits && (
+                {benefits.length >= 12 && canManageBenefits && (
                     <Alert className="mt-4">
                         <AlertCircle className="h-4 w-4" />
                         <AlertDescription>

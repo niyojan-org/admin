@@ -63,12 +63,12 @@ export function GuestSpeakerCard({
             {/* Header Section */}
             <div className="flex gap-4">
                 {/* Avatar */}
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                     <Avatar className={`${isDialog ? 'w-24 h-24' : 'w-16 h-16 sm:w-20 sm:h-20'} border-2 border-border/50`}>
                         {speaker.photoUrl && speaker.photoUrl.trim() && (
                             <AvatarImage src={speaker.photoUrl} alt={speaker.name} className="object-cover" />
                         )}
-                        <AvatarFallback className="bg-gradient-to-br from-primary/20 to-primary/10 text-primary font-medium">
+                        <AvatarFallback className="bg-linear-to-br from-primary/20 to-primary/10 text-primary font-medium">
                             <IconUser className={`${isDialog ? 'w-12 h-12' : 'w-8 h-8 sm:w-10 sm:h-10'}`} />
                         </AvatarFallback>
                     </Avatar>
@@ -94,7 +94,7 @@ export function GuestSpeakerCard({
                         {!isDialog && (
                             <>
                                 {/* Desktop Actions */}
-                                <div className="hidden sm:flex gap-1 flex-shrink-0">
+                                <div className="hidden sm:flex gap-1 shrink-0">
                                     <Button
                                         variant="ghost"
                                         size="sm"
@@ -129,7 +129,7 @@ export function GuestSpeakerCard({
                                 </div>
 
                                 {/* Mobile Actions */}
-                                <div className="sm:hidden flex-shrink-0">
+                                <div className="sm:hidden shrink-0">
                                     <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button
@@ -206,7 +206,7 @@ export function GuestSpeakerCard({
                                 >
                                     <IconComponent className="w-3.5 h-3.5 mr-1.5" />
                                     <span className="capitalize font-medium">{platform}</span>
-                                    <IconExternalLink className="w-3 h-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                    <IconExternalLink className="w-3 h-3 ml-1  transition-opacity" />
                                 </Badge>
                             );
                         })}

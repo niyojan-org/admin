@@ -67,10 +67,10 @@ export const getPlatformColor = (platform) => {
 export const validateSocialPlatform = (platform, url) => {
     const validators = {
         instagram: /^https?:\/\/(www\.)?instagram\.com\/.+/,
-        linkedin: /^https?:\/\/(www\.)?linkedin\.com\/.+/,
+        youtube: /^https?:\/\/(www\.)?youtube\.com\/.+/,
         twitter: /^https?:\/\/(www\.)?(twitter\.com|x\.com)\/.+/,
         facebook: /^https?:\/\/(www\.)?facebook\.com\/.+/,
-        youtube: /^https?:\/\/(www\.)?youtube\.com\/.+/,
+        linkedin: /^https?:\/\/(www\.)?linkedin\.com\/.+/,
         tiktok: /^https?:\/\/(www\.)?tiktok\.com\/.+/,
         website: /^https?:\/\/.+\..+/,
     };

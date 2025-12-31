@@ -15,6 +15,7 @@ import { CouponFormDialog } from './coupons/CouponFormDialog';
 import { PaginationControls } from './coupons/PaginationControls';
 import { CouponDetailsDialog } from './coupons/CouponDetailsDialog';
 import { CouponAllowanceDialog } from './coupons/CouponAllowanceToggle';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function Coupons({ eventId }) {
     // State management
@@ -239,8 +240,8 @@ export default function Coupons({ eventId }) {
 
     return (
         <>
-            <Card className="h-full">
-                <CardHeader className="">
+            <Card className="h-full border-none shadow-sm hover:shadow-md transition-shadow dark:bg-card/80">
+                <CardHeader>
                     <div className="flex flex-col gap-2 items-start justify-between">
                         <CardTitle className="flex flex-col gap-2">
                             <div className="flex items-center gap-2">
@@ -290,7 +291,8 @@ export default function Coupons({ eventId }) {
                         </div>
                     </div>
                 </CardHeader>
-                <CardContent className="">
+                <CardContent className="p-0">
+                    <ScrollArea className="h-[430px] pr-3">
                     {loading ? (
                         <div className="space-y-3">
                             {[...Array(3)].map((_, i) => (
@@ -367,6 +369,7 @@ export default function Coupons({ eventId }) {
                             />
                         </>
                     )}
+                    </ScrollArea>
                 </CardContent>
             </Card >
 

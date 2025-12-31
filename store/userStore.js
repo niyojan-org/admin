@@ -19,18 +19,11 @@ export const useUserStore = create((set) => ({
   setToken: async () => {
     try {
 
-
-      // // Check if user data already exists
-      // const currentState = useUserStore.getState();
-      // if (currentState.user && currentState.organization) {
-      //   set({ token, isAuthenticated: true });
-      //   return true;
-      // }
-
       // Fetch user data only if not present
       const resUser = await api.get("/user/me");
+      // setAccessToken({ isAuthenticated: true });
       const user = resUser.data.data.user;
-      setAccessToken({ isAuthenticated: true });
+
       let organization = null;
       try {
         // Fetch organization separately
@@ -43,12 +36,9 @@ export const useUserStore = create((set) => ({
       // Store in org store too
 
       set({ user, organization, isAuthenticated: true, error: null });
-      // toast.success("Welcome to your back..!!");
-
       return true;
     } catch (error) {
       set({ isAuthenticated: false, user: null, token: null, organization: null });
-      // toast.error(error?.response?.data?.message || "Session expired or organization not found. Please login again.");
       sessionStorage.clear();
       return false;
     } finally {

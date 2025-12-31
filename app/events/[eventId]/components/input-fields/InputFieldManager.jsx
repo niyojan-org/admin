@@ -1,10 +1,15 @@
-'use client'
+"use client";
 import { useState, useEffect } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { IconPlus, IconArrowsSort, IconAlertHexagon, IconLoader } from "@tabler/icons-react";
+import {
+  IconPlus,
+  IconArrowsSort,
+  IconAlertHexagon,
+  IconLoader,
+} from "@tabler/icons-react";
 import { FieldsList } from "./FieldsList";
 import { FieldFormDialog } from "./FieldFormDialog";
 import { DeleteFieldDialog } from "./DeleteFieldDialog";
@@ -13,6 +18,48 @@ import { useFieldOperations } from "./hooks/useFieldOperations";
 import api from "@/lib/api";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+
+
+import { IconSettings } from "@tabler/icons-react";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+
+import { IconInfoCircle } from "@tabler/icons-react";
+import { Separator } from "@/components/ui/separator";
+
+
+export const SYSTEM_DEFAULT_FIELDS = [
+  {
+    _id: "system-fullName",
+    name: "fullName",
+    label: "Full Name",
+    type: "text",
+    required: true,
+    placeholder: "Enter your full name",
+    system: true,
+  },
+  {
+    _id: "system-email",
+    name: "email",
+    label: "Email",
+    type: "email",
+    required: true,
+    placeholder: "Enter your email address",
+    system: true,
+  },
+  {
+    _id: "system-phone",
+    name: "phone",
+    label: "Phone Number",
+    type: "tel",
+    required: true,
+    placeholder: "Enter Whatsapp number",
+    system: true,
+  },
+];
 
 export function InputFieldManager({ eventId, className }) {
   const [fields, setFields] = useState([]);
@@ -46,7 +93,7 @@ export function InputFieldManager({ eventId, className }) {
         setFields(response.data.event?.inputFields || []);
       }
     } catch (error) {
-      console.error('Failed to fetch fields:', error);
+      console.error("Failed to fetch fields:", error);
       toast.error("Failed to load fields");
       setFields([]);
     } finally {
@@ -61,7 +108,7 @@ export function InputFieldManager({ eventId, className }) {
     handleEditField,
     handleDeleteField,
     handleArrangeFields,
-    resetForm
+    resetForm,
   } = useFieldOperations(eventId, {
     onFieldAdded: (data) => {
       setOperationLoading(false);
@@ -114,7 +161,7 @@ export function InputFieldManager({ eventId, className }) {
         fetchFields(); // Fallback to refetch
       }
       setShowArrangeDialog(false);
-    }
+    },
   });
 
   const openEdit = (index) => {
@@ -129,7 +176,7 @@ export function InputFieldManager({ eventId, className }) {
       placeholder: field.placeholder || "",
       maxLength: field.maxLength || "",
       min: field.min || "",
-      max: field.max || ""
+      max: field.max || "",
     });
     setEditDialog(true);
   };
@@ -177,21 +224,36 @@ export function InputFieldManager({ eventId, className }) {
   const handleArrangeWithLoading = async (newOrder) => {
     setOperationLoading(true);
     try {
-      await handleArrangeFields(newOrder);
+      // 🟢 filter out system fields
+      const filteredOrder = newOrder.filter(
+        (id) => !id.startsWith("system-")
+      );
+
+      await handleArrangeFields(filteredOrder);
     } catch (error) {
+      console.error("Arrange failed:", error);
+    } finally {
       setOperationLoading(false);
     }
   };
 
+  const displayFields = [...SYSTEM_DEFAULT_FIELDS, ...(fields || [])];
   if (!eventId) {
     return (
-      <Card className={cn("w-full h-full my-auto items-center flex-col justify-center", className)}>
+      <Card
+        className={cn(
+          "w-full h-full my-auto items-center flex-col justify-center",
+          className
+        )}
+      >
         <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
           <div className="w-24 h-24 bg-muted rounded-full flex items-center justify-center mb-2">
-            <IconAlertHexagon className='h-20 w-20' />
+            <IconAlertHexagon className="h-20 w-20" />
           </div>
           <div className="space-y-2">
-            <h3 className="text-lg font-semibold text-foreground">No Event Selected</h3>
+            <h3 className="text-lg font-semibold text-foreground">
+              No Event Selected
+            </h3>
             <p className="text-sm text-muted-foreground max-w-sm">
               Please select an event to view and manage its tickets
             </p>
@@ -202,10 +264,15 @@ export function InputFieldManager({ eventId, className }) {
   }
 
   return (
-    <Card className={cn("w-full h-[480px] flex flex-col", className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4 flex-shrink-0">
+    <Card
+      className={cn(
+        "w-full h-[480px] flex flex-col border-none shadow-sm hover:shadow-md transition-shadow dark:bg-card/80",
+        className
+      )}
+    >
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb- shrink-0">
         <CardTitle className="flex items-center gap-2">
-          Registration Fields ({fields.length || 0})
+          Registration Fields ({displayFields.length || 0})
         </CardTitle>
 
         <div className="flex items-center gap-2">
@@ -245,9 +312,9 @@ export function InputFieldManager({ eventId, className }) {
             </Button>
           )}
 
-          <Button 
-            variant="outline" 
-            size="sm" 
+          <Button
+            variant="outline"
+            size="sm"
             onClick={openAdd}
             disabled={loading || operationLoading}
           >
@@ -261,7 +328,50 @@ export function InputFieldManager({ eventId, className }) {
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 overflow-hidden p-0">
+      <CardContent className="flex-1 overflow-hidden ">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium">Default Registration Fields</span>
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-5 w-5 p-0 hover:bg-transparent"
+              >
+                <IconInfoCircle className="h-3 w-3 text-muted-foreground" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-72" side="bottom" align="center">
+              <div className="space-y-2">
+                <h4 className="font-medium text-sm">
+                  3 Default Fields
+                </h4>
+                <div className="space-y-1.5 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
+                    {/* <span className="font-medium">Enabled:</span> */}
+                    <span>Full Name</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
+                    {/* <span className="font-medium">Disabled:</span> */}
+                    <span>Email</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-400"></div>
+                    {/* <span className="font-medium">Disabled:</span> */}
+                    <span>WhatsApp Number</span>
+                  </div>
+<span>
+  Note: Please do not recreate the three input fields. These fields are automatically shown on the event registration form.
+</span>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
+        </div>
+
+          {/* <Separator className="w-5 mb-2 h-5 rounded-full" /> */}
         {loading ? (
           <div className="space-y-4 px-6">
             {/* Loading skeleton for fields */}
@@ -293,13 +403,19 @@ export function InputFieldManager({ eventId, className }) {
             </div>
           </div>
         ) : (
-          <ScrollArea className="h-full w-full">
+          <ScrollArea className="h-full w-full pr-1">
             <div className="pb-6 space-y-3">
               <FieldsList
-                fields={fields}
-                onEdit={openEdit}
+                fields={displayFields}
+                onEdit={(index) => {
+                  //blvoiking system fileds
+                  if (displayFields[index]?.system) return;
+                  openEdit(index - SYSTEM_DEFAULT_FIELDS.length);
+                }}
                 onDelete={(index) => {
-                  setDeleteIndex(index);
+                  //block system fileds
+                  if (displayFields[index]?.system) return;
+                  setDeleteIndex(index - SYSTEM_DEFAULT_FIELDS.length);
                   setShowDeleteDialog(true);
                 }}
                 onArrange={handleArrangeFields}
