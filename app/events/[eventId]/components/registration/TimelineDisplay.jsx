@@ -79,7 +79,7 @@ export default function TimelineDisplay({
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     if (days > 0) {
-      return `${days}d ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      return `${days}d:${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
     
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
@@ -95,11 +95,11 @@ export default function TimelineDisplay({
     }
 
     if (now < startDate) {
-      return { status: 'upcoming', color: 'text-blue-600' };
+      return { status: 'upcoming', color: 'text-primary' };
     } else if (now <= endDate) {
-      return { status: 'active', color: 'text-green-600' };
+      return { status: 'active', color: 'text-success' };
     } else {
-      return { status: 'ended', color: 'text-red-600' };
+      return { status: 'ended', color: 'text-destructive' };
     }
   };
 
@@ -119,11 +119,11 @@ export default function TimelineDisplay({
   }
 
   return (
-    <Card className={className}>
+    <Card className="border-none shadow-sm dark:bg-card/80 hover:shadow-md transition-shadow">
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <Clock className="w-4 h-4" />
-          Registration Timeline
+          Registration Timeline 
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -131,7 +131,7 @@ export default function TimelineDisplay({
         {timeLeft && (
           <div className="text-center p-4 bg-muted/50 rounded-lg">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <Timer className={`w-4 h-4 ${timeLeft.type === 'start' ? 'text-blue-600' : 'text-orange-600'}`} />
+              <Timer className={`w-4 h-4 ${timeLeft.type === 'start' ? 'text-primary' : 'text-secondary'}`} />
               <span className="text-sm font-medium">{timeLeft.label}</span>
             </div>
             <div className="text-2xl font-mono font-bold tracking-wider">
@@ -147,8 +147,8 @@ export default function TimelineDisplay({
           {registrationStart && (
             <div className="flex items-center gap-3">
               <div className={`w-2 h-2 rounded-full ${
-                status === 'upcoming' ? 'bg-blue-500' : 
-                status === 'active' ? 'bg-green-500' : 'bg-gray-400'
+                status === 'upcoming' ? 'bg-primary' : 
+                status === 'active' ? 'bg-success' : 'bg-border'
               }`} />
               <div className="flex-1">
                 <div className="flex items-center justify-between">
@@ -161,7 +161,7 @@ export default function TimelineDisplay({
                   {format(new Date(registrationStart), 'PPP p')}
                 </div>
                 {isFuture(new Date(registrationStart)) && (
-                  <div className="text-xs text-blue-600">
+                  <div className="text-xs text-primary">
                     {formatDistanceToNow(new Date(registrationStart), { addSuffix: true })}
                   </div>
                 )}
@@ -172,8 +172,8 @@ export default function TimelineDisplay({
           {registrationEnd && (
             <div className="flex items-center gap-3">
               <div className={`w-2 h-2 rounded-full ${
-                status === 'ended' ? 'bg-red-500' : 
-                status === 'active' ? 'bg-orange-500' : 'bg-gray-400'
+                status === 'ended' ? 'bg-destructive' : 
+                status === 'active' ? 'bg-secondary' : 'bg-destructive'
               }`} />
               <div className="flex-1">
                 <div className="flex items-center justify-between">
@@ -186,7 +186,7 @@ export default function TimelineDisplay({
                   {format(new Date(registrationEnd), 'PPP p')}
                 </div>
                 {isFuture(new Date(registrationEnd)) && (
-                  <div className="text-xs text-orange-600">
+                  <div className="text-xs text-secondary">
                     {formatDistanceToNow(new Date(registrationEnd), { addSuffix: true })}
                   </div>
                 )}

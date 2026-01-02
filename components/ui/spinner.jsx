@@ -9,9 +9,18 @@ function Spinner({
     <IconLoader3
       role="status"
       aria-label="Loading"
-      className={cn("size-4 animate-spin", className)}
+      className={cn("size-8 animate-spin", className)}
       {...props} />
   );
+}
+
+
+export function SpinnerCustom() {
+  return (
+    <div className="flex items-center gap-4">
+      <Spinner />
+    </div>
+  )
 }
 
 export { Spinner }

@@ -82,7 +82,7 @@ function ClientLayoutInner({ children }) {
         <AppSidebar />
         {useScrollArea ? (
           <ScrollArea className="h-dvh w-full">
-            <div className="flex-1 min-h-dvh sm:pt-0 w-full font-source-sans-3 px-2 md:px-4 lg:px-6">
+            <div className="flex-1 min-h-dvh sm:pt-0 pt-16 w-full font-source-sans-3 px-2 md:px-4 lg:px-6">
               {children}
             </div>
           </ScrollArea>

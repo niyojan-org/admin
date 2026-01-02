@@ -238,14 +238,13 @@ export default function Tickets({ eventId, className }) {
         );
     }
 
-
     return (
         <>
-            <Card className={cn("w-full h-[480px] flex flex-col", className)}>
-                <CardHeader className="pb-4 flex-shrink-0">
+            <Card className={cn(" border-none shadow-sm hover:shadow-md transition-shadow dark:bg-card/80 w-full h-[480px] flex flex-col p-4", className)}>
+                <CardHeader className="pb-4 shrink-0">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                         <div className="flex items-center gap-2">
-                            <IconTicket className="w-5 h-5 text-primary flex-shrink-0" />
+                            <IconTicket className="w-5 h-5 text-primary shrink-0" />
                             <CardTitle className="text-lg">
                                 Tickets ({tickets.length})
                             </CardTitle>
@@ -365,7 +364,7 @@ export default function Tickets({ eventId, className }) {
                         </div>
                     ) : (
                         <ScrollArea className="h-full">
-                            <div className="space-y-3 pr-2 pb-6">
+                            <div className="space-y-3 pr-3 pb-6">
                                 {tickets.map((ticket) => (
                                     <div key={ticket._id} className="border rounded-lg p-3 sm:p-4 space-y-3">
                                         <TicketHeader

@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Edit, Trash2, Star, Eye, EyeOff, GripVertical } from 'lucide-react';
 import BenefitForm from './BenefitForm';
+import { IconEdit, IconTrash } from '@tabler/icons-react';
 
 const BenefitCard = ({ 
     benefit, 
@@ -45,18 +46,18 @@ const BenefitCard = ({
 
     return (
         <Card className={`group hover:shadow-md transition-all duration-200 py-2 ${isDragging ? 'shadow-lg' : ''}`}>
-            <CardContent className="">
+            <CardContent>
                 <div className="flex items-start justify-between">
-                    <div className="flex items-center flex-1 space-x-2">
+                    <div className="flex items-center flex-1 space-x-1">
                         {/* Drag Handle */}
                         {canManageBenefits && (
-                            <div className={`transition-opacity cursor-grab active:cursor-grabbing ${isDragging ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
-                                <GripVertical className="h-4 w-4 text-muted-foreground" />
+                            <div className={`transition-opacity  cursor-grab active:cursor-grabbing ${isDragging ? 'opacity-100' : 'opacity-100 group-hover:opacity-100'}`}>
+                                <GripVertical className="h-4 w-4  text-muted-foreground" />
                             </div>
                         )}
                         
                         {/* Benefit Icon */}
-                        <div className="flex-shrink-0">
+                        {/* <div className="shrink-0">
                             {benefit.icon ? (
                                 <img 
                                     src={benefit.icon} 
@@ -71,7 +72,7 @@ const BenefitCard = ({
                             <div className={`h-8 w-8 rounded-md bg-primary flex items-center justify-center ${benefit.icon ? 'hidden' : 'flex'}`}>
                                 <Star className="h-4 w-4 text-primary-foreground" />
                             </div>
-                        </div>
+                        </div> */}
 
                         {/* Content */}
                         <div className="flex-1 min-w-0">
@@ -114,7 +115,7 @@ const BenefitCard = ({
 
                                 {/* Actions */}
                                 {canManageBenefits && (
-                                    <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity ">
+                                    <div className="flex items-center space-x-1  transition-opacity ">
                                         <Dialog open={showEditDialog} onOpenChange={setShowEditDialog} >
                                             <DialogTrigger asChild>
                                                 <Button 
@@ -123,7 +124,7 @@ const BenefitCard = ({
                                                     className="h-6 w-6 p-0"
                                                     disabled={loading}
                                                 >
-                                                    <Edit className="h-3 w-3" />
+                                                    <IconEdit className="h-4 w-4" />
                                                 </Button>
                                             </DialogTrigger>
                                             <DialogContent className="max-w-2xl">
@@ -143,10 +144,10 @@ const BenefitCard = ({
                                                 <Button 
                                                     variant="ghost" 
                                                     size="sm" 
-                                                    className="h-6 w-6 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                                                    className="h-6 w-6 p-0 text-muted-foreground  hover:text-destructive hover:bg-destructive/10 "
                                                     disabled={loading || deleteLoading}
                                                 >
-                                                    <Trash2 className="h-3 w-3" />
+                                                    <IconTrash className="h-4 w-4" />
                                                 </Button>
                                             </AlertDialogTrigger>
                                             <AlertDialogContent>

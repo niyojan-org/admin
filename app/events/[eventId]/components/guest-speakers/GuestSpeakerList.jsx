@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { IconUsers, IconAlertTriangle, IconPlus } from '@tabler/icons-react';
 import GuestSpeakerCard from './GuestSpeakerCard';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 export function GuestSpeakerList({
     speakers = [],
@@ -22,9 +23,9 @@ export function GuestSpeakerList({
             <CardContent className="">
                 <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2">
                     {[...Array(4)].map((_, index) => (
-                        <div key={index} className="border rounded-lg p-4 sm:p-6 bg-gradient-to-br from-card to-card/80">
+                        <div key={index} className="border rounded-lg p-4 sm:p-6 bg-linear-to-br from-card to-card/80">
                             <div className="flex gap-4">
-                                <Skeleton className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex-shrink-0" />
+                                <Skeleton className="w-16 h-16 sm:w-20 sm:h-20 rounded-full shrink-0" />
                                 <div className="flex-1 space-y-3">
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1 space-y-2">
@@ -33,7 +34,7 @@ export function GuestSpeakerList({
                                             <Skeleton className="h-4 w-3/4" />
                                         </div>
                                         {canManage && (
-                                            <div className="hidden sm:flex gap-1 flex-shrink-0">
+                                            <div className="hidden sm:flex gap-1 shrink-0">
                                                 <Skeleton className="h-8 w-8" />
                                                 <Skeleton className="h-8 w-8" />
                                                 <Skeleton className="h-8 w-8" />
@@ -65,7 +66,7 @@ export function GuestSpeakerList({
                             variant="outline"
                             size="sm"
                             onClick={() => window.location.reload()}
-                            className="self-start sm:self-auto flex-shrink-0"
+                            className="self-start sm:self-auto shrink-0"
                         >
                             Retry
                         </Button>
@@ -80,7 +81,7 @@ export function GuestSpeakerList({
             <CardContent className="">
                 <div className="text-center py-8 sm:py-12">
                     <div className="flex flex-col items-center gap-4 sm:gap-6 max-w-md mx-auto">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-linear-to-br from-primary/20 to-primary/10 flex items-center justify-center">
                             <IconUsers className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
                         </div>
                         <div className="space-y-2 text-center">
@@ -109,18 +110,21 @@ export function GuestSpeakerList({
     }
 
     return (
-        <CardContent className="">
+        <CardContent className="p-0">
+            <ScrollArea className="h-[430px] pr-3">
+
             <div className="grid gap-2 sm:gap-4 grid-cols-1">
                 {speakers.map((speaker) => (
                     <GuestSpeakerCard
-                        key={speaker._id}
-                        speaker={speaker}
-                        userRole={userRole}
-                        onEdit={onEditSpeaker}
-                        onDelete={onDeleteSpeaker}
+                    key={speaker._id}
+                    speaker={speaker}
+                    userRole={userRole}
+                    onEdit={onEditSpeaker}
+                    onDelete={onDeleteSpeaker}
                     />
                 ))}
             </div>
+            </ScrollArea>
         </CardContent>
     );
 }

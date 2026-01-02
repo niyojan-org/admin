@@ -38,8 +38,8 @@ const BenefitsHeader = ({
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-1 sm:gap-2 mt-2">
-                <Card className="text-center p-1.5 sm:p-2 gap-0 rounded-md">
+            <div className="grid grid-cols-2 gap-2 sm:gap-2 mt-2">
+                <Card className="text-center p-2 sm:p-2 gap-0 rounded-md">
                     <CardContent>
                         <p className='text-lg font-semibold'>{benefitCount}</p>
                         <p className="text-xs text-muted-foreground">Total Benefits</p>
@@ -52,14 +52,14 @@ const BenefitsHeader = ({
                     </CardContent>
                 </Card>
 
-                <Card className="text-center p-1.5 sm:p-2 gap-0 rounded-md">
+                {/* <Card className="text-center p-1.5 sm:p-2 gap-0 rounded-md">
                     <CardContent>
                         <div className="text-sm sm:text-lg font-semibold">
                             {benefitCount > 5 ? 'High' : benefitCount > 2 ? 'Medium' : 'Low'}
                         </div>
                         <div className="text-xs text-muted-foreground">Appeal</div>
                     </CardContent>
-                </Card>
+                </Card> */}
             </div>
         </CardHeader>
     );

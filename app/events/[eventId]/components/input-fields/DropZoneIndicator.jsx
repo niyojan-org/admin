@@ -9,7 +9,7 @@ export function DropZoneIndicator({ isVisible, position = 'top' }) {
       ${position === 'top' ? 'mb-2' : 'mt-2'}
       animate-pulse
     `}>
-      <div className="w-full h-full bg-gradient-to-r from-primary/50 via-primary to-primary/50 rounded-full" />
+      <div className="w-full h-full bg-linear-to-r from-primary/50 via-primary to-primary/50 rounded-full" />
     </div>
   );
 }

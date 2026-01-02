@@ -177,8 +177,8 @@ export function SessionForm({
                     </DialogTitle>
                 </DialogHeader>
 
-                <ScrollArea className={'h-full'}>
-                    <form onSubmit={handleSubmit} className="space-y-4 max-h-[60vh] px-1">
+                <ScrollArea className={'h-full pr-3'}>
+                    <form onSubmit={handleSubmit} className="space-y-2 max-h-[60vh]">
                         {/* Error Display */}
                         {errors.length > 0 && (
                             <Alert variant="destructive">

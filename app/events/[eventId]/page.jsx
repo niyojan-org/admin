@@ -21,6 +21,8 @@ import { QuickActions } from "./components/QuickActions";
 import { useEventStore } from "@/store/eventStore";
 import { FullPageLoader } from "@/components/ui/full-page-loader";
 import { LoaderFour, LoaderOne } from "@/components/ui/loader";
+import { Megaphone, Share2 } from "lucide-react";
+import { IconShare3 } from "@tabler/icons-react";
 
 const EventPage = () => {
   const params = useParams();
@@ -29,6 +31,18 @@ const EventPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { setCurrentEvent } = useEventStore();
+
+  const handleRegistrationStatusChange = (data) => {
+    setEventData((prev) => ({
+      ...prev,
+      event: {
+        ...prev.event,
+        isRegistrationOpen: data.isRegistrationOpen,
+        registrationStart: data.registrationStart,
+        registrationEnd: data.registrationEnd,
+      },
+    }));
+  };
 
   useEffect(() => {
     const fetchEventData = async () => {
@@ -58,9 +72,7 @@ const EventPage = () => {
   }, [eventId]);
 
   if (loading) {
-    return <FullPageLoader>
-      <p className="font-medium text-primary flex items-center text-xl gap-3">Loading event data <LoaderOne size={2}/></p>
-    </FullPageLoader>;
+    return <FullPageLoader />
   }
 
   if (error) {
@@ -108,19 +120,22 @@ const EventPage = () => {
         {/* Registration Dashboard */}
         <ProtectedComp roles={["admin", "owner", "manager"]}>
           <div className="md:col-span-3 lg:col-span-4 lg:row-span-2">
-            <RegistrationDashboard eventId={event._id} />
+            <RegistrationDashboard eventId={event._id} onStatusChange={handleRegistrationStatusChange} />
           </div>
         </ProtectedComp>
 
         {/* Quick Actions + Share + Announcements - Desktop Only */}
-        <div className="hidden lg:flex md:col-span-3 lg:col-span-2 lg:row-span-2 flex-col gap-4 h-full justify-between">
+        <div className="hidden lg:flex md:col-span-3 lg:col-span-2 flex-col gap-2 h-full justify-between">
           <QuickActions event={event} setEventData={setEventData} />
 
-          <Card className="shadow-sm hover:shadow-md transition-shadow gap-2 p-4">
-            <CardHeader className="">
-              <CardTitle className="text-lg">Share Hub</CardTitle>
+          <Card className="border-none dark:bg-card/80 shadow-sm transition-[box-shadow,transform] duration-200 ease-out hover:shadow-md gap-2 p-4">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <IconShare3 className="h-5 w-h text-primary" />
+                Share Hub
+              </CardTitle>
               <CardDescription className="text-sm">
-                Spread the word about your event easily.
+                Spread the word about your event easily and boost attendance across your event.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -131,11 +146,14 @@ const EventPage = () => {
           </Card>
 
           <ProtectedComp roles={["admin", "owner", "manager"]}>
-            <Card className="shadow-sm hover:shadow-md transition-shadow gap-2 p-4">
-              <CardHeader className="">
-                <CardTitle className="text-lg">Announcements</CardTitle>
+            <Card className="border-none shadow-sm hover:shadow-md transition-shadow dark:bg-card/80 gap-2 p-4">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Megaphone className="h-5 w-5 text-primary" />
+                  Announcements
+                </CardTitle>
                 <CardDescription className="text-sm">
-                  Keep attendees informed in real time.
+                  Keep attendees informed in real time about any important event updates.
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -149,12 +167,15 @@ const EventPage = () => {
 
         {/* Share Hub - Mobile/Tablet */}
         <div className="lg:hidden md:col-span-3">
-          <Card className="shadow-sm hover:shadow-md transition-shadow gap-2 p-4">
-            <CardHeader className="">
-              <CardTitle className="text-lg">Share Hub</CardTitle>
-              <CardDescription className="text-sm">
-                Spread the word about your event easily.
-              </CardDescription>
+          <Card className="border-none shadow-sm hover:shadow-md transition-shadow dark:bg-card/80 gap-2 p-4">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <IconShare3 className="w-5 h-5 text-primary" />
+                Share Hub
+              </CardTitle>
+                <CardDescription className="text-sm">
+                  Spread the word about your event easily and boost attendance across your event.
+                </CardDescription>
             </CardHeader>
             <CardContent>
               <Button asChild className="w-full">
@@ -167,16 +188,19 @@ const EventPage = () => {
         {/* Announcements - Mobile/Tablet */}
         <ProtectedComp roles={["admin", "owner", "manager"]}>
           <div className="lg:hidden md:col-span-3">
-            <Card className="shadow-sm hover:shadow-md transition-shadow gap-2 p-4">
+            <Card className="border-none shadow-sm hover:shadow-md transition-shadow dark:bg-card/80 gap-2 p-4">
               <CardHeader className="">
-                <CardTitle className="text-lg">Announcements</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Megaphone className="h-5 w-5 text-primary" />
+                  Announcements
+                </CardTitle>
                 <CardDescription className="text-sm">
-                  Keep attendees informed in real time.
+                  Keep attendees informed in real time about any important event updates.
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <Button asChild className="w-full">
-                  <Link href={`/events/${event.slug}/announcements`}>Manage Announcements</Link>
+                  <Link href={`/events/${event._id}/announcements`}>Manage Announcements</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -189,7 +213,7 @@ const EventPage = () => {
         </div>
 
         {/* Custom Fields */}
-        <div className="md:col-span-3 lg:col-span-2">
+        <div className="md:col-span-3 lg:col-span-2 ">
           <InputField eventId={event._id} className={"h-[600px]"} />
         </div>
 
@@ -205,22 +229,26 @@ const EventPage = () => {
 
         {/* Guest Speakers */}
         <div className="md:col-span-3 lg:col-span-3 h-full">
-          <GuestSpeaker eventId={event._id} />
+          {/* <ScrollArea className="h-[500px]"> */}
+            <GuestSpeaker eventId={event._id} />
+          {/* </ScrollArea> */}
         </div>
 
-        {/* Referrals */}
-        <div className="hidden">
-          <ScrollArea className="h-[420px]">
-            <Referrals eventId={event._id} />
-          </ScrollArea>
-        </div>
+        {/* Referrals
+        // <div className="hidden">
+        //   <ScrollArea className="h-[420px]">
+        //     <Referrals eventId={event._id} />
+        //   </ScrollArea>
+        // </div> */}
 
         {/* Coupons */}
-        <ProtectedComp roles={["admin", "owner", "manager"]}>
-          <div className="md:col-span-3 h-full">
-            <Coupons eventId={event._id} />
-          </div>
-        </ProtectedComp>
+          <ProtectedComp roles={["admin", "owner", "manager"]}>
+            <div className="md:col-span-3 h-full">
+              {/* <ScrollArea className="h-[500px]"> */}
+                <Coupons eventId={event._id} />
+              {/* </ScrollArea> */}
+            </div>
+          </ProtectedComp>
       </div>
     </div>
   );

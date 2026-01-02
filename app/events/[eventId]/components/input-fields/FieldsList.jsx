@@ -16,23 +16,26 @@ export function FieldsList({ fields, onEdit, onDelete, onArrange }) {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  const handleDragStart = (e, index) => {
-    setDraggedIndex(index);
-    e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("text/html", index.toString());
-    setTimeout(() => {
-      if (e.target) e.target.style.opacity = "0.5";
-    }, 0);
-  };
+  // const handleDragStart = (e, index) => {
+  //   setDraggedIndex(index);
+  //   e.dataTransfer.effectAllowed = "move";
+  //   e.dataTransfer.setData("text/html", index.toString());
+  //   setTimeout(() => {
+  //     if (e.target) e.target.style.opacity = "0.5";
+  //   }, 0);
+  // };
 
-  const handleDragOver = (e, index) => {
-    e.preventDefault();
-    if (draggedIndex !== null && draggedIndex !== index) {
-      setDragOverIndex(index);
-    }
-  };
+  // const handleDragOver = (e, index) => {
+  //   if (fields[index]?.system || fields[draggedIndex]?.system) return;    
+  //   e.preventDefault();
+  //   if (draggedIndex !== null && draggedIndex !== index) {
+  //     setDragOverIndex(index);
+  //   }
+  // };
+
 
   const handleDragEnter = (e, index) => {
+    if (fields[index]?.system) return;
     e.preventDefault();
     if (draggedIndex !== null && draggedIndex !== index) {
       setDragOverIndex(index);
@@ -45,30 +48,42 @@ export function FieldsList({ fields, onEdit, onDelete, onArrange }) {
     }
   };
 
-  const handleDrop = async (e, dropIndex) => {
-    e.preventDefault();
-    if (draggedIndex === null) return resetDragState();
+  // const handleDrop = async (e, dropIndex) => {
+  //   e.preventDefault();
+  //   if (draggedIndex === null) return resetDragState();
 
-    if (draggedIndex === dropIndex) return resetDragState();
+  //   if (draggedIndex === dropIndex) return resetDragState();
 
-    try {
-      const newFields = [...fields];
-      const draggedField = newFields[draggedIndex];
-      newFields.splice(draggedIndex, 1);
+  //   // ❌ Do not allow dropping on system fields
+  //   if (fields[dropIndex]?.system) return resetDragState();
 
-      let insertIndex = dropIndex;
-      if (dropIndex > draggedIndex) insertIndex = dropIndex - 1;
+  //   if (draggedIndex === null) return resetDragState();
+  //   if (draggedIndex === dropIndex) return resetDragState();
 
-      newFields.splice(insertIndex, 0, draggedField);
-      const newOrder = newFields.map((f) => f._id);
+  //   // ❌ Also block if dragged field itself is system
+  //   if (fields[draggedIndex]?.system) return resetDragState();
 
-      await onArrange(newOrder);
-    } catch (err) {
-      console.error("Reordering failed:", err);
-    } finally {
-      resetDragState();
-    }
-  };
+  //   try {
+  //     const newFields = [...fields];
+  //     const draggedField = newFields[draggedIndex];
+  //     newFields.splice(draggedIndex, 1);
+
+  //     let insertIndex = dropIndex;
+  //     if (dropIndex > draggedIndex) insertIndex = dropIndex - 1;
+
+  //     newFields.splice(insertIndex, 0, draggedField);
+  //     const newOrder = newFields
+  //       .filter(f => !f.system)   // 🚫 REMOVE SYSTEM FIELDS
+  //       .map(f => f._id);         // ✅ ONLY DB IDS
+
+  //     await onArrange(newOrder);
+
+  //   } catch (err) {
+  //     console.error("Reordering failed:", err);
+  //   } finally {
+  //     resetDragState();
+  //   }
+  // };
 
   const handleDragEnd = (e) => {
     if (e.target) e.target.style.opacity = "1";
@@ -84,7 +99,7 @@ export function FieldsList({ fields, onEdit, onDelete, onArrange }) {
     return (
       <div className="text-center py-12 text-muted-foreground border-2 border-dashed border-muted rounded-lg">
         <p className="text-lg font-medium">No registration fields yet</p>
-        <p className="text-sm">Click "Add Field" to create your first field.</p>
+        <p className="text-sm">Click "Add Field" to create your first field.  </p>
       </div>
     );
   }
@@ -93,7 +108,7 @@ export function FieldsList({ fields, onEdit, onDelete, onArrange }) {
     <ScrollArea className="w-full h-full pr-2">
       <div className="space-y-3 w-full">
         {fields.map((field, index) => (
-          <div key={field._id} className="w-full">
+          <div key={field._id || field.name || index} className="w-full">
             <DropZoneIndicator 
               isVisible={dragOverIndex === index && draggedIndex > index}
               position="top"

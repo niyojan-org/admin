@@ -28,13 +28,8 @@ import { registrationApi } from '@/lib/api/registration';
  * Quick Actions Component
  * Provides quick actions for registration management
  */
-export default function QuickActions({ 
-  eventId,
-  isRegistrationOpen,
-  registrationStart,
-  registrationEnd,
-  requirements = {},
-  onStatusChange 
+export default function RegistrationQuickActions({ 
+  eventId,isRegistrationOpen,registrationStart,registrationEnd,requirements = {},onStatusChange 
 }) {
   const [isToggling, setIsToggling] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
@@ -185,11 +180,11 @@ export default function QuickActions({
 
   return (
     <>
-      <Card>
+      <Card className="border-none dark:bg-card/80 shadow-sm transition-[box-shadow,transform] duration-200 ease-out hover:shadow-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Calendar className="w-5 h-5" />
-            Quick Actions
+            Registration Control
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">

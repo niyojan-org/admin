@@ -3,6 +3,9 @@ import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 import { toast } from 'sonner';
 
+const sortByOrder = (list = []) => 
+    [...list].sort((a, b) => (a.order ?? 0) - (b.order ?? 0 ));
+
 export const useBenefitsData = (eventId) => {
     const [benefits, setBenefits] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -16,7 +19,7 @@ export const useBenefitsData = (eventId) => {
             const response = await api.get(`/events/admin/benefits/${eventId}`);
             
             if (response.data.success) {
-                setBenefits(response.data.benefits || []);
+                setBenefits(sortByOrder(response.data.benefits || [] ));
             } else {
                 throw new Error(response.data.message || 'Failed to fetch benefits');
             }
@@ -32,6 +35,9 @@ export const useBenefitsData = (eventId) => {
             }
         } finally {
             setLoading(false);
+            // if(response.data.success) {
+            //     setBenefits(sortByOrder(response.data.benefit || [] ));
+            // }
         }
     };
 
@@ -41,7 +47,7 @@ export const useBenefitsData = (eventId) => {
             const response = await api.post(`/events/admin/benefits/${eventId}`, benefitData);
             
             if (response.data.success) {
-                setBenefits(prev => [...prev, response.data.addedBenefit]);
+                setBenefits(prev => sortByOrder([...prev, response.data.addedBenefit]));
                 toast.success('Benefit added successfully!');
                 return response.data.addedBenefit;
             } else {
@@ -111,13 +117,14 @@ export const useBenefitsData = (eventId) => {
 
     // Reorder benefits
     const reorderBenefits = async (benefitIds) => {
+        // console.log('Sending reorder benefits', { benefitIds });
         try {
-            const response = await api.put(`/events/admin/benefits/${eventId}/reorder`, {
-                benefitIds
-            });
+            const response = await api.put(`/events/admin/benefits/${eventId}/reorder`, 
+                { benefitIds }
+            );
             
             if (response.data.success) {
-                setBenefits(response.data.benefits);
+                setBenefits(sortByOrder(response.data.benefits));
                 toast.success('Benefits reordered successfully!');
                 return response.data.benefits;
             } else {

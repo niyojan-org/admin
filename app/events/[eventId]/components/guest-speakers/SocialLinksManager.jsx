@@ -135,7 +135,7 @@ export function SocialLinksManager({
 
                     {error && (
                         <p className="text-xs text-destructive flex items-center gap-1">
-                            <span className="w-1 h-1 rounded-full bg-destructive flex-shrink-0 mt-1.5"></span>
+                            <span className="w-1 h-1 rounded-full bg-destructive shrink-0 mt-1.5"></span>
                             {error}
                         </p>
                     )}

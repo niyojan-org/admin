@@ -19,7 +19,7 @@ export function FullPageLoader({ className, children }) {
             <div className="flex flex-col items-center gap-4">
                 <Spinner className="size-16 text-primary animate-spin" />
                 <div>
-                    {children ? children : <span className="text-lg font-medium text-primary">Loading...</span>}
+                    {children ? children : <span className="text-lg font-medium text-primary">Loading..Double loading</span>}
                 </div>
             </div>
         </div>

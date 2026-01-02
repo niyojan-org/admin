@@ -118,7 +118,7 @@ export default function RegistrationSettings({
   ];
 
   return (
-    <Card>
+    <Card className="border-none dark:bg-card/80 shadow-sm transition-[box-shadow,transform] duration-200 ease-out hover:shadow-md">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Settings className="w-5 h-5" />
