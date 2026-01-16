@@ -2,15 +2,16 @@
 import { useEffect, useState, useRef } from "react";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { IconDashboard, IconHome, IconLoader, IconShieldLock, IconLogin, IconLogin2 } from "@tabler/icons-react";
 import { Button } from "./ui/button";
+import { useOrgStore } from "@/store/orgStore";
 
 export default function ProtectedRoute({ children, roles }) {
-  const { isAuthenticated, loading, user, organization } = useUserStore();
+  const { isAuthenticated, loading, user } = useUserStore();
+  const { organization } = useOrgStore();
   const router = useRouter();
   const [secondsLeft, setSecondsLeft] = useState(5)
-  const secondsRef = useRef(null)
+  const secondsRef = useRef(null);
 
   useEffect(() => {
     let timeoutId

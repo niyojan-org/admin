@@ -104,7 +104,7 @@ const EventPage = () => {
   const { event, organization } = eventData;
 
   return (
-    <div className="mx-auto py-6 mb-10">
+    <div className="mx-auto py-6 mb-10 h-full w-full">
       {/* Event Header */}
       <div className="mb-8">
         <EventHeader event={event} organization={organization} setEventData={setEventData} />

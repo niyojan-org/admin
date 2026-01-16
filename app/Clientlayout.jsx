@@ -24,8 +24,8 @@ function ClientLayoutInner({ children }) {
   const pathname = usePathname();
   const banner = useBanner();
 
-  const { isAuthenticated, setToken, organization, loading: userLoading } = useUserStore();
-  const { isInfoComplete, isVerified, loading: orgLoading } = useOrgStore();
+  const { isAuthenticated, fetchUser, loading: userLoading } = useUserStore();
+  const { isInfoComplete, isVerified, loading: orgLoading, fetchOrganization, organization } = useOrgStore();
 
 
   if (!isInfoComplete) {
@@ -43,11 +43,17 @@ function ClientLayoutInner({ children }) {
     });
   }
 
-  // Countdown + redirect logic
-  useEffect(() => { setToken() }, []);
+  useEffect(() => {
+    const initializeAuth = async () => {
+      const success = await fetchUser();
+      if (success) {
+        await fetchOrganization();
+      }
+    };
+    initializeAuth();
+  }, [fetchUser, fetchOrganization]);
 
-  // Routes that should show the sidebar
-  const protectedRoutes = ['/dashboard', '/events', '/messages', '/notifications', '/organization', '/organization/edit', '/contact'];
+  const protectedRoutes = ['/dashboard', '/events', '/messages', '/notifications', '/organization', '/organization/edit', '/contact', '/editor', '/profile'];
   const showSidebar = protectedRoutes.some(route => pathname.startsWith(route)) && isAuthenticated;
 
   // Routes that should NOT use ScrollArea (they handle their own scrolling)
@@ -78,36 +84,18 @@ function ClientLayoutInner({ children }) {
 
   if (showSidebar) {
     return (
-      <div className="flex w-full">
+      <div className="flex w-full h-dvh font-source-sans-3 pb-4">
         <AppSidebar />
-        {useScrollArea ? (
-          <ScrollArea className="h-dvh w-full">
-            <div className="flex-1 min-h-dvh sm:pt-0 pt-16 w-full font-source-sans-3 px-2 md:px-4 lg:px-6">
-              {children}
-            </div>
-          </ScrollArea>
-        ) : (
-          <div className="flex-1 h-dvh sm:pt-0 w-full font-source-sans-3 overflow-auto">
-            {children}
-          </div>
-        )}
+        <div className="flex px-2 sm:px-6 h-full items-center justify-center sm:py-4 w-full overflow-auto">
+          {children}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="">
-      {useScrollArea ? (
-        <ScrollArea className="h-dvh">
-          <div className="h-dvh sm:pt-0 w-full font-source-sans-3">
-            {children}
-          </div>
-        </ScrollArea>
-      ) : (
-        <div className="h-dvh sm:pt-0 w-full font-source-sans-3 overflow-auto">
-          {children}
-        </div>
-      )}
+    <div className="px-3">
+      {children}
     </div>
   );
 }
