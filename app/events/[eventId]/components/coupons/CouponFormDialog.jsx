@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DateTimeInput } from '@/components/ui/date-time-input';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { IconPlus, IconLoader2, IconRefresh } from '@tabler/icons-react';
 
 export function CouponFormDialog({
@@ -175,11 +175,12 @@ export function CouponFormDialog({
                     <div className="gap-3">
                         <div className="space-y-2">
                             <Label htmlFor="expiresAt">Expiry Date & Time</Label>
-                            <DateTimeInput
+                            <DateTimePicker
                                 value={formData.expiresAt}
                                 onChange={(value) => setFormData(prev => ({ ...prev, expiresAt: value }))}
                                 minDateTime={new Date().toISOString()}
                                 className="w-full"
+                                use12HourFormat={true}
                             />
                         </div>
                     </div>

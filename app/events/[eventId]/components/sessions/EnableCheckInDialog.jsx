@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { IconCheck, IconLoader2, IconRefresh } from '@tabler/icons-react';
 import moment from 'moment';
-import { DateTimeInput } from '@/components/ui/date-time-input';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 
 // Generate 6-digit alphanumeric uppercase code
 const generateCheckInCode = () => {
@@ -135,7 +135,7 @@ export default function EnableCheckInDialog({
                         <Label htmlFor="checkInStartTime">
                             Check-in Start Time <span className="text-destructive">*</span>
                         </Label>
-                        <DateTimeInput
+                        <DateTimePicker
                             value={formData.checkInStartTime}
                             onChange={(value) => handleChange('checkInStartTime', value)}
                             minDateTime={moment(formData.checkInStartTime).subtract(2, 'hours').toISOString()}
@@ -152,7 +152,7 @@ export default function EnableCheckInDialog({
                         <Label htmlFor="checkInEndTime">
                             Check-in End Time <span className="text-destructive">*</span>
                         </Label>
-                        <DateTimeInput
+                        <DateTimePicker
                             value={formData.checkInEndTime}
                             onChange={(value) => handleChange('checkInEndTime', value)}
                             minDateTime={formData.checkInStartTime}

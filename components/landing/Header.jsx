@@ -51,7 +51,7 @@ export function Header() {
 
                         <Link href="/auth">
                             <Button size="default" className="font-medium">
-                                Access Dashboard
+                                Dashboard
                             </Button>
                         </Link>
                     </div>

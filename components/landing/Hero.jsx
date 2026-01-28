@@ -40,10 +40,10 @@ export function Hero() {
                     </p>
 
                     {/* CTA Buttons */}
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4 w-full">
                         <Link href="/auth">
-                            <Button size="lg" className="gap-2 text-base px-8">
-                                Access Dashboard
+                            <Button size="lg" className="gap-2 text-base px-8 w-full">
+                                Dashboard
                                 <IconArrowRight className="size-5" />
                             </Button>
                         </Link>

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { DateTimeInput } from '@/components/ui/date-time-input';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 
 export function UsageConfigSection({
     formData,
@@ -47,7 +47,7 @@ export function UsageConfigSection({
 
                 <div className="space-y-2">
                     <Label>Expiry Date & Time (Optional)</Label>
-                    <DateTimeInput
+                    <DateTimePicker
                         value={formData.expiresAt}
                         onChange={(isoString) => {
                             setFormData(prev => ({ ...prev, expiresAt: isoString }));
@@ -55,6 +55,7 @@ export function UsageConfigSection({
                         }}
                         minDateTime={new Date().toISOString()}
                         className={errors.expiresAt ? 'border-destructive' : ''}
+                        use12HourFormat={true}
                     />
                     {errors.expiresAt && (
                         <p className="text-sm text-destructive">{errors.expiresAt}</p>

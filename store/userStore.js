@@ -169,14 +169,14 @@ export const useUserStore = create((set, get) => ({
   fetchUser: async () => {
     try {
       set({ loading: true, error: null });
-      const response = await api.get("/user/me");
-      const { user } = response.data.data;
+      const response = await api.get("/users/me");
+      const user = response.data.data;
       set({
         user,
         isAuthenticated: true,
       });
       try {
-        
+
       } catch {
 
       }
