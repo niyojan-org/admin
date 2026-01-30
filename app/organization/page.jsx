@@ -30,10 +30,10 @@ const OrganizationPage = () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await api.get("/org/me");
+      const response = await api.get("/organizations/admin");
 
-      if (response.data.success && response.data.org) {
-        setOrganization(response.data.org);
+      if (response.data.success && response.data.organization) {
+        setOrganization(response.data.organization);
       } else {
         setError("Organization not found");
       }

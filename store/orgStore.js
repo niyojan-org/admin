@@ -14,8 +14,8 @@ export const useOrgStore = create((set) => ({
     fetchOrganization: async () => {
         set({ loading: true, error: null }); // Set loading true at start
         try {
-            const res = await api.get("/org/me");
-            const organization = res.data.org;
+            const res = await api.get("/organizations/admin");
+            const organization = res.data.organization;
 
             let isInfoComplete = true;
             let isVerified = true;

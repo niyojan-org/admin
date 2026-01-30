@@ -84,7 +84,7 @@ function ClientLayoutInner({ children }) {
 
   if (showSidebar) {
     return (
-      <div className="flex w-full h-dvh font-source-sans-3 pb-4">
+      <div className="flex w-full min-h-dvh font-source-sans-3 pb-4">
         <AppSidebar />
         <div className="flex-1 px-2 sm:px-6 h-full items-center justify-center sm:py-4 w-full overflow-auto pt-15">
           {children}

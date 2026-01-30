@@ -230,7 +230,7 @@ export default function CreateOrganizationPage() {
 
     try {
       const data = getSubmissionData();
-      const response = await api.post("/org/create", data);
+      const response = await api.post("/organizations/admin/create", data);
 
       if (response.data.success) {
         toast.success("Organization created successfully!");
@@ -278,7 +278,7 @@ export default function CreateOrganizationPage() {
               Set up your organization profile to start creating events
             </p>
           </div>
-          <div className="flex items-center gap-2 flex-1 w-full">
+          <div className="flex items-center gap-2 flex-1 w-full justify-end">
             {/* Auto-save indicator */}
             {(isAutoSaving || lastSavedAt) && (
               <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
