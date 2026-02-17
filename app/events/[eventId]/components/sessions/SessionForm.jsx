@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { DateTimeInput } from '@/components/ui/date-time-input';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { validateSession, formatDateTimeLocal } from './sessionUtils';
 import { IconAlertTriangle } from '@tabler/icons-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -231,7 +231,7 @@ export function SessionForm({
                                     <Label htmlFor={field.key}>
                                         {field.label} {field.required && '*'}
                                     </Label>
-                                    <DateTimeInput
+                                    <DateTimePicker
                                         id={field.key}
                                         value={formData[field.key]}
                                         onChange={(value) => handleInputChange(field.key, value)}

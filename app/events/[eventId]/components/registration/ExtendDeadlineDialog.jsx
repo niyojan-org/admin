@@ -12,7 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { DateTimeInput } from '@/components/ui/date-time-input';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { Loader2, AlertTriangle, Clock, Calendar } from 'lucide-react';
 import { toast } from 'sonner';
 import { registrationApi } from '@/lib/api/registration';
@@ -186,7 +186,7 @@ export default function ExtendDeadlineDialog({
               <Calendar className="w-4 h-4" />
               New End Date & Time
             </Label>
-            <DateTimeInput
+            <DateTimePicker
               id="new-end-date"
               value={newEndDate}
               onChange={setNewEndDate}

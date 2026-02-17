@@ -11,7 +11,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { DateTimeInput } from '@/components/ui/date-time-input';
+import { DateTimePicker } from '@/components/ui/date-time-picker';
 import { Loader2, AlertTriangle, Calendar, Clock } from 'lucide-react';
 import { toast } from 'sonner';
 import { registrationApi } from '@/lib/api/registration';
@@ -204,7 +204,7 @@ export default function EditTimelineDialog({
                 <Clock className="w-4 h-4" />
                 Registration Start Date & Time
               </Label>
-              <DateTimeInput
+              <DateTimePicker
                 id="start-date"
                 value={registrationStart}
                 onChange={setRegistrationStart}
@@ -221,7 +221,7 @@ export default function EditTimelineDialog({
                 <Clock className="w-4 h-4" />
                 Registration End Date & Time
               </Label>
-              <DateTimeInput
+              <DateTimePicker
                 id="end-date"
                 value={registrationEnd}
                 onChange={setRegistrationEnd}

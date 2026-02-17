@@ -56,7 +56,7 @@ export default function EventsPage() {
 
   if (loading) {
     return (
-      <div className="p-6 space-y-6 bg-linear-to-br from-blue-50 via-white to-purple-50 min-h-[80vh]">
+      <div className="p-6 space-y-6 h-full w-full">
         {/* Header Skeleton */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div className="space-y-2">
@@ -67,7 +67,7 @@ export default function EventsPage() {
         </div>
 
         {/* Filters Skeleton */}
-        <Card className="p-6 shadow-lg rounded-xl bg-white/80">
+        <Card className="p-6 shadow-lg rounded-xl">
           <div className="flex flex-col sm:flex-row gap-4">
             <Skeleton className="h-10 flex-1" />
             <div className="flex gap-2">
@@ -79,8 +79,8 @@ export default function EventsPage() {
 
         {/* Events Grid Skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <Card key={index} className="overflow-hidden shadow-md rounded-xl bg-white/90">
+          {Array.from({ length: 3 }).map((_, index) => (
+            <Card key={index} className="overflow-hidden shadow-md rounded-xl">
               <Skeleton className="w-full h-48" />
               <div className="p-4 space-y-3">
                 <div className="flex items-center justify-between">
@@ -113,7 +113,7 @@ export default function EventsPage() {
   }
 
   return (
-    <div className="flex flex-col h-dvh md:px-8 pb-4">
+    <div className="flex flex-col h-full w-full md:px-8 pb-4">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center w-full gap-1 md:gap-4">
         <div className="-space-y-1 sm:space-y-0">

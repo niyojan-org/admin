@@ -1,5 +1,8 @@
 'use client';
 
+import { Input } from "./input";
+import { Label } from "./label";
+
 export default function FloatingInput({
   label,
   type = 'text',
@@ -10,31 +13,18 @@ export default function FloatingInput({
 }) {
   return (
     <div className="relative w-full">
-      <label
+      <Label
         htmlFor={name}
-        className="block mb-1 text-sm text-gray-700 font-medium"
+        className="block mb-1 text-sm font-medium"
       >
         {label}
-      </label>
-      <input
+      </Label>
+      <Input
         type={type}
         name={name}
         id={name}
         value={value}
         onChange={onChange}
-        className="
-          w-full 
-          rounded-md 
-          border border-gray-300 
-          bg-white 
-          px-3 py-2 
-          text-sm 
-          text-gray-800 
-          placeholder-gray-400 
-          focus:border-indigo-500 
-          focus:ring-1 focus:ring-indigo-500 
-          transition
-        "
         {...props}
       />
     </div>
