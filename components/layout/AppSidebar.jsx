@@ -35,6 +35,7 @@ import SidebarHeader from "./sidebar/SidebarHeader";
 import NavigationItem from "./sidebar/NavigationItem";
 import ThemeToggle from "./sidebar/ThemeToggle";
 import UserProfile from "./sidebar/UserProfile";
+import NotificationMenu from "./NotificationMenu";
 
 const AppSidebar = ({ className }) => {
   const pathname = usePathname();
@@ -97,15 +98,13 @@ const AppSidebar = ({ className }) => {
     //   id: "messages",
     //   label: "Messages",
     //   icon: IconMail,
-    //   href: "/messages",
-    //   badge: { text: "5", variant: "secondary" },
     // },
-    // {
-    //   id: "notifications",
-    //   label: "Notifications",
-    //   icon: IconBell,
-    //   href: "/notifications",
-    // },
+    {
+      id: "notifications",
+      label: "Notifications",
+      icon: IconBell,
+      href: "/notifications",
+    },
   ];
 
   const settingsItems = [
@@ -283,16 +282,19 @@ const AppSidebar = ({ className }) => {
             </h2>
           </Link>
 
-          <button
-            onClick={toggleMobileMenu}
-            className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-accent transition-colors"
-          >
-            {isMobileMenuOpen ? (
-              <IconX className="h-4 w-4 text-foreground" />
-            ) : (
-              <IconMenu2 className="h-4 w-4 text-foreground" />
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <NotificationMenu />
+            <button
+              onClick={toggleMobileMenu}
+              className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-accent transition-colors"
+            >
+              {isMobileMenuOpen ? (
+                <IconX className="h-4 w-4 text-foreground" />
+              ) : (
+                <IconMenu2 className="h-4 w-4 text-foreground" />
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu Overlay */}
