@@ -5,10 +5,10 @@ import { useRouter, useParams } from "next/navigation";
 import steps from "./steps";
 
 // Step Components (reuse from create)
-import BasicDetailsStep from "../../create/steps/BasicDetailsStep";
-import SessionsStep from "../../create/steps/SessionsStep";
-import TicketsStep from "../../create/steps/TicketsStep";
-import CustomFieldsStep from "../../create/steps/CustomFieldsStep";
+import BasicInfoStep from "../../create/components/BasicInfoStep";
+import SessionsStep from "../../create/components/SessionsStep";
+import TicketsStep from "../../create/components/TicketsStep";
+import CustomFieldsStep from "../../create/components/CustomFieldsStep";
 import api from "@/lib/api";
 import { toast } from "sonner";
 import { RegistrationDashboard } from "../components/registration";
@@ -111,7 +111,7 @@ export default function EditEventPage() {
       <>
         {/* Step 0: Basic Details */}
         {step === 0 && (
-          <BasicDetailsStep eventId={eventId} onNext={goNext} />
+          <BasicInfoStep eventId={eventId} onNext={goNext} />
         )}
 
         {/* Step 1: Registration Details */}
