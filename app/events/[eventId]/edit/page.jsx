@@ -82,7 +82,7 @@ export default function EditEventPage() {
   }
 
   return (
-    <div className="mx-auto justify-between min-h-screen px-2 flex flex-col py-5">
+    <div className="mx-auto justify-between min-h-dvh px-2 flex flex-col py-5">
       {/* Header */}
       <div className="mb-1 flex flex-col">
         <h1 className="text-2xl font-bold text-navy">Edit Event</h1>

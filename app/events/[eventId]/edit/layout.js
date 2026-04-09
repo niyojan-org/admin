@@ -15,7 +15,7 @@ export default function EventEditLayout({ children }) {
 
     // Optionally, show a loading state while auth is being determined
     if (isAuthenticated === null) {
-        return <div className="flex items-center justify-center h-screen">Checking authentication...</div>;
+        return <div className="flex items-center justify-center h-dvh">Checking authentication...</div>;
     }
 
     return <>{children}</>;

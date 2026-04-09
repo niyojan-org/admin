@@ -9,6 +9,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 //         </ProtectedRoute>
 //     );
 // }
+
 export default function EventLayout({ children }) {
-    return children
+  return <div className="h-full">{children}</div>;
 }

@@ -3,23 +3,22 @@
 import { FullPageLoader } from "@/components/ui/full-page-loader";
 import { useOrgStore } from "@/store/orgStore";
 import ExistingOrg from "./components/ExistingOrg";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 function Layout({ children }) {
-    const { organization, loading } = useOrgStore();
+  const { organization, loading } = useOrgStore();
 
-    if (loading) {
-        return <FullPageLoader />
-    }
+  if (loading) {
+    return <FullPageLoader />;
+  }
 
-    if (organization) {
-        return <ExistingOrg />
-    }
+  if (organization) {
+    return <ExistingOrg />;
+  }
 
-    return (
-        <div className="min-h-screen bg-background">
-            {children}
-        </div>
-    )
+  return (
+    <ProtectedRoute requireOrganization={false}>{children}</ProtectedRoute>
+  );
 }
 
-export default Layout
+export default Layout;

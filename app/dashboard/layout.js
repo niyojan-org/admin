@@ -16,7 +16,7 @@ export default function DashboardLayout({ children, event, notifications, revenu
             </div>
 
             {/* Tablet & Desktop: Original grid layout */}
-            <div className="hidden md:grid grid-cols-6 grid-rows-2 gap-4 py-4 h-screen">
+            <div className="hidden md:grid grid-cols-6 grid-rows-2 gap-4 py-4 h-dvh">
                 {/* Summary */}
                 <div className="col-span-2">
                     {summary}

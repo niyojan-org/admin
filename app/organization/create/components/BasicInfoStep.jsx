@@ -14,7 +14,10 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useOrganizationCreationStore, CATEGORY_OPTIONS } from "@/store/organizationCreationStore";
-import { Building2, Mail, Phone, Tag, FileText, Image } from "lucide-react";
+import { Building2, Mail, Phone, Tag, FileText } from "lucide-react";
+import { ImageCropUpload } from "@/components/ui/image-crop-upload";
+import { uploadOrganizationLogo } from "@/lib/api/resources";
+import { toast } from "sonner";
 
 export default function BasicInfoStep() {
     const {
@@ -59,6 +62,18 @@ export default function BasicInfoStep() {
                     newErrors.category = "Please select a category";
                 } else {
                     delete newErrors.category;
+                }
+                break;
+            case "description":
+                if (!value || value.trim().length === 0) {
+                    newErrors.description = "Description is required";
+                } else {
+                    const wordCount = value.trim().split(/\s+/).filter(word => word.length > 0).length;
+                    if (wordCount < 10) {
+                        newErrors.description = `Description must be at least 10 words (current: ${wordCount})`;
+                    } else {
+                        delete newErrors.description;
+                    }
                 }
                 break;
             default:
@@ -182,47 +197,51 @@ export default function BasicInfoStep() {
                     />
                 </div>
 
-                {/* Description (Optional) */}
+                {/* Description */}
                 <div className="space-y-2">
                     <Label htmlFor="description" className="flex items-center gap-1">
                         <FileText className="size-4" />
-                        Description <span className="text-muted-foreground text-xs">(Optional)</span>
+                        Description <span className="text-destructive">*</span>
                     </Label>
                     <Textarea
                         id="description"
-                        placeholder="Describe your organization..."
+                        placeholder="Describe your organization... (minimum 10 words)"
                         value={organizationDraft.description}
-                        onChange={(e) => updateField("description", e.target.value)}
+                        onChange={(e) => handleChange("description", e.target.value)}
                         className="min-h-24"
+                        aria-invalid={!!errors.description}
                     />
+                    {errors.description && (
+                        <p className="text-sm text-destructive">{errors.description}</p>
+                    )}
                 </div>
 
-                {/* Logo URL (Optional) */}
-                <div className="space-y-2">
-                    <Label htmlFor="logo" className="flex items-center gap-1">
-                        <Image className="size-4" />
-                        Logo URL <span className="text-muted-foreground text-xs">(Optional)</span>
-                    </Label>
-                    <Input
-                        id="logo"
-                        type="url"
-                        placeholder="https://example.com/logo.png"
+                {/* Logo Upload */}
+                <div className="space-y-2 col-span-full">
+                    <ImageCropUpload
+                        label="Organization Logo"
+                        placeholder="Upload your organization logo"
                         value={organizationDraft.logo}
-                        onChange={(e) => updateField("logo", e.target.value)}
+                        onChange={(url) => updateField("logo", url)}
+                        uploadFn={async (file) => {
+                            try {
+                                const result = await uploadOrganizationLogo(
+                                    file,
+                                    organizationDraft.name || "Organization Logo"
+                                );
+                                toast.success("Logo uploaded successfully");
+                                return result;
+                            } catch (error) {
+                                toast.error("Failed to upload logo");
+                                throw error;
+                            }
+                        }}
+                        aspectRatio={1}
+                        maxSize={5 * 1024 * 1024}
                     />
-                    {organizationDraft.logo && (
-                        <div className="mt-2 flex items-center gap-2">
-                            <img
-                                src={organizationDraft.logo}
-                                alt="Logo preview"
-                                className="size-12 rounded-md border object-cover"
-                                onError={(e) => {
-                                    e.target.style.display = "none";
-                                }}
-                            />
-                            <span className="text-sm text-muted-foreground">Logo preview</span>
-                        </div>
-                    )}
+                    <p className="text-xs text-muted-foreground">
+                        Upload a square image for best results. The image will be cropped to fit.
+                    </p>
                 </div>
             </CardContent>
         </Card>

@@ -5,9 +5,16 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import {
-  IconCheck, IconChevronRight, IconDeviceFloppy,
-  IconRocket, IconInfoCircle, IconCalendar, IconTicket,
-  IconForms, IconDiscount, IconEye
+  IconCheck,
+  IconChevronRight,
+  IconDeviceFloppy,
+  IconRocket,
+  IconInfoCircle,
+  IconCalendar,
+  IconTicket,
+  IconForms,
+  IconDiscount,
+  IconEye,
 } from "@tabler/icons-react";
 import { Progress } from "@/components/ui/progress";
 import { useEventForm } from "./hooks/useEventForm";
@@ -120,7 +127,7 @@ export default function CreateEventPage() {
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
-      setCompletedSteps(prev => new Set([...prev, currentStep]));
+      setCompletedSteps((prev) => new Set([...prev, currentStep]));
       setCurrentStep(currentStep + 1);
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
@@ -155,16 +162,11 @@ export default function CreateEventPage() {
 
     try {
       setIsSubmitting(true);
-
-      // Create event using the event store
-      console.log(eventDraft)
-      console.log("All good")
       const createdEvent = await createEvent(eventDraft);
-
       if (createdEvent) {
         toast.success("Event created successfully!");
         clearDraft();
-        router.push(`/events/${createdEvent._id}`);
+        router.push(`/events/${createdEvent.slug}`);
       }
     } catch (error) {
       console.error("Error creating event:", error);
@@ -183,7 +185,9 @@ export default function CreateEventPage() {
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Create New Event</h1>
+            <h1 className="text-3xl font-bold tracking-tight">
+              Create New Event
+            </h1>
             <p className="text-muted-foreground">
               Set up your event in {steps.length} simple steps
             </p>
@@ -227,7 +231,8 @@ export default function CreateEventPage() {
           const Icon = step.icon;
           const isCompleted = completedSteps.has(step.id);
           const isCurrent = currentStep === step.id;
-          const isAccessible = step.id <= currentStep || completedSteps.has(step.id);
+          const isAccessible =
+            step.id <= currentStep || completedSteps.has(step.id);
 
           return (
             <button
@@ -235,11 +240,15 @@ export default function CreateEventPage() {
               onClick={() => isAccessible && handleStepClick(step.id)}
               disabled={!isAccessible}
               className={cn(
-                "relative flex flex-col items-center gap-2 rounded-lg border-2 p-3 transition-all",
+                "relative flex sm:flex-col items-center gap-2 rounded-lg border-2 p-3 transition-all",
                 isCurrent && "border-primary bg-primary/5 shadow-sm",
-                isCompleted && !isCurrent && "border-green-500/50 bg-green-500/5",
-                !isCurrent && !isCompleted && "border-border hover:border-primary/50",
-                !isAccessible && "opacity-50 cursor-not-allowed"
+                isCompleted &&
+                  !isCurrent &&
+                  "border-green-500/50 bg-green-500/5",
+                !isCurrent &&
+                  !isCompleted &&
+                  "border-border hover:border-primary/50",
+                !isAccessible && "opacity-50 cursor-not-allowed",
               )}
             >
               <div
@@ -247,7 +256,7 @@ export default function CreateEventPage() {
                   "flex items-center justify-center w-10 h-10 rounded-full transition-colors",
                   isCurrent && "bg-primary text-primary-foreground",
                   isCompleted && !isCurrent && "bg-green-500 text-white",
-                  !isCurrent && !isCompleted && "bg-muted"
+                  !isCurrent && !isCompleted && "bg-muted",
                 )}
               >
                 {isCompleted && !isCurrent ? (
@@ -257,10 +266,12 @@ export default function CreateEventPage() {
                 )}
               </div>
               <div className="text-center">
-                <p className={cn(
-                  "text-xs font-medium",
-                  isCurrent && "text-primary"
-                )}>
+                <p
+                  className={cn(
+                    "text-xs font-medium",
+                    isCurrent && "text-primary",
+                  )}
+                >
                   {step.title}
                 </p>
               </div>
@@ -273,7 +284,7 @@ export default function CreateEventPage() {
       <div className="bg-muted/50 rounded-lg p-4 border">
         <div className="flex items-start gap-3">
           {React.createElement(steps[currentStep].icon, {
-            className: "w-5 h-5 text-primary mt-0.5"
+            className: "w-5 h-5 text-primary mt-0.5",
           })}
           <div>
             <h3 className="font-semibold">{steps[currentStep].title}</h3>
@@ -321,10 +332,7 @@ export default function CreateEventPage() {
               )}
             </Button>
           ) : (
-            <Button
-              onClick={handleNext}
-              className="gap-2"
-            >
+            <Button onClick={handleNext} className="gap-2">
               Next Step
               <IconChevronRight className="w-4 h-4" />
             </Button>

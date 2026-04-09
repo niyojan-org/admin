@@ -213,7 +213,7 @@ export default function NotificationView() {
     searchQuery;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-dvh bg-background">
       {/* Header */}
       <div className="sticky top-0 z-10 bg-background border-b border-border">
         <div className="container max-w-6xl mx-auto px-4 py-4">

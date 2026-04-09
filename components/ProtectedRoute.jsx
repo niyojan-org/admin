@@ -2,78 +2,86 @@
 import { useEffect, useState, useRef } from "react";
 import { useUserStore } from "@/store/userStore";
 import { useRouter } from "next/navigation";
-import { IconDashboard, IconHome, IconLoader, IconShieldLock, IconLogin, IconLogin2 } from "@tabler/icons-react";
+import {
+  IconDashboard,
+  IconHome,
+  IconLoader,
+  IconShieldLock,
+  IconLogin,
+  IconLogin2,
+} from "@tabler/icons-react";
 import { Button } from "./ui/button";
 import { useOrgStore } from "@/store/orgStore";
 
-export default function ProtectedRoute({ children, roles }) {
+export default function ProtectedRoute({
+  children,
+  roles,
+  requireOrganization = true,
+}) {
   const { isAuthenticated, loading, user } = useUserStore();
   const { organization } = useOrgStore();
   const router = useRouter();
-  const [secondsLeft, setSecondsLeft] = useState(5)
+  const [secondsLeft, setSecondsLeft] = useState(5);
   const secondsRef = useRef(null);
 
   useEffect(() => {
-    let timeoutId
-    let intervalId
-
+    let timeoutId;
+    let intervalId;
     if (loading === false && isAuthenticated === false) {
-      // Start a countdown and redirect after 5 seconds. Show a Sonner toast.
-      console.warn("User is not authenticated, redirecting to auth page in 5s.");
-      // initialize countdown only if not already started
+      console.warn(
+        "User is not authenticated, redirecting to auth page in 5s.",
+      );
       if (secondsRef.current === null) {
-        secondsRef.current = 5
-        setSecondsLeft(5)
+        secondsRef.current = 5;
+        setSecondsLeft(5);
       }
-
-      // toast.info('You will be redirected to login shortly', { duration: 4000 })
-
       intervalId = setInterval(() => {
-        // decrement ref and state
-        secondsRef.current = Math.max(0, (secondsRef.current || 0) - 1)
-        setSecondsLeft(secondsRef.current)
+        secondsRef.current = Math.max(0, (secondsRef.current || 0) - 1);
+        setSecondsLeft(secondsRef.current);
         if (secondsRef.current === 0) {
-          clearInterval(intervalId)
-          router.replace('/auth')
+          clearInterval(intervalId);
+          router.replace("/auth");
         }
-      }, 1000)
-
-      // safety timeout in case interval misses
+      }, 1000);
       timeoutId = setTimeout(() => {
-        clearInterval(intervalId)
-        router.replace('/auth')
-      }, 5000)
+        clearInterval(intervalId);
+        router.replace("/auth");
+      }, 5000);
     }
 
     return () => {
-      if (intervalId) clearInterval(intervalId)
-      if (timeoutId) clearTimeout(timeoutId)
-    }
+      if (intervalId) clearInterval(intervalId);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, [loading, isAuthenticated, router]);
 
   // If not authenticated, show login prompt
   if (loading === false && isAuthenticated === false) {
     return (
-      <div className="flex flex-col items-center justify-center h-[90vh] px-4 py-8 bg-background animate-in fade-in">
+      <div className="flex flex-col items-center justify-center h-full animate-in fade-in">
         <div className="flex flex-col items-center gap-4 max-w-md w-full">
           <div className="rounded-full bg-primary/10 p-4">
             {/* Tabler Login Icon */}
             <IconLogin className="h-12 w-12 text-primary" />
           </div>
-          <h2 className="text-2xl font-bold text-primary">Authentication Required</h2>
+          <h2 className="text-2xl font-bold text-primary">
+            Authentication Required
+          </h2>
           <p className="text-muted-foreground text-center text-base">
-            Please log in to access this page.<br />
+            Please log in to access this page.
+            <br />
             You need to be authenticated to continue.
           </p>
           <p className="text-sm text-muted-foreground text-center mt-2">
-            Redirecting to the login page in {secondsLeft} second{secondsLeft !== 1 ? 's' : ''}...
+            Redirecting to the login page in {secondsLeft} second
+            {secondsLeft !== 1 ? "s" : ""}...
           </p>
           <Button
             className="mt-6 px-5 py-2 rounded-md bg-primary text-primary-foreground font-semibold shadow hover:bg-primary/90 transition-colors duration-200"
             onClick={() => {
               // immediate redirect via router.replace and show toast
               // toast.info('Redirecting to login...')
-              router.replace('/auth')
+              router.replace("/auth");
             }}
           >
             <span className="inline-flex items-center gap-2">
@@ -90,7 +98,7 @@ export default function ProtectedRoute({ children, roles }) {
   // Optionally show nothing or a loader while checking
   if (loading || isAuthenticated === null) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[90vh] px-4 py-8 bg-background">
+      <div className="flex flex-col items-center justify-center h-full">
         <div className="flex flex-col items-center gap-4 max-w-md w-full">
           <div className="rounded-full bg-primary/10 p-4">
             {/* Tabler Loader Icon */}
@@ -110,15 +118,17 @@ export default function ProtectedRoute({ children, roles }) {
     );
   }
 
-  if (!organization && isAuthenticated) {
+  if (requireOrganization && !organization && isAuthenticated) {
     // Authenticated but no organization: ask user to create org and redirect
     return (
-      <div className="flex flex-col items-center justify-center min-h-[90vh] px-4 py-8 bg-background">
+      <div className="flex flex-col items-center justify-center h-full">
         <div className="flex flex-col items-center gap-4 max-w-md w-full">
           <div className="rounded-full bg-primary/10 p-4">
             <IconLogin2 className="h-12 w-12 text-primary" />
           </div>
-          <h2 className="text-2xl font-bold text-primary">No organization found</h2>
+          <h2 className="text-2xl font-bold text-primary">
+            No organization found
+          </h2>
           <p className="text-muted-foreground text-center text-base">
             You don't have an organization yet. You need to create one.
           </p>
@@ -129,7 +139,7 @@ export default function ProtectedRoute({ children, roles }) {
             className="mt-6 px-5 py-2 rounded-md bg-primary text-primary-foreground font-semibold shadow hover:bg-primary/90 transition-colors duration-200"
             onClick={() => {
               // toast('Redirecting to organization registration...')
-              router.replace('/organization/create')
+              router.replace("/organization/create");
             }}
           >
             <span className="inline-flex items-center gap-2">
@@ -139,7 +149,7 @@ export default function ProtectedRoute({ children, roles }) {
           </Button>
         </div>
       </div>
-    )
+    );
   }
 
   // Role-based access check
@@ -147,25 +157,28 @@ export default function ProtectedRoute({ children, roles }) {
     const userRole = user?.organization.role;
     if (!roles.includes(userRole)) {
       return (
-        <div className="flex flex-col items-center justify-center min-h-[90vh] px-4 py-8 bg-background animate-in fade-in">
+        <div className="flex flex-col items-center justify-center h-full animate-in fade-in">
           <div className="flex flex-col items-center gap-4 max-w-md w-full">
             <div className="rounded-full bg-destructive/10 p-4">
               {/* Tabler Shield X Icon */}
               <IconShieldLock className="h-20 w-20 text-destructive" />
             </div>
-            <h2 className="text-2xl font-bold text-destructive">Access Denied</h2>
+            <h2 className="text-2xl font-bold text-destructive">
+              Access Denied
+            </h2>
             <p className="text-muted-foreground text-center text-base">
-              You do not have permission to access this page.<br />
-              Please contact your organization admin if you believe this is a mistake.
+              You do not have permission to access this page.
+              <br />
+              Please contact your organization admin if you believe this is a
+              mistake.
             </p>
             <Button
               className="mt-6 px-5 py-2 rounded-md bg-primary text-primary-foreground font-semibold shadow hover:bg-primary/90 transition-colors duration-200"
-              onClick={() => window.location.href = '/dashboard'}
+              onClick={() => (window.location.href = "/dashboard")}
             >
               {/* Tabler Dashboard Icon */}
               <IconDashboard className="h-4 w-4" />
               Go to Dashboard
-
             </Button>
           </div>
         </div>
@@ -173,5 +186,5 @@ export default function ProtectedRoute({ children, roles }) {
     }
   }
 
-  return children;
+  return <div className="h-full">{children}</div>;
 }

@@ -2,10 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -24,6 +22,8 @@ import {
 } from "@/components/ui/dialog";
 import { useOrganizationCreationStore, DOCUMENT_TYPE_OPTIONS } from "@/store/organizationCreationStore";
 import { FileText, Plus, Trash2, ExternalLink, Upload } from "lucide-react";
+import { uploadDocument } from "@/lib/api/resources";
+import { toast } from "sonner";
 
 export default function DocumentsStep() {
   const {
@@ -39,19 +39,11 @@ export default function DocumentsStep() {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newDocument, setNewDocument] = useState({ type: "", url: "" });
   const [documentError, setDocumentError] = useState({});
+  const [uploadingDocument, setUploadingDocument] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const errors = stepErrors[5] || {};
   const documents = organizationDraft.documents;
-
-  // Validate URL
-  const isValidUrl = (url) => {
-    try {
-      new URL(url);
-      return true;
-    } catch {
-      return false;
-    }
-  };
 
   // Validate document before adding
   const validateDocument = () => {
@@ -62,9 +54,7 @@ export default function DocumentsStep() {
     }
 
     if (!newDocument.url) {
-      docErrors.url = "Please enter the document URL";
-    } else if (!isValidUrl(newDocument.url)) {
-      docErrors.url = "Please enter a valid URL";
+      docErrors.file = "Please upload a document file";
     }
 
     // Check for duplicate type
@@ -92,11 +82,44 @@ export default function DocumentsStep() {
     }
   }, [documents.length, setStepErrors, clearStepErrors]);
 
+  // Handle file upload
+  const handleFileUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file size (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("File size must be less than 10MB");
+      return;
+    }
+
+    try {
+      setUploadingDocument(true);
+      setSelectedFile(file);
+
+      // Upload file and get URL
+      const uploadResult = await uploadDocument(file, newDocument.type || "Document");
+      
+      if (uploadResult?.url) {
+        setNewDocument(prev => ({ ...prev, url: uploadResult.url }));
+        toast.success("Document uploaded successfully!");
+      } else {
+        throw new Error("Failed to get upload URL");
+      }
+    } catch (error) {
+      toast.error(error.message || "Failed to upload document");
+      setSelectedFile(null);
+    } finally {
+      setUploadingDocument(false);
+    }
+  };
+
   // Handle add document
   const handleAddDocument = () => {
     if (validateDocument()) {
       addDocument({ ...newDocument });
       setNewDocument({ type: "", url: "" });
+      setSelectedFile(null);
       setIsAddDialogOpen(false);
       setDocumentError({});
       clearStepErrors(5);
@@ -141,25 +164,28 @@ export default function DocumentsStep() {
                   <FileText className="size-5 shrink-0 text-muted-foreground" />
                   <div className="min-w-0 flex-1">
                     <p className="font-medium">{doc.type}</p>
-                    <a
-                      href={doc.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-1 text-sm text-primary hover:underline truncate"
-                    >
-                      <span className="truncate">{doc.url}</span>
-                      <ExternalLink className="size-3 shrink-0" />
-                    </a>
+                    <p className="text-sm text-muted-foreground">Document uploaded</p>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => handleRemoveDocument(index)}
-                  className="shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                >
-                  <Trash2 className="size-4" />
-                </Button>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => window.open(doc.url, '_blank')}
+                    className="shrink-0 text-primary hover:text-primary hover:bg-primary/10"
+                    title="View document"
+                  >
+                    <ExternalLink className="size-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleRemoveDocument(index)}
+                    className="shrink-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -224,24 +250,46 @@ export default function DocumentsStep() {
                 )}
               </div>
 
-              {/* Document URL */}
+              {/* Document Upload */}
               <div className="space-y-2">
-                <Label htmlFor="docUrl">
-                  Document URL <span className="text-destructive">*</span>
+                <Label htmlFor="docFile">
+                  Upload Document <span className="text-destructive">*</span>
                 </Label>
-                <Input
-                  id="docUrl"
-                  type="url"
-                  placeholder="https://example.com/document.pdf"
-                  value={newDocument.url}
-                  onChange={(e) =>
-                    setNewDocument((prev) => ({ ...prev, url: e.target.value }))
-                  }
-                  aria-invalid={!!documentError.url}
-                />
-                {documentError.url && (
-                  <p className="text-sm text-destructive">{documentError.url}</p>
-                )}
+                <div className="space-y-3">
+                  <input
+                    id="docFile"
+                    type="file"
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById('docFile')?.click()}
+                    disabled={uploadingDocument || !newDocument.type}
+                    className="w-full"
+                  >
+                    <Upload className="size-4 mr-2" />
+                    {uploadingDocument ? "Uploading..." : selectedFile ? selectedFile.name : "Choose File"}
+                  </Button>
+
+                  {documentError.file && (
+                    <p className="text-sm text-destructive">{documentError.file}</p>
+                  )}
+                  
+                  {!newDocument.type && (
+                    <p className="text-xs text-muted-foreground">
+                      Please select a document type first
+                    </p>
+                  )}
+                  
+                  {newDocument.type && !uploadingDocument && (
+                    <p className="text-xs text-muted-foreground">
+                      Max file size: 10MB. Supported: PDF, DOC, DOCX, JPG, PNG
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
             <DialogFooter>
@@ -250,12 +298,15 @@ export default function DocumentsStep() {
                 onClick={() => {
                   setIsAddDialogOpen(false);
                   setNewDocument({ type: "", url: "" });
+                  setSelectedFile(null);
                   setDocumentError({});
                 }}
               >
                 Cancel
               </Button>
-              <Button onClick={handleAddDocument}>Add Document</Button>
+              <Button onClick={handleAddDocument} disabled={uploadingDocument}>
+                Add Document
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
@@ -266,7 +317,7 @@ export default function DocumentsStep() {
             <strong>Accepted documents:</strong> Certificate of Incorporation, GST Certificate, PAN Card, Business License, Tax Exemption Certificate, etc.
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            <strong>Note:</strong> Documents should be hosted on a secure, publicly accessible URL (e.g., cloud storage).
+            <strong>Note:</strong> Upload your documents securely (max 10MB per file).
           </p>
         </div>
       </CardContent>

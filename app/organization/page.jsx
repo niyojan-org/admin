@@ -48,6 +48,10 @@ const OrganizationPage = () => {
     }
   };
 
+  const handleUpdate = () => {
+    fetchOrganization();
+  };
+
   const handleSectionChange = (section) => {
     setActiveSection(section);
   };
@@ -93,12 +97,12 @@ const OrganizationPage = () => {
       />
 
       {/* Content Sections */}
-      {activeSection === "overview" && <OverviewTab organization={organization} />}
-      {activeSection === "details" && <DetailsTab organization={organization} />}
-      {activeSection === "bank" && <BankDetailsTab organization={organization} />}
-      {activeSection === "stats" && <StatsTab organization={organization} />}
-      {activeSection === "documents" && <DocumentsTab organization={organization} />}
-      {activeSection === "settings" && <SettingsTab organization={organization} />}
+      {activeSection === "overview" && <OverviewTab organization={organization} onUpdate={handleUpdate} />}
+      {activeSection === "details" && <DetailsTab organization={organization} onUpdate={handleUpdate} />}
+      {activeSection === "bank" && <BankDetailsTab organization={organization} onUpdate={handleUpdate} />}
+      {activeSection === "stats" && <StatsTab organization={organization} onUpdate={handleUpdate} />}
+      {activeSection === "documents" && <DocumentsTab organization={organization} onUpdate={handleUpdate} />}
+      {activeSection === "settings" && <SettingsTab organization={organization} onUpdate={handleUpdate} />}
     </div>
   );
 };

@@ -23,9 +23,7 @@ import {
   IconHomeCog,
 } from "@tabler/icons-react";
 import { Separator } from "@/components/ui/separator";
-import {
-  TooltipProvider,
-} from "@/components/ui/tooltip";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { useUserStore } from "@/store/userStore";
 import { useOrgStore } from "@/store/orgStore";
 import Image from "next/image";
@@ -72,7 +70,7 @@ const AppSidebar = ({ className }) => {
           label: "Create Event",
           href: "/events/create",
           icon: IconPlus,
-        }
+        },
         // {
         //   id: "event-templates",
         //   label: "Templates",
@@ -125,7 +123,7 @@ const AppSidebar = ({ className }) => {
       label: "Support",
       icon: IconHeadset,
       href: "/contact",
-    }
+    },
   ];
 
   // Check if a navigation item is active
@@ -134,15 +132,21 @@ const AppSidebar = ({ className }) => {
     if (item.href !== "/dashboard") {
       // For items with children, check if any child is active
       if (item.children) {
-        return item.children.some(child => {
+        return item.children.some((child) => {
           if (child.href === "/events" && pathname === "/events") return true;
-          if (child.href !== "/events" && pathname.startsWith(child.href)) return true;
+          if (child.href !== "/events" && pathname.startsWith(child.href))
+            return true;
           return false;
         });
       }
       // For '/organization/members', require exact match
-      if (item.href === "/organization/members" && pathname === "/organization/members") return true;
-      if (item.href === "/organization" && pathname === "/organization") return true;
+      if (
+        item.href === "/organization/members" &&
+        pathname === "/organization/members"
+      )
+        return true;
+      if (item.href === "/organization" && pathname === "/organization")
+        return true;
       // For items without children, exact match or starts with (but not for /events base)
       if (item.href === "/events" && pathname === "/events") return true;
       // if (item.href !== "/events" && item.href !== "/organization/members" && pathname.startsWith(item.href)) return true;
@@ -153,12 +157,12 @@ const AppSidebar = ({ className }) => {
   // Auto-expand active menu items with children
   useEffect(() => {
     const activeExpandedItems = {};
-    navigationItems.forEach(item => {
+    navigationItems.forEach((item) => {
       if (item.children && isActive(item)) {
         activeExpandedItems[item.id] = true;
       }
     });
-    setExpandedItems(prev => ({ ...prev, ...activeExpandedItems }));
+    setExpandedItems((prev) => ({ ...prev, ...activeExpandedItems }));
   }, [pathname]);
 
   // Toggle sidebar collapse
@@ -168,9 +172,9 @@ const AppSidebar = ({ className }) => {
 
   // Toggle expanded state for navigation items with children
   const toggleExpanded = (itemId) => {
-    setExpandedItems(prev => ({
+    setExpandedItems((prev) => ({
       ...prev,
-      [itemId]: !prev[itemId]
+      [itemId]: !prev[itemId],
     }));
   };
 
@@ -191,7 +195,7 @@ const AppSidebar = ({ className }) => {
 
   // Sidebar content component
   const SidebarContent = ({ isMobile = false }) => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col fixed bg-card border-r border-border h-dvh top-0 z-40">
       {/* Header */}
       <SidebarHeader
         isCollapsed={isCollapsed}
@@ -253,8 +257,8 @@ const AppSidebar = ({ className }) => {
       {/* Desktop Sidebar */}
       <motion.div
         className={cn(
-          "hidden lg:flex flex-col bg-card border-r border-border h-dvh sticky top-0 z-40",
-          className
+          "hidden lg:flex flex-col bg-card h-dvh sticky top-0 z-40",
+          className,
         )}
         animate={{ width: isCollapsed ? 80 : 280 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -278,12 +282,13 @@ const AppSidebar = ({ className }) => {
               />
             </div>
             <h2 className="text-base font-semibold text-foreground truncate">
-              Orgatick X {organization?.name || "Organization"}
+              Orgatick
             </h2>
           </Link>
 
           <div className="flex items-center gap-2">
-            <NotificationMenu />
+            {/* <NotificationMenu />  */}
+            {/* TODO: try to add this */}
             <button
               onClick={toggleMobileMenu}
               className="h-8 w-8 flex items-center justify-center rounded-md hover:bg-accent transition-colors"

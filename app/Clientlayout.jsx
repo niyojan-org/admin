@@ -3,14 +3,11 @@ import { useUserStore } from "@/store/userStore";
 import { usePathname } from "next/navigation";
 import { useEffect, Suspense } from "react";
 import AppSidebar from "@/components/layout/AppSidebar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { useOrgStore } from "@/store/orgStore";
 import { IconLoader } from "@tabler/icons-react";
-import { Button } from "@/components/ui/button";
 import { BannerProvider, useBanner } from "@/components/banner/banner";
 
 export default function ClientLayout({ children }) {
-
   return (
     <Suspense>
       <BannerProvider>
@@ -22,26 +19,9 @@ export default function ClientLayout({ children }) {
 
 function ClientLayoutInner({ children }) {
   const pathname = usePathname();
-  const banner = useBanner();
 
   const { isAuthenticated, fetchUser, loading: userLoading } = useUserStore();
-  const { isInfoComplete, isVerified, loading: orgLoading, fetchOrganization, organization } = useOrgStore();
-
-
-  if (!isInfoComplete) {
-    // BannerProvider expects a link object with href and label
-    banner.warning(
-      "Please complete your organization profile to access all features.",
-      { href: '/organization/create', label: 'Complete Profile' }
-    );
-  }
-
-  if (organization && !isVerified && isInfoComplete) {
-    banner.info("Your organization is not verified. Please complete the verification process to access all features.", {
-      href: "/organization/verify",
-      label: "Verify Now"
-    });
-  }
+  const { loading: orgLoading, fetchOrganization } = useOrgStore();
 
   useEffect(() => {
     const initializeAuth = async () => {
@@ -51,16 +31,24 @@ function ClientLayoutInner({ children }) {
       }
     };
     initializeAuth();
-  }, [fetchUser, fetchOrganization]);
+  }, [fetchUser, fetchOrganization, isAuthenticated]);
 
-  const protectedRoutes = ['/dashboard', '/events', '/messages', '/notifications', '/organization', '/organization/edit', '/contact', '/editor', '/profile'];
-  const showSidebar = protectedRoutes.some(route => pathname.startsWith(route)) && isAuthenticated;
+  const protectedRoutes = [
+    "/dashboard",
+    "/events",
+    "/messages",
+    "/notifications",
+    "/organization",
+    "/organization/edit",
+    "/contact",
+    "/editor",
+    "/profile",
+  ];
+  const showSidebar =
+    protectedRoutes.some((route) => pathname.startsWith(route)) &&
+    isAuthenticated;
 
-  // Routes that should NOT use ScrollArea (they handle their own scrolling)
-  const noScrollAreaRoutes = ['/participants', '/organization/members'];
-  const useScrollArea = !noScrollAreaRoutes.some(route => pathname.includes(route));
-
-  if (!isAuthenticated && userLoading || orgLoading) {
+  if ((!isAuthenticated && userLoading) || orgLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[90vh] px-4 py-8 bg-background">
         <div className="flex flex-col items-center gap-4 max-w-md w-full">
@@ -79,23 +67,19 @@ function ClientLayoutInner({ children }) {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   if (showSidebar) {
     return (
-      <div className="flex w-full min-h-dvh font-source-sans-3 pb-4">
+      <div className="flex w-full h-dvh font-source-sans-3 mt-16 mb-4 sm:mt-0 sm:mb-0">
         <AppSidebar />
-        <div className="flex-1 px-2 sm:px-6 h-full items-center justify-center sm:py-4 w-full overflow-auto pt-15">
+        <div className="flex-1 px-2 sm:px-6 h-full items-center justify-center w-full">
           {children}
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="px-3">
-      {children}
-    </div>
-  );
+  return <div className="px-3 h-dvh">{children}</div>;
 }

@@ -1,13 +1,18 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { IconCheck, IconX } from "@tabler/icons-react";
+import { Edit, ExternalLink } from "lucide-react";
+import VerificationReadinessChecker from "./VerificationReadinessChecker";
 
 const SettingsTab = ({ organization }) => {
+  const router = useRouter();
   const stepsCompleted = organization.stepsCompleted || {};
   const completedSteps = Object.values(stepsCompleted).filter(Boolean).length;
   const totalSteps = Object.keys(stepsCompleted).length;
@@ -15,11 +20,46 @@ const SettingsTab = ({ organization }) => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
+      {/* Quick Actions */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg sm:text-xl">Quick Actions</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">
+            Manage your organization settings
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <div className="grid gap-3 sm:grid-cols-2">
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => router.push("/organization/edit")}
+            >
+              <Edit className="size-4 mr-2" />
+              Edit Organization
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => router.push("/organization/verify")}
+            >
+              <ExternalLink className="size-4 mr-2" />
+              View Verification Details
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Verification Readiness */}
+      <VerificationReadinessChecker organization={organization} />
+
       {/* Profile Completion */}
       <Card>
         <CardHeader>
           <CardTitle className="text-lg sm:text-xl">Profile Completion</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">Complete all steps to unlock full features</CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
+            Complete all steps to unlock full features
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -48,7 +88,9 @@ const SettingsTab = ({ organization }) => {
       <Card>
         <CardHeader>
           <CardTitle className="text-lg sm:text-xl">Event Preferences</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">Customize your event hosting settings</CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
+            Customize your event hosting settings
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
@@ -91,7 +133,9 @@ const SettingsTab = ({ organization }) => {
       <Card>
         <CardHeader>
           <CardTitle className="text-lg sm:text-xl">Account Status</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">Organization account information</CardDescription>
+          <CardDescription className="text-xs sm:text-sm">
+            Organization account information
+          </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between">

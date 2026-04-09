@@ -17,3 +17,9 @@ export { default as StatsCards } from "./StatsCards";
 export { default as TrustScoreCard } from "./TrustScoreCard";
 export { default as EventPreferencesCard } from "./EventPreferencesCard";
 export { default as SupportContactCard } from "./SupportContactCard";
+
+// Dialog Components
+export { default as BankDetailsDialog } from "./BankDetailsDialog";
+
+// Verification Components
+export { default as VerificationReadinessChecker } from "./VerificationReadinessChecker";

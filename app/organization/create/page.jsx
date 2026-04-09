@@ -112,7 +112,6 @@ export default function CreateOrganizationPage() {
   // Auto-save draft on changes (debounced)
   useEffect(() => {
     if (!hasDraft) return;
-
     const timeoutId = setTimeout(() => {
       setIsAutoSaving(true);
       saveDraft();
