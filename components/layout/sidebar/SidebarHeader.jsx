@@ -11,43 +11,46 @@ import {
 } from "@/components/ui/tooltip";
 import Image from "next/image";
 
-const SidebarHeader = ({ isCollapsed, onToggleCollapse, organization, isMobile }) => {
+const SidebarHeader = ({
+  isCollapsed,
+  onToggleCollapse,
+  organization,
+  isMobile,
+}) => {
   return (
     <div className="relative">
-      <div className={cn(
-        "flex items-center px-4 py-6",
-        isCollapsed && !isMobile ? "justify-center px-2" : "justify-start"
-      )}>
+      <div
+        className={cn(
+          "flex items-center px-4 py-6",
+          isCollapsed && !isMobile ? "justify-center px-2" : "justify-start",
+        )}
+      >
         {isCollapsed && !isMobile ? (
           <Tooltip>
             <TooltipTrigger asChild>
               <Link href="/dashboard" className="flex items-center">
-                <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center p-1">
-                  <Image
-                    src="https://res.cloudinary.com/ddk9qhmit/image/upload/v1755007468/icon_cusbi5.png"
-                    alt="Orgatick"
-                    width={24}
-                    height={24}
-                    className="h-6 w-6 object-contain"
-                  />
-                </div>
+                <Image
+                  src="https://res.cloudinary.com/ddk9qhmit/image/upload/v1755007468/icon_cusbi5.png"
+                  alt="Orgatick"
+                  width={24}
+                  height={24}
+                  className="h-6 w-6 object-contain"
+                />
               </Link>
             </TooltipTrigger>
             <TooltipContent side="right">
-              <p>Orgatick X {organization?.name || "Organization"}</p>
+              <p>Orgatick</p>
             </TooltipContent>
           </Tooltip>
         ) : (
           <Link href="/dashboard" className="flex items-center space-x-3">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center p-1">
-              <Image
-                src="https://res.cloudinary.com/ddk9qhmit/image/upload/v1755007468/icon_cusbi5.png"
-                alt="Orgatick"
-                width={24}
-                height={24}
-                className="h-6 w-6 object-contain"
-              />
-            </div>
+            <Image
+              src="https://res.cloudinary.com/ddk9qhmit/image/upload/v1755007468/icon_cusbi5.png"
+              alt="Orgatick"
+              width={24}
+              height={24}
+              className="h-6 w-6 object-contain"
+            />
             <AnimatePresence>
               {(!isCollapsed || isMobile) && (
                 <motion.div
@@ -57,7 +60,7 @@ const SidebarHeader = ({ isCollapsed, onToggleCollapse, organization, isMobile }
                   className="overflow-hidden"
                 >
                   <h2 className="text-xl font-bold text-foreground">
-                    Orgatick X {organization?.name || "Organization"}
+                    Orgatick
                   </h2>
                 </motion.div>
               )}
@@ -65,7 +68,7 @@ const SidebarHeader = ({ isCollapsed, onToggleCollapse, organization, isMobile }
           </Link>
         )}
       </div>
-      
+
       {/* Absolute positioned expand arrow at the right edge */}
       {!isMobile && (
         <Tooltip>

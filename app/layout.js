@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import ClientLayout from "./Clientlayout";
 import { ThemeProvider } from "@/components/theme-provider";
+import AppSidebar from "@/components/layout/AppSidebar";
 
 const sourceCodePro = Source_Code_Pro({
   variable: "--font-mono",
@@ -34,6 +35,9 @@ export default function RootLayout({ children }) {
           enableSystem={false}
         >
           <ClientLayout> {children}</ClientLayout>
+          {/* <AppSidebar />
+
+          {children} */}
           <Toaster />
         </ThemeProvider>
       </body>

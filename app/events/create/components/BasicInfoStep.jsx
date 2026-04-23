@@ -28,7 +28,7 @@ import { toast } from "sonner";
 import { uploadEventBanner } from "@/lib/api/resources";
 
 export default function BasicInfoStep() {
-  const { eventDraft, updateField, updateFields } = useEventForm();
+  const { eventDraft, updateField } = useEventForm();
   const [uploadingBanner, setUploadingBanner] = useState(false);
   const [bannerPreview, setBannerPreview] = useState(
     eventDraft.bannerImage || "",
@@ -118,9 +118,8 @@ export default function BasicInfoStep() {
       // Upload to server and get URL
       const uploadResult = await uploadEventBanner(
         file,
-        eventDraft.name || "Event Banner",
+        eventDraft.title || "Event Banner",
       );
-      console.log(uploadResult);
 
       if (uploadResult?.url) {
         // Store the URL (not the base64) in the form data
@@ -130,7 +129,7 @@ export default function BasicInfoStep() {
         throw new Error("Failed to get upload URL");
       }
     } catch (error) {
-      toast.error(error.message || "Failed to upload banner");
+      toast.error(error.message || error || "Failed to upload banner");
       setBannerPreview("");
       updateField("bannerImage", "");
       if (fileInputRef.current) {
@@ -224,7 +223,7 @@ export default function BasicInfoStep() {
             <p className="text-xs text-muted-foreground">
               Upload an image with 16:9 aspect ratio (e.g., 1920x1080 or
               1280x720) under 5MB
-            </p>wgr-zjpk-mqn
+            </p>
 
             {/* Banner Preview */}
             {(bannerPreview || eventDraft.bannerImage) && (
@@ -300,34 +299,6 @@ export default function BasicInfoStep() {
                 Uploading and validating image...
               </div>
             )}
-
-            {/* Or provide URL */}
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or provide URL
-                </span>
-              </div>
-            </div>
-
-            <Input
-              id="bannerImageUrl"
-              type="url"
-              placeholder="https://example.com/banner.jpg"
-              value={
-                eventDraft.bannerImage?.startsWith("data:")
-                  ? ""
-                  : eventDraft.bannerImage
-              }
-              onChange={(e) => {
-                const url = e.target.value;
-                setBannerPreview(url);
-                updateField("bannerImage", url);
-              }}
-            />
           </div>
 
           <div className="space-y-2">

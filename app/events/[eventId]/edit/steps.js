@@ -19,5 +19,9 @@ const steps = [
         key: "customFields",
         label: "Custom Fields",
     },
+    {
+        key: "coupons",
+        label: "Coupons",
+    },
 ];
 export default steps;

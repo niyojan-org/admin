@@ -5,7 +5,7 @@ import { useEffect, Suspense } from "react";
 import AppSidebar from "@/components/layout/AppSidebar";
 import { useOrgStore } from "@/store/orgStore";
 import { IconLoader } from "@tabler/icons-react";
-import { BannerProvider, useBanner } from "@/components/banner/banner";
+import { BannerProvider } from "@/components/banner/banner";
 
 export default function ClientLayout({ children }) {
   return (
@@ -72,11 +72,11 @@ function ClientLayoutInner({ children }) {
 
   if (showSidebar) {
     return (
-      <div className="flex w-full h-dvh font-source-sans-3 mt-16 mb-4 sm:mt-0 sm:mb-0">
+      <div className="flex w-full min-h-dvh font-source-sans-3 pt-16 lg:pt-0 mb-4 sm:mt-0 sm:mb-0">
         <AppSidebar />
-        <div className="flex-1 px-2 sm:px-6 h-full items-center justify-center w-full">
+        <main className="min-w-0 flex-1 px-2 sm:px-6 h-full w-full">
           {children}
-        </div>
+        </main>
       </div>
     );
   }

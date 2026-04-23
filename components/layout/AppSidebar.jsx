@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
@@ -8,169 +8,174 @@ import { cn } from "@/lib/utils";
 import {
   IconDashboard,
   IconCalendarEvent,
-  IconUsers,
-  IconChartBar,
-  IconCreditCard,
   IconBell,
   IconMenu2,
   IconX,
   IconPlus,
-  IconMail,
-  IconUserCheck,
-  IconTicket,
   IconBuilding,
   IconHeadset,
   IconHomeCog,
+  IconChartBar,
+  IconUsers,
+  IconIdBadge2,
+  IconShare3,
+  IconSpeakerphone,
+  IconQrcode,
+  IconEdit,
 } from "@tabler/icons-react";
 import { Separator } from "@/components/ui/separator";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useUserStore } from "@/store/userStore";
 import { useOrgStore } from "@/store/orgStore";
 import Image from "next/image";
-
-// Import the smaller components
 import SidebarHeader from "./sidebar/SidebarHeader";
 import NavigationItem from "./sidebar/NavigationItem";
 import ThemeToggle from "./sidebar/ThemeToggle";
 import UserProfile from "./sidebar/UserProfile";
-import NotificationMenu from "./NotificationMenu";
+
+const navigationItems = [
+  {
+    id: "dashboard",
+    label: "Dashboard",
+    icon: IconDashboard,
+    href: "/dashboard",
+  },
+  {
+    id: "events",
+    label: "Events",
+    icon: IconCalendarEvent,
+    href: "/events",
+    badge: { text: "3", variant: "secondary" },
+    children: [
+      {
+        id: "all-events",
+        label: "All Events",
+        href: "/events",
+        icon: IconCalendarEvent,
+      },
+      {
+        id: "create-event",
+        label: "Create Event",
+        href: "/events/create",
+        icon: IconPlus,
+      },
+    ],
+  },
+  {
+    id: "notifications",
+    label: "Notifications",
+    icon: IconBell,
+    href: "/notifications",
+  },
+];
+
+const settingsItems = [
+  {
+    id: "settings",
+    label: "Organization",
+    icon: IconBuilding,
+    href: "/organization",
+    exact: true,
+  },
+  {
+    id: "member-management",
+    label: "Members",
+    icon: IconHomeCog,
+    href: "/organization/members",
+  },
+  {
+    id: "contact-support",
+    label: "Support",
+    icon: IconHeadset,
+    href: "/contact",
+  },
+];
+
+const getEventIdFromPath = (pathname) => {
+  const match = pathname.match(/^\/events\/([^/]+)/);
+  const eventId = match?.[1];
+
+  if (!eventId || eventId === "create") return null;
+  return eventId;
+};
+
+const getEventContextItems = (eventId) => [
+  {
+    id: "event-overview",
+    label: "Overview",
+    href: `/events/${eventId}`,
+    icon: IconChartBar,
+    exact: true,
+  },
+  {
+    id: "event-participants",
+    label: "Participants",
+    href: `/events/${eventId}/participants`,
+    icon: IconUsers,
+  },
+  {
+    id: "event-registration",
+    label: "Registration",
+    href: `/events/${eventId}/registration`,
+    icon: IconIdBadge2,
+  },
+  {
+    id: "event-share",
+    label: "Share",
+    href: `/events/${eventId}/share`,
+    icon: IconShare3,
+  },
+  {
+    id: "event-announcements",
+    label: "Announcements",
+    href: `/events/${eventId}/announcements`,
+    icon: IconSpeakerphone,
+  },
+  {
+    id: "event-checkin",
+    label: "Check-in",
+    href: `/events/${eventId}/checkin`,
+    icon: IconQrcode,
+  },
+  {
+    id: "event-edit",
+    label: "Edit Event",
+    href: `/events/${eventId}/edit`,
+    icon: IconEdit,
+  },
+];
 
 const AppSidebar = ({ className }) => {
   const pathname = usePathname();
+  const eventId = getEventIdFromPath(pathname);
+  const eventContextItems = eventId ? getEventContextItems(eventId) : [];
+  const isEventWorkspace = Boolean(eventId);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [expandedItems, setExpandedItems] = useState({});
   const { user, logout } = useUserStore();
   const { organization } = useOrgStore();
 
-  // Navigation configuration
-  const navigationItems = [
-    {
-      id: "dashboard",
-      label: "Dashboard",
-      icon: IconDashboard,
-      href: "/dashboard",
-      badge: null,
-    },
-    {
-      id: "events",
-      label: "Events",
-      icon: IconCalendarEvent,
-      href: "/events",
-      badge: { text: "3", variant: "secondary" },
-      children: [
-        {
-          id: "all-events",
-          label: "All Events",
-          href: "/events",
-          icon: IconCalendarEvent,
-        },
-        {
-          id: "create-event",
-          label: "Create Event",
-          href: "/events/create",
-          icon: IconPlus,
-        },
-        // {
-        //   id: "event-templates",
-        //   label: "Templates",
-        //   href: "/events/templates",
-        //   icon: IconTicket,
-        // },
-      ],
-    },
-    // {
-    //   id: "analytics",
-    //   label: "Analytics",
-    //   icon: IconChartBar,
-    //   href: "/dashboard/analytics",
-    // },
-    // {
-    //   id: "payments",
-    //   label: "Payments",
-    //   icon: IconCreditCard,
-    //   href: "/dashboard/payments",
-    //   badge: { text: "New", variant: "destructive" },
-    // },
-    // {
-    //   id: "messages",
-    //   label: "Messages",
-    //   icon: IconMail,
-    // },
-    {
-      id: "notifications",
-      label: "Notifications",
-      icon: IconBell,
-      href: "/notifications",
-    },
-  ];
-
-  const settingsItems = [
-    {
-      id: "settings",
-      label: "Organization",
-      icon: IconBuilding,
-      href: "/organization",
-    },
-    {
-      id: "member-management",
-      label: "Members",
-      icon: IconHomeCog,
-      href: "/organization/members",
-    },
-    {
-      id: "contact-support",
-      label: "Support",
-      icon: IconHeadset,
-      href: "/contact",
-    },
-  ];
-
-  // Check if a navigation item is active
   const isActive = (item) => {
-    if (item.href === "/dashboard" && pathname === "/dashboard") return true;
-    if (item.href !== "/dashboard") {
-      // For items with children, check if any child is active
-      if (item.children) {
-        return item.children.some((child) => {
-          if (child.href === "/events" && pathname === "/events") return true;
-          if (child.href !== "/events" && pathname.startsWith(child.href))
-            return true;
-          return false;
-        });
-      }
-      // For '/organization/members', require exact match
-      if (
-        item.href === "/organization/members" &&
-        pathname === "/organization/members"
-      )
-        return true;
-      if (item.href === "/organization" && pathname === "/organization")
-        return true;
-      // For items without children, exact match or starts with (but not for /events base)
-      if (item.href === "/events" && pathname === "/events") return true;
-      // if (item.href !== "/events" && item.href !== "/organization/members" && pathname.startsWith(item.href)) return true;
+    if (item.exact) return pathname === item.href;
+    if (item.href === "/events") {
+      return pathname === "/events" || pathname.startsWith("/events/");
     }
-    return false;
+    if (item.children) return item.children.some((child) => isActive(child));
+    return pathname === item.href || pathname.startsWith(`${item.href}/`);
   };
 
-  // Auto-expand active menu items with children
   useEffect(() => {
-    const activeExpandedItems = {};
-    navigationItems.forEach((item) => {
-      if (item.children && isActive(item)) {
-        activeExpandedItems[item.id] = true;
-      }
-    });
-    setExpandedItems((prev) => ({ ...prev, ...activeExpandedItems }));
+    setExpandedItems((prev) => ({
+      ...prev,
+      events: pathname.startsWith("/events"),
+    }));
   }, [pathname]);
 
-  // Toggle sidebar collapse
   const toggleCollapse = () => {
-    setIsCollapsed(!isCollapsed);
+    setIsCollapsed((current) => !current);
   };
 
-  // Toggle expanded state for navigation items with children
   const toggleExpanded = (itemId) => {
     setExpandedItems((prev) => ({
       ...prev,
@@ -178,25 +183,24 @@ const AppSidebar = ({ className }) => {
     }));
   };
 
-  // Handle mobile menu toggle
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsMobileMenuOpen((current) => !current);
   };
 
-  // Close mobile menu when pathname changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  // Handle logout
+  const handleNavigationClick = (isMobile) => {
+    if (isMobile) setIsMobileMenuOpen(false);
+  };
+
   const handleLogout = async () => {
     await logout();
   };
 
-  // Sidebar content component
   const SidebarContent = ({ isMobile = false }) => (
-    <div className="flex flex-col fixed bg-card border-r border-border h-dvh top-0 z-40">
-      {/* Header */}
+    <div className="scrollbar-none flex h-full w-full min-w-0 flex-col overflow-hidden bg-card border-r border-border">
       <SidebarHeader
         isCollapsed={isCollapsed}
         onToggleCollapse={toggleCollapse}
@@ -206,9 +210,29 @@ const AppSidebar = ({ className }) => {
 
       <Separator />
 
-      {/* Navigation */}
-      <nav className="flex-1 px-4 py-4 space-y-1">
-        {/* Main navigation items */}
+      <nav className="scrollbar-none min-h-0 flex-1 overflow-y-auto px-4 py-4 space-y-1">
+        {isEventWorkspace && (
+          <>
+            {(!isCollapsed || isMobile) && (
+              <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                Event
+              </p>
+            )}
+            {eventContextItems.map((item) => (
+              <NavigationItem
+                key={item.id}
+                item={item}
+                isActive={isActive(item)}
+                isCollapsed={isCollapsed && !isMobile}
+                onItemClick={() => handleNavigationClick(isMobile)}
+              />
+            ))}
+            <div className="py-2">
+              <Separator className="my-2" />
+            </div>
+          </>
+        )}
+
         {navigationItems.map((item) => (
           <NavigationItem
             key={item.id}
@@ -217,7 +241,7 @@ const AppSidebar = ({ className }) => {
             isCollapsed={isCollapsed && !isMobile}
             isExpanded={expandedItems[item.id]}
             onToggleExpanded={() => toggleExpanded(item.id)}
-            onItemClick={() => setIsCollapsed(true)}
+            onItemClick={() => handleNavigationClick(isMobile)}
           />
         ))}
 
@@ -232,15 +256,13 @@ const AppSidebar = ({ className }) => {
             item={item}
             isActive={isActive(item)}
             isCollapsed={isCollapsed && !isMobile}
-            onItemClick={() => setIsCollapsed(true)}
+            onItemClick={() => handleNavigationClick(isMobile)}
           />
         ))}
 
-        {/* Theme Toggle */}
         <ThemeToggle isCollapsed={isCollapsed && !isMobile} />
       </nav>
 
-      {/* User profile section */}
       <div className="p-4 border-t border-border">
         <UserProfile
           user={user}
@@ -257,7 +279,7 @@ const AppSidebar = ({ className }) => {
       {/* Desktop Sidebar */}
       <motion.div
         className={cn(
-          "hidden lg:flex flex-col bg-card h-dvh sticky top-0 z-40",
+          "scrollbar-none hidden lg:flex h-dvh shrink-0 flex-col overflow-visible bg-card sticky top-0 z-40",
           className,
         )}
         animate={{ width: isCollapsed ? 80 : 280 }}
@@ -318,7 +340,7 @@ const AppSidebar = ({ className }) => {
                 animate={{ x: 0 }}
                 exit={{ x: "-100%" }}
                 transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                className="fixed left-0 top-0 h-full w-72 bg-card border-r border-border shadow-lg z-50 lg:hidden"
+                className="scrollbar-none fixed left-0 top-0 h-full w-72 overflow-y-auto bg-card border-r border-border shadow-lg z-50 lg:hidden"
               >
                 <SidebarContent isMobile />
               </motion.div>

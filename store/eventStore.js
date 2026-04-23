@@ -22,7 +22,10 @@ export const useEventStore = create((set, get) => ({
 
     // Validate sessions against registration end date
     if (eventData.sessions && eventData.registrationEnd) {
-      const sessionValidation = validateSessions(eventData.sessions, eventData.registrationEnd);
+      const sessionValidation = validateSessions(
+        eventData.sessions,
+        eventData.registrationEnd,
+      );
       if (!sessionValidation.isValid) {
         errors.push(...sessionValidation.errors);
       }
@@ -30,7 +33,7 @@ export const useEventStore = create((set, get) => ({
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   },
 
@@ -42,7 +45,7 @@ export const useEventStore = create((set, get) => ({
       // Validate event data
       const validation = get().validateEventData(eventData);
       if (!validation.isValid) {
-        const errorMessage = validation.errors.join(', ');
+        const errorMessage = validation.errors.join(", ");
         set({ error: errorMessage, loading: false });
         toast.error(errorMessage);
         throw new Error(errorMessage);
@@ -55,15 +58,20 @@ export const useEventStore = create((set, get) => ({
         set((state) => ({
           events: [...state.events, newEvent],
           currentEvent: newEvent,
-          loading: false
+          loading: false,
         }));
         toast.success("Event created successfully!");
         return newEvent;
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || "Failed to create event";
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to create event";
       set({ error: errorMessage, loading: false });
-      toast.error(errorMessage, { description: error.response?.data?.error?.details || "Please check your input and try again." });
+      toast.error(errorMessage, {
+        description: "Please check your input and try again.",
+      });
       throw error;
     }
   },
@@ -87,19 +95,29 @@ export const useEventStore = create((set, get) => ({
       if (response.data) {
         const updatedEvent = response.data.event;
         set((state) => ({
-          events: state.events.map(event =>
-            event._id === eventId ? updatedEvent : event
+          events: state.events.map((event) =>
+            event._id === eventId ? updatedEvent : event,
           ),
-          currentEvent: state.currentEvent?._id === eventId ? updatedEvent : state.currentEvent,
-          loading: false
+          currentEvent:
+            state.currentEvent?._id === eventId
+              ? updatedEvent
+              : state.currentEvent,
+          loading: false,
         }));
         toast.success("Event updated successfully!");
         return updatedEvent;
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || "Failed to update event";
+      const errorMessage =
+        error.response?.data?.message ||
+        error.message ||
+        "Failed to update event";
       set({ error: errorMessage, loading: false });
-      toast.error(errorMessage, { description: error.response?.data?.error?.details || "Please check your input and try again." });
+      toast.error(errorMessage, {
+        description:
+          error.response?.data?.error?.details ||
+          "Please check your input and try again.",
+      });
       throw error;
     }
   },
@@ -110,13 +128,15 @@ export const useEventStore = create((set, get) => ({
     try {
       await api.delete(`/events/admin/${eventId}`);
       set((state) => ({
-        events: state.events.filter(event => event._id !== eventId),
-        currentEvent: state.currentEvent?._id === eventId ? null : state.currentEvent,
-        loading: false
+        events: state.events.filter((event) => event._id !== eventId),
+        currentEvent:
+          state.currentEvent?._id === eventId ? null : state.currentEvent,
+        loading: false,
       }));
       toast.success("Event deleted successfully!");
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Failed to delete event";
+      const errorMessage =
+        error.response?.data?.message || "Failed to delete event";
       set({ error: errorMessage, loading: false });
       toast.error(errorMessage);
       throw error;
@@ -134,7 +154,8 @@ export const useEventStore = create((set, get) => ({
         return response.data;
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Failed to fetch events";
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch events";
       set({ error: errorMessage, loading: false });
       toast.error(errorMessage);
       throw error;
@@ -152,9 +173,14 @@ export const useEventStore = create((set, get) => ({
         return eventData;
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Failed to fetch event";
+      const errorMessage =
+        error.response?.data?.message || "Failed to fetch event";
       set({ error: errorMessage, loading: false });
-      toast.error(errorMessage, { description: error.response?.data?.error?.details || "Please check your input and try again." });
+      toast.error(errorMessage, {
+        description:
+          error.response?.data?.error?.details ||
+          "Please check your input and try again.",
+      });
       throw error;
     }
   },
@@ -163,21 +189,27 @@ export const useEventStore = create((set, get) => ({
   addCoupon: async (eventId, couponData) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.post(`/events/admin/${eventId}/coupons`, couponData);
+      const response = await api.post(
+        `/events/admin/${eventId}/coupons`,
+        couponData,
+      );
       if (response.data) {
         const coupon = response.data.data.coupon;
         set((state) => ({
-          currentEvent: state.currentEvent ? {
-            ...state.currentEvent,
-            coupons: [...(state.currentEvent.coupons || []), coupon]
-          } : state.currentEvent,
-          loading: false
+          currentEvent: state.currentEvent
+            ? {
+                ...state.currentEvent,
+                coupons: [...(state.currentEvent.coupons || []), coupon],
+              }
+            : state.currentEvent,
+          loading: false,
         }));
         toast.success("Coupon added successfully!");
         return coupon;
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Failed to add coupon";
+      const errorMessage =
+        error.response?.data?.message || "Failed to add coupon";
       set({ error: errorMessage, loading: false });
       toast.error(errorMessage);
       throw error;
@@ -187,23 +219,30 @@ export const useEventStore = create((set, get) => ({
   updateCoupon: async (eventId, couponId, couponData) => {
     set({ loading: true, error: null });
     try {
-      const response = await api.put(`/events/admin/${eventId}/coupons/${couponId}`, couponData);
+      const response = await api.put(
+        `/events/admin/${eventId}/coupons/${couponId}`,
+        couponData,
+      );
       if (response.data) {
         const updatedCoupon = response.data.data.coupon;
         set((state) => ({
-          currentEvent: state.currentEvent ? {
-            ...state.currentEvent,
-            coupons: state.currentEvent.coupons?.map(coupon =>
-              coupon._id === couponId ? updatedCoupon : coupon
-            ) || []
-          } : state.currentEvent,
-          loading: false
+          currentEvent: state.currentEvent
+            ? {
+                ...state.currentEvent,
+                coupons:
+                  state.currentEvent.coupons?.map((coupon) =>
+                    coupon._id === couponId ? updatedCoupon : coupon,
+                  ) || [],
+              }
+            : state.currentEvent,
+          loading: false,
         }));
         toast.success("Coupon updated successfully!");
         return updatedCoupon;
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Failed to update coupon";
+      const errorMessage =
+        error.response?.data?.message || "Failed to update coupon";
       set({ error: errorMessage, loading: false });
       toast.error(errorMessage);
       throw error;
@@ -215,17 +254,21 @@ export const useEventStore = create((set, get) => ({
     try {
       await api.delete(`/events/admin/${eventId}/coupons/${couponId}`);
       set((state) => ({
-        currentEvent: state.currentEvent ? {
-          ...state.currentEvent,
-          coupons: state.currentEvent.coupons?.filter(coupon =>
-            coupon._id !== couponId
-          ) || []
-        } : state.currentEvent,
-        loading: false
+        currentEvent: state.currentEvent
+          ? {
+              ...state.currentEvent,
+              coupons:
+                state.currentEvent.coupons?.filter(
+                  (coupon) => coupon._id !== couponId,
+                ) || [],
+            }
+          : state.currentEvent,
+        loading: false,
       }));
       toast.success("Coupon deleted successfully!");
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Failed to delete coupon";
+      const errorMessage =
+        error.response?.data?.message || "Failed to delete coupon";
       set({ error: errorMessage, loading: false });
       toast.error(errorMessage);
       throw error;
@@ -234,22 +277,28 @@ export const useEventStore = create((set, get) => ({
 
   toggleCouponStatus: async (eventId, couponId) => {
     try {
-      const response = await api.patch(`/events/admin/${eventId}/coupons/${couponId}/toggle`);
+      const response = await api.patch(
+        `/events/admin/${eventId}/coupons/${couponId}/toggle`,
+      );
       if (response.data) {
         const updatedCoupon = response.data.data.coupon;
         set((state) => ({
-          currentEvent: state.currentEvent ? {
-            ...state.currentEvent,
-            coupons: state.currentEvent.coupons?.map(coupon =>
-              coupon._id === couponId ? updatedCoupon : coupon
-            ) || []
-          } : state.currentEvent
+          currentEvent: state.currentEvent
+            ? {
+                ...state.currentEvent,
+                coupons:
+                  state.currentEvent.coupons?.map((coupon) =>
+                    coupon._id === couponId ? updatedCoupon : coupon,
+                  ) || [],
+              }
+            : state.currentEvent,
         }));
         toast.success(response.data.message);
         return updatedCoupon;
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Failed to toggle coupon status";
+      const errorMessage =
+        error.response?.data?.message || "Failed to toggle coupon status";
       toast.error(errorMessage);
       throw error;
     }
@@ -259,10 +308,11 @@ export const useEventStore = create((set, get) => ({
   clearError: () => set({ error: null }),
 
   // Reset store
-  reset: () => set({
-    events: [],
-    currentEvent: null,
-    loading: false,
-    error: null
-  })
+  reset: () =>
+    set({
+      events: [],
+      currentEvent: null,
+      loading: false,
+      error: null,
+    }),
 }));

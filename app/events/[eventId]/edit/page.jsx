@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import steps from "./steps";
 
 // Step Components (reuse from create)
@@ -11,18 +11,24 @@ import TicketsStep from "../../create/components/TicketsStep";
 import CustomFieldsStep from "../../create/components/CustomFieldsStep";
 import api from "@/lib/api";
 import { toast } from "sonner";
-import { RegistrationDashboard } from "../components/registration";
-import { Spinner, SpinnerCustom } from "@/components/ui/spinner";
+import { RegistrationDashboard } from "../components-old/registration";
+import { Spinner } from "@/components/ui/spinner";
+import Coupons from "../components-old/Coupons";
+
+const getStepIndex = (stepKey) => {
+  const stepIndex = steps.findIndex((item) => item.key === stepKey);
+  return stepIndex >= 0 ? stepIndex : 0;
+};
 
 export default function EditEventPage() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const eventId = params.eventId;
 
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(() => getStepIndex(searchParams.get("step")));
   const [initialDataLoaded, setInitialDataLoaded] = useState(false);
   const [currentEvent, setCurrentEvent] = useState(null);
-
 
   // Load existing event data
   useEffect(() => {
@@ -40,6 +46,9 @@ export default function EditEventPage() {
     loadEventData();
   }, [eventId, initialDataLoaded, router]);
 
+  useEffect(() => {
+    setStep(getStepIndex(searchParams.get("step")));
+  }, [searchParams]);
 
   const goToStep = (stepIndex) => {
     // Validate current step before moving
@@ -76,7 +85,9 @@ export default function EditEventPage() {
   if (initialDataLoaded && !currentEvent) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-destructive">Event not found or you don't have permission to edit it.</div>
+        <div className="text-destructive">
+          Event not found or you don't have permission to edit it.
+        </div>
       </div>
     );
   }
@@ -95,12 +106,9 @@ export default function EditEventPage() {
           <Button
             key={s.key}
             onClick={() => goToStep(index)}
-            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${index === step
-              ? "text-white bg-accent"
-              : index < step
-                ? ""
-                : ""
-              }`}
+            className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              index === step ? "text-white bg-accent" : index < step ? "" : ""
+            }`}
           >
             {index + 1}. {s.label}
           </Button>
@@ -110,39 +118,40 @@ export default function EditEventPage() {
       {/* Form Content */}
       <>
         {/* Step 0: Basic Details */}
-        {step === 0 && (
-          <BasicInfoStep eventId={eventId} onNext={goNext} />
-        )}
+        {step === 0 && <BasicInfoStep eventId={eventId} onNext={goNext} />}
 
         {/* Step 1: Registration Details */}
-        {step === 1 && (
-          <RegistrationDashboard eventId={eventId} />
-        )}
+        {step === 1 && <RegistrationDashboard eventId={eventId} />}
 
         {/* Step 2: Sessions */}
-        {step === 2 && (
-          <SessionsStep event={{ _id: eventId }} />
-        )}
+        {step === 2 && <SessionsStep event={{ _id: eventId }} />}
 
         {/* Step 3: Tickets */}
-        {step === 3 && (
-          <TicketsStep event={{ _id: eventId }} />
-        )}
+        {step === 3 && <TicketsStep event={{ _id: eventId }} />}
 
-        {/* Step 4: Custom Input Fields */}
-        {step === 4 && (
-          <CustomFieldsStep event={{ _id: eventId }} />
-        )}
+        {step === 4 && <CustomFieldsStep event={{ _id: eventId }} />}
+
+        {/* Step 5: Coupons */}
+        {step === 5 && <Coupons eventId={eventId} />}
       </>
 
       {/* Navigation Buttons */}
       <div className="flex justify-between pt-3 border-t">
-        <Button onClick={goBack} variant="outline" className="cursor-pointer" disabled={step === 0}>
+        <Button
+          onClick={goBack}
+          variant="outline"
+          className="cursor-pointer"
+          disabled={step === 0}
+        >
           Back
         </Button>
 
         <div className="flex gap-2">
-          <Button onClick={() => router.push("/events")} variant="ghost" className="cursor-pointer">
+          <Button
+            onClick={() => router.push("/events")}
+            variant="ghost"
+            className="cursor-pointer"
+          >
             Cancel
           </Button>
           <Button onClick={goNext} className="cursor-pointer">

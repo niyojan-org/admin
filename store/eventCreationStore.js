@@ -83,17 +83,17 @@ export const useEventCreationStore = create(
     (set, get) => ({
       // Event draft data
       eventDraft: { ...initialEventState },
-      
+
       // Draft management
       isDraftSaved: false,
       lastSavedAt: null,
       draftId: null,
 
       // Update entire event draft
-      setEventDraft: (eventData) => 
-        set({ 
-          eventDraft: eventData, 
-          isDraftSaved: false 
+      setEventDraft: (eventData) =>
+        set({
+          eventDraft: eventData,
+          isDraftSaved: false,
         }),
 
       // Update specific field in event draft
@@ -134,7 +134,7 @@ export const useEventCreationStore = create(
           eventDraft: {
             ...state.eventDraft,
             sessions: state.eventDraft.sessions.map((session, i) =>
-              i === index ? { ...session, ...sessionData } : session
+              i === index ? { ...session, ...sessionData } : session,
             ),
           },
           isDraftSaved: false,
@@ -167,7 +167,7 @@ export const useEventCreationStore = create(
           eventDraft: {
             ...state.eventDraft,
             tickets: state.eventDraft.tickets.map((ticket, i) =>
-              i === index ? { ...ticket, ...ticketData } : ticket
+              i === index ? { ...ticket, ...ticketData } : ticket,
             ),
           },
           isDraftSaved: false,
@@ -200,7 +200,7 @@ export const useEventCreationStore = create(
           eventDraft: {
             ...state.eventDraft,
             customFields: state.eventDraft.customFields.map((field, i) =>
-              i === index ? { ...field, ...fieldData } : field
+              i === index ? { ...field, ...fieldData } : field,
             ),
           },
           isDraftSaved: false,
@@ -211,7 +211,7 @@ export const useEventCreationStore = create(
           eventDraft: {
             ...state.eventDraft,
             customFields: state.eventDraft.customFields.filter(
-              (_, i) => i !== index
+              (_, i) => i !== index,
             ),
           },
           isDraftSaved: false,
@@ -235,7 +235,7 @@ export const useEventCreationStore = create(
           eventDraft: {
             ...state.eventDraft,
             coupons: state.eventDraft.coupons.map((coupon, i) =>
-              i === index ? { ...coupon, ...couponData } : coupon
+              i === index ? { ...coupon, ...couponData } : coupon,
             ),
           },
           isDraftSaved: false,
@@ -294,6 +294,7 @@ export const useEventCreationStore = create(
       validateDraft: () => {
         const draft = get().eventDraft;
         const errors = [];
+        const isVenueRequired = ["hybrid", "offline"].includes(draft.mode);
 
         if (!draft.title?.trim()) {
           errors.push("Event title is required");
@@ -301,6 +302,14 @@ export const useEventCreationStore = create(
 
         if (!draft.description?.trim()) {
           errors.push("Event description is required");
+        }
+
+        if (!draft.category?.trim()) {
+          errors.push("Event category is required");
+        }
+
+        if (!draft.mode?.trim()) {
+          errors.push("Event mode is required");
         }
 
         if (!draft.organizationId) {
@@ -347,7 +356,15 @@ export const useEventCreationStore = create(
             session.endTime &&
             new Date(session.startTime) >= new Date(session.endTime)
           ) {
-            errors.push(`Session ${index + 1}: End time must be after start time`);
+            errors.push(
+              `Session ${index + 1}: End time must be after start time`,
+            );
+          }
+
+          if (isVenueRequired && !session.venue?.name?.trim()) {
+            errors.push(
+              `Session ${index + 1}: Venue name is required for ${draft.mode} events`,
+            );
           }
         });
 
@@ -362,7 +379,102 @@ export const useEventCreationStore = create(
           if (ticket.capacity <= 0) {
             errors.push(`Ticket ${index + 1}: Capacity must be greater than 0`);
           }
+
+          if (ticket.isGroupTicket) {
+            const minParticipants = ticket.groupSettings?.minParticipants ?? 2;
+            const maxParticipants = ticket.groupSettings?.maxParticipants ?? 10;
+
+            if (minParticipants < 2) {
+              errors.push(
+                `Ticket ${index + 1}: Minimum group participants must be at least 2`,
+              );
+            }
+
+            if (maxParticipants < minParticipants) {
+              errors.push(
+                `Ticket ${index + 1}: Maximum group participants must be greater than or equal to minimum`,
+              );
+            }
+          }
         });
+
+        // Validate custom fields
+        draft.customFields.forEach((field, index) => {
+          if (!field.label?.trim()) {
+            errors.push(`Custom field ${index + 1}: Label is required`);
+          }
+
+          if (!field.name?.trim()) {
+            errors.push(`Custom field ${index + 1}: Name is required`);
+          }
+
+          if (!field.type?.trim()) {
+            errors.push(`Custom field ${index + 1}: Type is required`);
+          }
+
+          const needsOptions = ["dropdown", "radio", "checkbox"].includes(
+            field.type,
+          );
+          if (needsOptions) {
+            if (!field.options || field.options.length === 0) {
+              errors.push(`Custom field ${index + 1}: Add at least one option`);
+            } else {
+              field.options.forEach((option, optionIndex) => {
+                if (!option.label?.trim() || !option.value?.trim()) {
+                  errors.push(
+                    `Custom field ${index + 1}, option ${optionIndex + 1}: Label and value are required`,
+                  );
+                }
+              });
+            }
+          }
+        });
+
+        // Validate coupons when enabled
+        if (draft.allowCoupons) {
+          draft.coupons.forEach((coupon, index) => {
+            const code = (coupon.code || "").trim();
+
+            if (!code) {
+              errors.push(`Coupon ${index + 1}: Code is required`);
+            } else if (!/^[A-Z0-9]{5,}$/.test(code)) {
+              errors.push(
+                `Coupon ${index + 1}: Code must be at least 5 uppercase alphanumeric characters`,
+              );
+            }
+
+            if ((coupon.discountValue ?? 0) <= 0) {
+              errors.push(
+                `Coupon ${index + 1}: Discount value must be greater than 0`,
+              );
+            }
+
+            if (
+              coupon.discountType === "percentage" &&
+              (coupon.discountValue ?? 0) > 100
+            ) {
+              errors.push(
+                `Coupon ${index + 1}: Percentage discount cannot exceed 100`,
+              );
+            }
+
+            if ((coupon.maxUsage ?? 0) < 0) {
+              errors.push(
+                `Coupon ${index + 1}: Maximum usage cannot be negative`,
+              );
+            }
+
+            if (
+              coupon.startsAt &&
+              coupon.endsAt &&
+              new Date(coupon.startsAt) >= new Date(coupon.endsAt)
+            ) {
+              errors.push(
+                `Coupon ${index + 1}: Valid until must be after valid from`,
+              );
+            }
+          });
+        }
 
         return {
           isValid: errors.length === 0,
@@ -379,8 +491,8 @@ export const useEventCreationStore = create(
         lastSavedAt: state.lastSavedAt,
         draftId: state.draftId,
       }),
-    }
-  )
+    },
+  ),
 );
 
 // Export templates for external use

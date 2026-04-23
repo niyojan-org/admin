@@ -5,11 +5,11 @@
 
 :root {
   --background: #f6faff;
-  --foreground: #1C458F;
+  --foreground: #1c458f;
   --card: #fcffff;
   --card-foreground: #000000;
   --popover: #fcffff;
-  --success: #22C55E;
+  --success: #22c55e;
   --popover-foreground: #000000;
   --primary: #1c458f;
   --primary-foreground: #ffffff;
@@ -50,11 +50,16 @@
   --shadow-offset-y: 2px;
   --shadow-2xs: 0px 2px 4px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0px 2px 4px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 1px 2px -1px hsl(0 0% 0% / 0.10);
-  --shadow: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 1px 2px -1px hsl(0 0% 0% / 0.10);
-  --shadow-md: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 2px 4px -1px hsl(0 0% 0% / 0.10);
-  --shadow-lg: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 4px 6px -1px hsl(0 0% 0% / 0.10);
-  --shadow-xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 8px 10px -1px hsl(0 0% 0% / 0.10);
+  --shadow-sm:
+    0px 2px 4px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow:
+    0px 2px 4px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow-md:
+    0px 2px 4px 0px hsl(0 0% 0% / 0.1), 0px 2px 4px -1px hsl(0 0% 0% / 0.1);
+  --shadow-lg:
+    0px 2px 4px 0px hsl(0 0% 0% / 0.1), 0px 4px 6px -1px hsl(0 0% 0% / 0.1);
+  --shadow-xl:
+    0px 2px 4px 0px hsl(0 0% 0% / 0.1), 0px 8px 10px -1px hsl(0 0% 0% / 0.1);
   --shadow-2xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.25);
 }
 
@@ -116,9 +121,8 @@
 /* /* new dark class, remove this if you dont want but see the difference, because our dark class not following our brand color, * */
 
 .dark {
-  --background: #0b1220;          /* deep navy for calm dark UI */
-  --foreground: #e6edf6;          /* soft white for readability */
-
+  --background: #0b1220; /* deep navy for calm dark UI */
+  --foreground: #e6edf6; /* soft white for readability */
 
   --card: #111a2e;
   --card-foreground: #e6edf6;
@@ -128,26 +132,26 @@
 
   /* 🔵 Brand primary */
   /* Was: #69a8ff (neon) */
-  --primary: #4f7fd9;             /* brand blue, toned down */
+  --primary: #4f7fd9; /* brand blue, toned down */
   --primary-foreground: #ffffff;
 
   /* 🟠 Secondary (Draft / warning states) */
   /* Was: #dab067 (too bright yellow) */
-  --secondary: #c08a3a;           /* muted amber = professional */
+  --secondary: #c08a3a; /* muted amber = professional */
   --secondary-foreground: #1a1205;
 
   /* ⚪ Muted / neutral UI */
-  --muted: #1a2436;               /* subtle surface */
-  --muted-foreground: #9aa6b6;    /* soft gray text */
+  --muted: #1a2436; /* subtle surface */
+  --muted-foreground: #9aa6b6; /* soft gray text */
 
   /* 💠 Accent (supporting blue) */
   /* Was: heavy saturated blue */
-  --accent: #1c2f5c;              /* deep navy accent */
+  --accent: #1c2f5c; /* deep navy accent */
   --accent-foreground: #e6edf6;
 
   /* 🔴 Destructive */
   /* Was: muddy brown-red */
-  --destructive: #c74a4a;         /* clean, modern red */
+  --destructive: #c74a4a; /* clean, modern red */
   --destructive-foreground: #ffffff;
 
   /* 🧱 Borders & inputs */
@@ -173,7 +177,7 @@
   --sidebar-accent-foreground: #e6edf6;
   --sidebar-border: #26334d;
   --sidebar-ring: #4f7fd9;
- 
+
   --radius: 10px;
   --letter-spacing: 0em;
   --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
@@ -187,15 +191,18 @@
   --shadow-offset-y: 2px;
   --shadow-2xs: 0px 2px 4px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0px 2px 4px 0px hsl(0 0% 0% / 0.05);
-  --shadow-sm: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 1px 2px -1px hsl(0 0% 0% / 0.10);
-  --shadow: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 1px 2px -1px hsl(0 0% 0% / 0.10);
-  --shadow-md: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 2px 4px -1px hsl(0 0% 0% / 0.10);
-  --shadow-lg: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 4px 6px -1px hsl(0 0% 0% / 0.10);
-  --shadow-xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.10), 0px 8px 10px -1px hsl(0 0% 0% / 0.10);
+  --shadow-sm:
+    0px 2px 4px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow:
+    0px 2px 4px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+  --shadow-md:
+    0px 2px 4px 0px hsl(0 0% 0% / 0.1), 0px 2px 4px -1px hsl(0 0% 0% / 0.1);
+  --shadow-lg:
+    0px 2px 4px 0px hsl(0 0% 0% / 0.1), 0px 4px 6px -1px hsl(0 0% 0% / 0.1);
+  --shadow-xl:
+    0px 2px 4px 0px hsl(0 0% 0% / 0.1), 0px 8px 10px -1px hsl(0 0% 0% / 0.1);
   --shadow-2xl: 0px 2px 4px 0px hsl(0 0% 0% / 0.25);
-  
 }
-
 
 @theme inline {
   --color-background: var(--background);
@@ -246,10 +253,12 @@
 
   /* Add padding at bottom of forms/containers for mobile keyboard */
   @media (max-width: 768px) {
-    form, main, [role="main"] {
+    form,
+    main,
+    [role="main"] {
       padding-bottom: max(env(safe-area-inset-bottom, 0px), 120px);
     }
-    
+
     /* Ensure smooth scrolling when keyboard appears */
     html {
       scroll-behavior: smooth;
@@ -260,4 +269,15 @@
 @theme {
   --font-sans: "Source Sans 3", sans-serif;
   --font-mono: "Source Code Pro", monospace;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none !important; /* IE/Edge */
+  scrollbar-width: none !important; /* Firefox */
 }

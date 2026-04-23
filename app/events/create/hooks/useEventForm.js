@@ -70,10 +70,10 @@ export const useEventForm = () => {
   // Clear draft with confirmation
   const handleClearDraft = useCallback(() => {
     if (hasUnsavedChanges()) {
-      const confirmed = window.confirm(
-        "You have unsaved changes. Are you sure you want to clear the draft?"
-      );
-      if (!confirmed) return;
+      // const confirmed = window.confirm(
+      //   "You have unsaved changes. Are you sure you want to clear the draft?"
+      // );
+      // if (!confirmed) return;
     }
     clearDraft();
     toast.info("Draft cleared");
