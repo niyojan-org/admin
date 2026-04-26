@@ -30,7 +30,7 @@ function EventBanner({ event }) {
     <div className="relative">
       <div className="rounded-2xl relative group">
         <Image
-          src={event.bannerImage}
+          src={event?.bannerImage || "/banner/default-event-banner.png"}
           alt="Event Banner"
           width={1920}
           height={1080}

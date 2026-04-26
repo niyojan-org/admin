@@ -114,6 +114,12 @@ const getEventContextItems = (eventId) => [
     icon: IconUsers,
   },
   {
+    id: "event-tickets",
+    label: "Tickets",
+    href: `/events/${eventId}/tickets`,
+    icon: IconIdBadge2,
+  },
+  {
     id: "event-registration",
     label: "Registration",
     href: `/events/${eventId}/registration`,
@@ -293,17 +299,15 @@ const AppSidebar = ({ className }) => {
       {/* Mobile Header */}
       <div className="lg:hidden fixed top-0 z-40 bg-card overflow-hidden w-full">
         <div className="flex items-center justify-between px-4 py-3 bg-card border-b border-border">
-          <Link href="/dashboard" className="flex items-center space-x-3">
-            <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center p-1">
-              <Image
-                src="https://res.cloudinary.com/ddk9qhmit/image/upload/v1755007468/icon_cusbi5.png"
-                width={24}
-                height={24}
-                alt="Orgatick"
-                className="h-5 w-5 object-contain"
-              />
-            </div>
-            <h2 className="text-base font-semibold text-foreground truncate">
+          <Link href="/" className="flex items-center space-x-3">
+            <Image
+              src="/icons/icon.png"
+              width={100}
+              height={100}
+              alt="Orgatick"
+              className="h-8 w-8 object-contain"
+            />
+            <h2 className="text-xl font-semibold text-foreground truncate">
               Orgatick
             </h2>
           </Link>

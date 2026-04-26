@@ -9,6 +9,8 @@ export const EventStore = create((set, get) => ({
 
   fetchEvent: async (eventId) => {
     try {
+      if (get().loading) return; // Prevent multiple simultaneous fetches
+      if (get().event?.slug === eventId) return; // If the requested event is already loaded, do nothing
       set({ loading: true, error: null, event: null });
       if (!eventId) {
         return null;

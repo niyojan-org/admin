@@ -28,9 +28,9 @@ const SidebarHeader = ({
         {isCollapsed && !isMobile ? (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href="/dashboard" className="flex items-center">
+              <Link href="/" className="flex items-center">
                 <Image
-                  src="https://res.cloudinary.com/ddk9qhmit/image/upload/v1755007468/icon_cusbi5.png"
+                  src="/icons/icon.png"
                   alt="Orgatick"
                   width={24}
                   height={24}
@@ -43,9 +43,9 @@ const SidebarHeader = ({
             </TooltipContent>
           </Tooltip>
         ) : (
-          <Link href="/dashboard" className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-3">
             <Image
-              src="https://res.cloudinary.com/ddk9qhmit/image/upload/v1755007468/icon_cusbi5.png"
+              src="/icons/icon.png"
               alt="Orgatick"
               width={24}
               height={24}

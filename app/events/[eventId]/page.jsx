@@ -17,7 +17,7 @@ function Page() {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-12">
         <div className="space-y-4 xl:col-span-8">
           <EventBanner event={event} />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <RegistrationCard event={event} className="h-full" />
             <MetricsCard event={event} className="h-full" />
           </div>
@@ -29,7 +29,6 @@ function Page() {
 
         <div className="col-span-1 xl:col-span-4">
           <QuickActionsCard event={event} />
-          
         </div>
       </div>
     </div>

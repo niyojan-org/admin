@@ -196,11 +196,13 @@ function QuickActionsCard({ event, className }) {
             Shortcuts shown according to your organization role.
           </CardDescription>
         </div>
-        <Badge variant="secondary">{roleLabels[userRole] || "Limited access"}</Badge>
+        <Badge variant="secondary">
+          {roleLabels[userRole] || "Limited access"}
+        </Badge>
       </CardHeader>
       <CardContent>
         {actions.length > 0 ? (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3">
             {actions.map((action) => (
               <QuickActionButton key={action.label} action={action} />
             ))}

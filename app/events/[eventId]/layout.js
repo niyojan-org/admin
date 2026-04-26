@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { EventStore } from "./event-store";
 import { useEffect } from "react";
-import EventBanner from "./components/EventBanner";
 
 const pageLabels = {
   participants: "Participants",
@@ -13,11 +12,13 @@ const pageLabels = {
   announcements: "Announcements",
   checkin: "Check-in",
   edit: "Edit Event",
+  tickets: "Tickets",
 };
 
 function EventBreadcrumbs({ event, eventId }) {
   const pathname = usePathname();
   const activeSegment = pathname.split("/")[3];
+  console.log(activeSegment);
   const activeLabel = pageLabels[activeSegment];
   const eventLabel = event?.title || decodeURIComponent(eventId);
 
@@ -75,7 +76,7 @@ function EventDetailLayout({ children }) {
   }
 
   return (
-    <div className="min-h-dvh w-full bg-background">
+    <div className="w-full bg-background">
       <div className="mx-auto w-full max-w-7xl py-4 sm:py-6">
         <EventBreadcrumbs event={event} eventId={eventId} />
         {children}
