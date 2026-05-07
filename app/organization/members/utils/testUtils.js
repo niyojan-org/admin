@@ -180,7 +180,7 @@ export const testFilters = {
   }
 };
 
-export default {
+const testUtils = {
   mockMembers,
   mockSummary,
   mockPagination,
@@ -190,3 +190,5 @@ export default {
   validateMemberForm,
   testFilters
 };
+
+export default testUtils;

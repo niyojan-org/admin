@@ -5,10 +5,13 @@ import StatsCards from "./StatsCards";
 import TrustScoreCard from "./TrustScoreCard";
 import EventPreferencesCard from "./EventPreferencesCard";
 import SupportContactCard from "./SupportContactCard";
+import VerificationPromptCard from "./VerificationPromptCard";
 
 const OverviewTab = ({ organization }) => {
   return (
     <div className="space-y-4 sm:space-y-6">
+      {/* Verification Prompt - Only shows when not verified */}
+      <VerificationPromptCard organization={organization} />
       {/* Stats Grid */}
       <StatsCards
         stats={organization.stats}
@@ -24,6 +27,8 @@ const OverviewTab = ({ organization }) => {
 
       {/* Contact & Support */}
       <SupportContactCard organization={organization} />
+
+
     </div>
   );
 };

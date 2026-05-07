@@ -10,10 +10,8 @@ export default function Layout({ children }) {
     });
 
     return (
-        <ProtectedRoute>
-            <div className="h-full">
-                {children}
-            </div>
-        </ProtectedRoute>
+        <div className="h-full">
+            {children}
+        </div>
     );
 }

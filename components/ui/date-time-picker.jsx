@@ -92,13 +92,10 @@ export function DateTimePicker({
         d.setHours(max.getHours(), max.getMinutes(), max.getSeconds());
       }
       setDate(d);
+      onChange(new Date(d));
     },
-    [setDate, setMonth]
+    [date, min, max, setDate, onChange]
   );
-  const onSubmit = useCallback(() => {
-    onChange(new Date(date));
-    setOpen(false);
-  }, [date, onChange]);
 
   const onMonthYearChanged = useCallback(
     (d, mode) => {
@@ -265,24 +262,22 @@ export function DateTimePicker({
             <TimePicker
               timePicker={timePicker}
               value={date}
-              onChange={setDate}
+              onChange={(d) => {
+                setDate(d);
+                onChange(new Date(d));
+              }}
               use12HourFormat={use12HourFormat}
               min={minDate}
               max={maxDate}
               needSeconds={needSeconds}
             />
           )}
-          <div className="flex flex-row-reverse items-center justify-between">
-            <Button className="ms-2 h-7 px-2" onClick={onSubmit}>
-              Done
-            </Button>
-            {timezone && (
-              <div className="text-sm">
-                <span>Timezone:</span>
-                <span className="font-semibold ms-1">{timezone}</span>
-              </div>
-            )}
-          </div>
+          {timezone && (
+            <div className="text-sm self-end">
+              <span>Timezone:</span>
+              <span className="font-semibold ms-1">{timezone}</span>
+            </div>
+          )}
         </div>
       </PopoverContent>
     </Popover>

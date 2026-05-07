@@ -1,16 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Icon404 from "@/assets/svg/404";
 import { Button } from "@/components/ui/button";
+import Icon404 from "@/assets/svg/404";
 
 
 const Error404 = () => {
-  const [animationData, setAnimationData] = useState(null);
-  const [loadingAnimation, setLoadingAnimation] = useState(true);
-
   return (
     <section
       className="relative flex flex-col items-center justify-center h-dvh"

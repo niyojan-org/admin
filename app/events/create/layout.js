@@ -1,7 +1,7 @@
 "use client";
-import { useOrgStore } from '@/store/orgStore';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import EventCreationNotAllowed from './components/EventCreationNotAllowed';
+import { useOrgStore } from "@/store/orgStore";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import EventCreationNotAllowed from "./components/EventCreationNotAllowed";
 
 export default function Layout({ children }) {
   const { organization } = useOrgStore();
@@ -14,9 +14,5 @@ export default function Layout({ children }) {
     );
   }
 
-  return (
-    <ProtectedRoute>
-      {children}
-    </ProtectedRoute>
-  );
+  return <ProtectedRoute>{children}</ProtectedRoute>;
 }

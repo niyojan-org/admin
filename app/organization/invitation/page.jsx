@@ -35,7 +35,7 @@ export default function InvitationPage() {
     }, [searchParams]);
 
         return (
-            <div className="flex items-center justify-center min-h-screen w-full bg-background p-4">
+            <div className="flex items-center justify-center min-h-dvh w-full bg-background p-4">
                 <div className="w-full max-w-md mx-auto">
                     <div className="bg-card rounded-xl shadow-lg p-6 flex flex-col items-center gap-6">
                         <div className="w-full text-center mb-2">

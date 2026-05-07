@@ -1,10 +1,22 @@
 "use client";
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  IconCalendar, IconMapPin, IconTicket, IconUsers, 
-  IconDiscount, IconForms, IconCheck, IconAlertCircle 
+import {
+  IconCalendar,
+  IconMapPin,
+  IconTicket,
+  IconUsers,
+  IconDiscount,
+  IconForms,
+  IconCheck,
+  IconAlertCircle,
 } from "@tabler/icons-react";
 import { useEventForm } from "../hooks/useEventForm";
 import { Separator } from "@/components/ui/separator";
@@ -21,27 +33,41 @@ export default function ReviewStep() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold">Review & Publish</h2>
-        <p className="text-muted-foreground">Review your event details before publishing</p>
+        <h2 className="text-2xl font-bold">Review & Create</h2>
+        <p className="text-muted-foreground">
+          Review your event details before adding
+        </p>
       </div>
 
       {/* Validation Status */}
-      <Card className={validation.isValid ? "border-green-500/50 bg-green-500/10" : "border-red-500/50 bg-red-500/10"}>
+      <Card
+        className={
+          validation.isValid
+            ? "border-green-500/50 bg-green-500/10"
+            : "border-red-500/50 bg-red-500/10"
+        }
+      >
         <CardContent className="py-4">
           <div className="flex items-start gap-3">
             {validation.isValid ? (
               <>
                 <IconCheck className="w-5 h-5 text-green-600 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-green-600 dark:text-green-400">Ready to Publish</p>
-                  <p className="text-sm text-green-600 dark:text-green-400">All required fields are complete!</p>
+                  <p className="font-semibold text-green-600 dark:text-green-400">
+                    Ready to Publish
+                  </p>
+                  <p className="text-sm text-green-600 dark:text-green-400">
+                    All required fields are complete!
+                  </p>
                 </div>
               </>
             ) : (
               <>
                 <IconAlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-red-600 dark:text-red-400">Missing Required Information</p>
+                  <p className="font-semibold text-red-600 dark:text-red-400">
+                    Missing Required Information
+                  </p>
                   <ul className="text-sm text-red-600 dark:text-red-400 list-disc list-inside mt-2 space-y-1">
                     {validation.errors.map((error, index) => (
                       <li key={index}>{error}</li>
@@ -86,12 +112,18 @@ export default function ReviewStep() {
           <Separator />
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-sm text-muted-foreground">Registration Start</p>
-              <p className="text-sm font-medium">{formatDate(eventDraft.registrationStart)}</p>
+              <p className="text-sm text-muted-foreground">
+                Registration Start
+              </p>
+              <p className="text-sm font-medium">
+                {formatDate(eventDraft.registrationStart)}
+              </p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Registration End</p>
-              <p className="text-sm font-medium">{formatDate(eventDraft.registrationEnd)}</p>
+              <p className="text-sm font-medium">
+                {formatDate(eventDraft.registrationEnd)}
+              </p>
             </div>
           </div>
           {eventDraft.tags.length > 0 && (
@@ -101,7 +133,9 @@ export default function ReviewStep() {
                 <p className="text-sm text-muted-foreground mb-2">Tags</p>
                 <div className="flex flex-wrap gap-2">
                   {eventDraft.tags.map((tag, index) => (
-                    <Badge key={index} variant="outline">{tag}</Badge>
+                    <Badge key={index} variant="outline">
+                      {tag}
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -128,13 +162,18 @@ export default function ReviewStep() {
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-semibold">{session.title}</p>
-                      <p className="text-sm text-muted-foreground">{session.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {session.description}
+                      </p>
                     </div>
-                    {session.isActive && <Badge variant="secondary">Active</Badge>}
+                    {session.isActive && (
+                      <Badge variant="secondary">Active</Badge>
+                    )}
                   </div>
                   <div className="text-sm">
                     <p className="text-muted-foreground">
-                      {formatDate(session.startTime)} - {formatDate(session.endTime)}
+                      {formatDate(session.startTime)} -{" "}
+                      {formatDate(session.endTime)}
                     </p>
                     {session.venue?.name && (
                       <p className="flex items-center gap-1 text-muted-foreground mt-1">
@@ -169,7 +208,10 @@ export default function ReviewStep() {
           ) : (
             <div className="space-y-3">
               {eventDraft.tickets.map((ticket, index) => (
-                <div key={index} className="border rounded-lg p-3 flex items-start justify-between">
+                <div
+                  key={index}
+                  className="border rounded-lg p-3 flex items-start justify-between"
+                >
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="font-semibold">{ticket.type}</p>
@@ -181,11 +223,13 @@ export default function ReviewStep() {
                       )}
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Capacity: {ticket.capacity} | Price: ${ticket.price.toFixed(2)}
+                      Capacity: {ticket.capacity} | Price: $
+                      {ticket.price.toFixed(2)}
                     </p>
                     {ticket.isGroupTicket && (
                       <p className="text-sm text-muted-foreground">
-                        Group size: {ticket.groupSettings?.minParticipants}-{ticket.groupSettings?.maxParticipants}
+                        Group size: {ticket.groupSettings?.minParticipants}-
+                        {ticket.groupSettings?.maxParticipants}
                       </p>
                     )}
                   </div>
@@ -209,12 +253,19 @@ export default function ReviewStep() {
           <CardContent>
             <div className="space-y-2">
               {eventDraft.customFields.map((field, index) => (
-                <div key={index} className="flex items-center justify-between border-b pb-2">
+                <div
+                  key={index}
+                  className="flex items-center justify-between border-b pb-2"
+                >
                   <div>
                     <p className="font-medium">{field.label}</p>
-                    <p className="text-sm text-muted-foreground">Type: {field.type}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Type: {field.type}
+                    </p>
                   </div>
-                  {field.required && <Badge variant="destructive">Required</Badge>}
+                  {field.required && (
+                    <Badge variant="destructive">Required</Badge>
+                  )}
                 </div>
               ))}
             </div>
@@ -234,12 +285,15 @@ export default function ReviewStep() {
           <CardContent>
             <div className="space-y-2">
               {eventDraft.coupons.map((coupon, index) => (
-                <div key={index} className="flex items-center justify-between border-b pb-2">
+                <div
+                  key={index}
+                  className="flex items-center justify-between border-b pb-2"
+                >
                   <div>
                     <p className="font-mono font-semibold">{coupon.code}</p>
                     <p className="text-sm text-muted-foreground">
-                      {coupon.discountType === "percentage" 
-                        ? `${coupon.discountValue}% off` 
+                      {coupon.discountType === "percentage"
+                        ? `${coupon.discountValue}% off`
                         : `$${coupon.discountValue.toFixed(2)} off`}
                     </p>
                   </div>
@@ -259,28 +313,53 @@ export default function ReviewStep() {
         <CardContent>
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div className="flex items-center gap-2">
-              {eventDraft.visibility === "public" ? <IconCheck className="w-4 h-4 text-green-600" /> : null}
+              {eventDraft.visibility === "public" ? (
+                <IconCheck className="w-4 h-4 text-green-600" />
+              ) : null}
               <span>Visibility: {eventDraft.visibility}</span>
             </div>
             <div className="flex items-center gap-2">
-              {eventDraft.allowMultipleSessions ? <IconCheck className="w-4 h-4 text-green-600" /> : null}
-              <span>Multiple Sessions: {eventDraft.allowMultipleSessions ? "Yes" : "No"}</span>
+              {eventDraft.allowMultipleSessions ? (
+                <IconCheck className="w-4 h-4 text-green-600" />
+              ) : null}
+              <span>
+                Multiple Sessions:{" "}
+                {eventDraft.allowMultipleSessions ? "Yes" : "No"}
+              </span>
             </div>
             <div className="flex items-center gap-2">
-              {eventDraft.autoApproveParticipants ? <IconCheck className="w-4 h-4 text-green-600" /> : null}
-              <span>Auto Approve: {eventDraft.autoApproveParticipants ? "Yes" : "No"}</span>
+              {eventDraft.autoApproveParticipants ? (
+                <IconCheck className="w-4 h-4 text-green-600" />
+              ) : null}
+              <span>
+                Auto Approve:{" "}
+                {eventDraft.autoApproveParticipants ? "Yes" : "No"}
+              </span>
             </div>
             <div className="flex items-center gap-2">
-              {eventDraft.allowCoupons ? <IconCheck className="w-4 h-4 text-green-600" /> : null}
-              <span>Coupons: {eventDraft.allowCoupons ? "Enabled" : "Disabled"}</span>
+              {eventDraft.allowCoupons ? (
+                <IconCheck className="w-4 h-4 text-green-600" />
+              ) : null}
+              <span>
+                Coupons: {eventDraft.allowCoupons ? "Enabled" : "Disabled"}
+              </span>
             </div>
             <div className="flex items-center gap-2">
-              {eventDraft.allowReferrals ? <IconCheck className="w-4 h-4 text-green-600" /> : null}
-              <span>Referrals: {eventDraft.allowReferrals ? "Enabled" : "Disabled"}</span>
+              {eventDraft.allowReferrals ? (
+                <IconCheck className="w-4 h-4 text-green-600" />
+              ) : null}
+              <span>
+                Referrals: {eventDraft.allowReferrals ? "Enabled" : "Disabled"}
+              </span>
             </div>
             <div className="flex items-center gap-2">
-              {eventDraft.enableEmailNotifications ? <IconCheck className="w-4 h-4 text-green-600" /> : null}
-              <span>Email Notifications: {eventDraft.enableEmailNotifications ? "On" : "Off"}</span>
+              {eventDraft.enableEmailNotifications ? (
+                <IconCheck className="w-4 h-4 text-green-600" />
+              ) : null}
+              <span>
+                Email Notifications:{" "}
+                {eventDraft.enableEmailNotifications ? "On" : "Off"}
+              </span>
             </div>
           </div>
         </CardContent>

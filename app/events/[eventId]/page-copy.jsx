@@ -1,0 +1,284 @@
+"use client";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import EventHeader from "./components-old/EventHeader";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import api from "@/lib/api";
+import { toast } from "sonner";
+import Coupons from "./components-old/Coupons";
+import Ticket from "./components-old/Ticket";
+import Sessions from "./components-old/Sessions";
+import InputField from "./components-old/InputField";
+import Referrals from "./components-old/Referrals";
+import ProtectedComp from "@/components/ProtectedComp";
+import GuestSpeaker from "./components-old/GuestSpeaker";
+import { RegistrationDashboard } from "./components-old/registration";
+import { Benefits } from "./components-old/Benefits";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { QuickActions } from "./components-old/QuickActions";
+import { useEventStore } from "@/store/eventStore";
+import { FullPageLoader } from "@/components/ui/full-page-loader";
+import { LoaderFour, LoaderOne } from "@/components/ui/loader";
+import { Megaphone, Share2 } from "lucide-react";
+import { IconShare3 } from "@tabler/icons-react";
+
+const EventPage = () => {
+  const params = useParams();
+  const eventId = params.eventId;
+  const [eventData, setEventData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { setCurrentEvent } = useEventStore();
+
+  const handleRegistrationStatusChange = (data) => {
+    setEventData((prev) => ({
+      ...prev,
+      event: {
+        ...prev.event,
+        isRegistrationOpen: data.isRegistrationOpen,
+        registrationStart: data.registrationStart,
+        registrationEnd: data.registrationEnd,
+      },
+    }));
+  };
+
+  useEffect(() => {
+    const fetchEventData = async () => {
+      try {
+        const response = await api.get(`/events/admin/${eventId}`);
+        const data = await response.data;
+        if (data.success) {
+          console.log("Fetched Event Data:", data.event);
+          setEventData(data.event);
+          setCurrentEvent(data.event);
+        } else {
+          setError("Failed to fetch event data");
+        }
+      } catch (err) {
+        setError("Error fetching event data");
+        console.error("Error:", err);
+        toast.error(
+          err.response.data.message ||
+            "Failed to load event data. Please try again later.",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (eventId) {
+      fetchEventData();
+    }
+  }, [eventId]);
+
+  if (loading) {
+    return <FullPageLoader />;
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-dvh">
+        <Card className="w-full max-w-md">
+          <CardContent className="p-6 text-center">
+            <h2 className="text-xl font-semibold mb-2 text-destructive">
+              Error
+            </h2>
+            <p className="text-muted-foreground">{error}</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!eventData) {
+    return (
+      <div className="flex items-center justify-center min-h-dvh">
+        <Card className="w-full max-w-md">
+          <CardContent className="p-6 text-center">
+            <h2 className="text-xl font-semibold mb-2">Event Not Found</h2>
+            <p className="text-muted-foreground">
+              The requested event could not be found.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const event = eventData;
+
+  return (
+    <div className="mx-auto py-6 mb-10 h-full w-full">
+      {/* Event Header */}
+      <div className="mb-8">
+        {/* <EventHeader
+          event={event}
+          organization={organization}
+          setEventData={setEventData}
+        /> */}
+      </div>
+
+      {/* Quick Actions - Mobile Only (below header) */}
+      <div className="mb-6 lg:hidden">
+        <QuickActions event={event} setEventData={setEventData} />
+      </div>
+
+      {/* Bento Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 auto-rows-min">
+        {/* Registration Dashboard */}
+        <ProtectedComp roles={["admin", "owner", "manager"]}>
+          <div className="md:col-span-3 lg:col-span-4 lg:row-span-2">
+            <RegistrationDashboard
+              eventId={event._id}
+              onStatusChange={handleRegistrationStatusChange}
+            />
+          </div>
+        </ProtectedComp>
+
+        {/* Quick Actions + Share + Announcements - Desktop Only */}
+        <div className="hidden lg:flex md:col-span-3 lg:col-span-2 flex-col gap-2 h-full justify-between">
+          <QuickActions event={event} setEventData={setEventData} />
+
+          <Card className="border-none dark:bg-card/80 shadow-sm transition-[box-shadow,transform] duration-200 ease-out hover:shadow-md gap-2 p-4">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <IconShare3 className="h-5 w-h text-primary" />
+                Share Hub
+              </CardTitle>
+              <CardDescription className="text-sm">
+                Spread the word about your event easily and boost attendance
+                across your event.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild className="w-full">
+                <Link href={`/events/${event.slug}/share`}>Share Event</Link>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <ProtectedComp roles={["admin", "owner", "manager"]}>
+            <Card className="border-none shadow-sm hover:shadow-md transition-shadow dark:bg-card/80 gap-2 p-4">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Megaphone className="h-5 w-5 text-primary" />
+                  Announcements
+                </CardTitle>
+                <CardDescription className="text-sm">
+                  Keep attendees informed in real time about any important event
+                  updates.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button asChild className="w-full">
+                  <Link href={`/events/${event.slug}/announcements`}>
+                    Manage Announcements
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </ProtectedComp>
+        </div>
+
+        {/* Share Hub - Mobile/Tablet */}
+        <div className="lg:hidden md:col-span-3">
+          <Card className="border-none shadow-sm hover:shadow-md transition-shadow dark:bg-card/80 gap-2 p-4">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <IconShare3 className="w-5 h-5 text-primary" />
+                Share Hub
+              </CardTitle>
+              <CardDescription className="text-sm">
+                Spread the word about your event easily and boost attendance
+                across your event.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild className="w-full">
+                <Link href={`/events/${event.slug}/share`}>Share Event</Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Announcements - Mobile/Tablet */}
+        <ProtectedComp roles={["admin", "owner", "manager"]}>
+          <div className="lg:hidden md:col-span-3">
+            <Card className="border-none shadow-sm hover:shadow-md transition-shadow dark:bg-card/80 gap-2 p-4">
+              <CardHeader className="">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Megaphone className="h-5 w-5 text-primary" />
+                  Announcements
+                </CardTitle>
+                <CardDescription className="text-sm">
+                  Keep attendees informed in real time about any important event
+                  updates.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button asChild className="w-full">
+                  <Link href={`/events/${event._id}/announcements`}>
+                    Manage Announcements
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        </ProtectedComp>
+
+        {/* Tickets */}
+        <div className="md:col-span-3 lg:col-span-4">
+          <Ticket eventId={event._id} className={"h-[600px]"} />
+        </div>
+
+        {/* Custom Fields */}
+        <div className="md:col-span-3 lg:col-span-2 ">
+          <InputField eventId={event._id} className={"h-[600px]"} />
+        </div>
+
+        {/* Sessions */}
+        <div className="md:col-span-3 lg:col-span-4">
+          <Sessions eventId={event._id} className={"h-[600px]"} />
+        </div>
+
+        {/* Benefits */}
+        <div className="md:col-span-3 lg:col-span-2">
+          <Benefits eventId={event._id} className={"h-[600px]"} />
+        </div>
+
+        {/* Guest Speakers */}
+        <div className="md:col-span-3 lg:col-span-3 h-full">
+          {/* <ScrollArea className="h-[500px]"> */}
+          <GuestSpeaker eventId={event._id} />
+          {/* </ScrollArea> */}
+        </div>
+
+        {/* Referrals
+        // <div className="hidden">
+        //   <ScrollArea className="h-[420px]">
+        //     <Referrals eventId={event._id} />
+        //   </ScrollArea>
+        // </div> */}
+
+        {/* Coupons */}
+        <ProtectedComp roles={["admin", "owner", "manager"]}>
+          <div className="md:col-span-3 h-full">
+            {/* <ScrollArea className="h-[500px]"> */}
+            <Coupons eventId={event._id} />
+            {/* </ScrollArea> */}
+          </div>
+        </ProtectedComp>
+      </div>
+    </div>
+  );
+};
+
+export default EventPage;

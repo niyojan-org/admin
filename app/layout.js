@@ -3,23 +3,20 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import ClientLayout from "./Clientlayout";
 import { ThemeProvider } from "@/components/theme-provider";
-
-
+import AppSidebar from "@/components/layout/AppSidebar";
 
 const sourceCodePro = Source_Code_Pro({
   variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
-})
+});
 
 const sourceSans3 = Source_Sans_3({
   variable: "--font-sans",
   subsets: ["latin"],
   display: "swap",
-})
-
-
+});
 
 export const metadata = {
   title: "Admin - Orgatick",
@@ -32,13 +29,18 @@ export default function RootLayout({ children }) {
       <body
         className={`${sourceSans3.variable} ${sourceCodePro.variable} antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
+        >
           <ClientLayout> {children}</ClientLayout>
+          {/* <AppSidebar />
+
+          {children} */}
           <Toaster />
         </ThemeProvider>
-        
       </body>
-
     </html>
   );
 }
