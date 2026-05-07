@@ -28,4 +28,24 @@ export const EventStore = create((set, get) => ({
       set({ loading: false });
     }
   },
+  refreshEvent: async () => {
+    try {
+      set({ loading: true, error: null });
+      const eventId = get().event?.slug;
+      if (!eventId) {
+        return null;
+      }
+      const response = await api.get(`/events/admin/${eventId}`);
+      set({ event: response.data.event });
+    } catch (error) {
+      set({
+        error: error?.response?.data?.message || "Failed to refresh event data",
+      });
+      toast.error(
+        error?.response?.data?.message || "Failed to refresh event data",
+      );
+    } finally {
+      set({ loading: false });
+    }
+  },
 }));

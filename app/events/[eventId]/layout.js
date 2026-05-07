@@ -13,6 +13,7 @@ const pageLabels = {
   checkin: "Check-in",
   edit: "Edit Event",
   tickets: "Tickets",
+  sessions: "Sessions",
 };
 
 function EventBreadcrumbs({ event, eventId }) {

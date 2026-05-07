@@ -1,15 +1,6 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { cn } from "@/lib/utils";
+import { useParams, useRouter } from "next/navigation";
 import {
   IconCalendarEvent,
-  IconCalendarTime,
   IconCopy,
   IconCurrencyRupee,
   IconEdit,
@@ -21,14 +12,20 @@ import {
   IconUserCheck,
   IconUsersGroup,
 } from "@tabler/icons-react";
-import { useParams, useRouter } from "next/navigation";
+
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 
 const numberFormatter = new Intl.NumberFormat("en-IN", {
   maximumFractionDigits: 0,
-});
-
-const priceFormatter = new Intl.NumberFormat("en-IN", {
-  maximumFractionDigits: 2,
 });
 
 const toDate = (value) => {
@@ -52,13 +49,6 @@ const formatDateTime = (value) => {
   }).format(date);
 };
 
-const formatPrice = (price) => {
-  const numericPrice = Number(price || 0);
-  return numericPrice === 0
-    ? "Free"
-    : `Rs ${priceFormatter.format(numericPrice)}`;
-};
-
 const getSalesWindowState = ({ isActive, salesStartTime, salesEndTime }) => {
   if (!isActive) {
     return { label: "Paused", variant: "secondary" };
@@ -79,26 +69,20 @@ const getSalesWindowState = ({ isActive, salesStartTime, salesEndTime }) => {
   return { label: "Live", variant: "success" };
 };
 
-function MetricCard({ icon: Icon, label, value, helper, toneClass }) {
+function StatTile({ icon: Icon, label, value, toneClass }) {
   return (
-    <div className="rounded-2xl border bg-muted/20 p-3">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-xs font-medium text-muted-foreground">{label}</p>
-          <p
-            className={cn(
-              "mt-1 text-lg font-semibold text-foreground",
-              toneClass,
-            )}
-          >
-            {value}
-          </p>
-        </div>
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border bg-background text-muted-foreground shadow-sm">
-          <Icon className="h-4 w-4" />
-        </div>
+    <div className="rounded-2xl border border-border/60 bg-background/80 p-3">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+          {label}
+        </p>
+        <Icon className="h-4 w-4 text-muted-foreground" />
       </div>
-      {/* <p className="mt-2 text-xs text-muted-foreground">{helper}</p> */}
+      <p
+        className={cn("mt-2 text-lg font-semibold text-foreground", toneClass)}
+      >
+        {value}
+      </p>
     </div>
   );
 }
@@ -106,30 +90,24 @@ function MetricCard({ icon: Icon, label, value, helper, toneClass }) {
 function TicketCard({
   ticket,
   className,
-  onEdit,
   onDuplicate,
   onToggleActive,
+  isBusy = false,
   ...props
 }) {
-  const isActive = Boolean(ticket?.isActive);
-  const isGroupTicket = Boolean(ticket?.isGroupTicket);
-
-  const capacity = Number(ticket?.capacity || 0);
-  const sold = Number(ticket?.sold || 0);
-  const available = Math.max(capacity - sold, 0);
-  const soldPercent = capacity > 0 ? Math.min((sold / capacity) * 100, 100) : 0;
-  const soldPercentLabel = Math.round(soldPercent);
-  const salesState = getSalesWindowState(ticket || {});
   const router = useRouter();
   const params = useParams();
   const routeEventId = Array.isArray(params?.eventId)
     ? params.eventId[0]
     : params?.eventId;
 
-  const handleEdit = () => {
-    if (!routeEventId) return;
-    router.push(`/events/${routeEventId}/tickets/edit?id=${ticket._id}`);
-  };
+  const isActive = Boolean(ticket?.isActive);
+  const isGroupTicket = Boolean(ticket?.isGroupTicket);
+  const capacity = Number(ticket?.capacity || 0);
+  const sold = Number(ticket?.sold || 0);
+  const available = Math.max(capacity - sold, 0);
+  const soldPercent = capacity > 0 ? Math.min((sold / capacity) * 100, 100) : 0;
+  const salesState = getSalesWindowState(ticket || {});
 
   const availabilityLabel =
     sold >= capacity && capacity > 0
@@ -138,32 +116,34 @@ function TicketCard({
         ? "No sales yet"
         : available <= Math.max(10, Math.ceil(capacity * 0.15))
           ? "Low availability"
-          : "Open inventory";
+          : "Healthy inventory";
 
-  const progressToneClass =
-    soldPercent >= 100
-      ? "text-destructive"
-      : soldPercent >= 70
-        ? "text-amber-600"
-        : "text-emerald-600";
+  const priceLabel =
+    Number(ticket?.price || 0) === 0
+      ? "Free"
+      : `${numberFormatter.format(Number(ticket?.price || 0))}`;
+
+  const handleEdit = () => {
+    if (!routeEventId) return;
+    router.push(`/events/${routeEventId}/tickets/edit?id=${ticket._id}`);
+  };
 
   return (
     <Card
       className={cn(
-        "group h-full w-full max-w-md gap-0 overflow-hidden border-border/70 p-0 shadow-sm transition-all duration-300 hover:border-primary/25 hover:shadow-xl sm:p-0 justify-between",
+        "h-full shadow-sm transition-all duration-300 hover:shadow-xl",
         className,
       )}
       {...props}
     >
-      {/* CARD HEADER */}
-      <div className="border-b bg-linear-to-br from-background via-background to-muted/30 px-5 pb-0 py-2 pb-4">
-        <div className="flex min-w-0 items-start gap-3">
+      <CardHeader className="border-b border-border">
+        <div className="flex items-start gap-4">
           <div
             className={cn(
-              "flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border shadow-sm",
+              "flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border",
               isGroupTicket
-                ? "border-primary/15 bg-primary/10 text-primary"
-                : "border-border/60 bg-muted/70 text-foreground",
+                ? "border-primary/20 bg-primary/10 text-primary"
+                : "border-border/60 bg-muted/60 text-foreground",
             )}
           >
             {isGroupTicket ? (
@@ -174,227 +154,188 @@ function TicketCard({
           </div>
 
           <div className="min-w-0">
-            <div className="flex items-center gap-3">
-              <h3 className="truncate text-lg font-semibold tracking-tight text-foreground">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge
+                variant={isActive ? "success" : "secondary"}
+                className="rounded-full px-3 py-1"
+              >
+                {isActive ? (
+                  <IconShieldCheck className="mr-1 h-3.5 w-3.5" />
+                ) : (
+                  <IconShieldX className="mr-1 h-3.5 w-3.5" />
+                )}
+                {isActive ? "Active" : "Inactive"}
+              </Badge>
+              <Badge
+                variant={salesState.variant}
+                className="rounded-full px-3 py-1"
+              >
+                {salesState.label}
+              </Badge>
+              <Badge variant="outline" className="rounded-full px-3 py-1">
+                {isGroupTicket ? "Group ticket" : "Individual"}
+              </Badge>
+            </div>
+
+            <div className="mt-2">
+              <h3 className="truncate text-xl font-semibold tracking-tight text-foreground">
                 {ticket?.type || "Ticket"}
               </h3>
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge
-                  variant={isActive ? "success" : "secondary"}
-                  className="gap-1 px-2.5 py-1"
-                >
-                  {isActive ? (
-                    <IconShieldCheck className="h-3.5 w-3.5" />
-                  ) : (
-                    <IconShieldX className="h-3.5 w-3.5" />
-                  )}
-                  {isActive ? "Active" : "Inactive"}
-                </Badge>
-
-                <Badge variant="outline" className="px-2.5 py-1">
-                  {isGroupTicket ? "Group" : "Individual"}
-                </Badge>
-              </div>
+              <p className="line-clamp-2 text-sm leading-6 text-muted-foreground">
+                {ticket?.description ||
+                  (isGroupTicket
+                    ? "Built for team registrations with shared participant rules."
+                    : "Single attendee access with its own inventory and sales schedule.")}
+              </p>
             </div>
-            <p className="mt-1 line-clamp-2 text-sm leading-6 text-muted-foreground">
-              {ticket?.description ||
-                (isGroupTicket
-                  ? "Designed for grouped registrations with shared participant rules."
-                  : "Single-attendee ticket with its own inventory and sales window.")}
-            </p>
           </div>
         </div>
-      </div>
+      </CardHeader>
 
-      <CardContent className="space-y-2 px-2 py-2 gap-2">
-        {/* SECTION 1 */}
+      <CardContent>
         <div className="grid grid-cols-3 gap-2">
-          <MetricCard
+          <StatTile
             icon={IconTicket}
             label="Capacity"
             value={numberFormatter.format(capacity)}
-            helper="Total bookable slots"
           />
-          <MetricCard
+          <StatTile
             icon={IconTrendingUp}
             label="Sold"
             value={numberFormatter.format(sold)}
-            helper="Completed registrations"
           />
-          <MetricCard
+          <StatTile
             icon={IconUserCheck}
             label="Available"
             value={numberFormatter.format(available)}
-            helper={availabilityLabel}
             toneClass={available > 0 ? "text-emerald-600" : "text-destructive"}
           />
         </div>
 
-        {/* SECTION 2 */}
-        <div className="grid grid-cols-3 items-center justify-between w-full gap-2">
-          {/* PRICE */}
-          <div className="col-span-1 rounded-2xl border bg-background/90 px-2 py-3 text-right shadow-sm backdrop-blur-sm w-full h-full">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
-              Price
-            </p>
-            <div className="mt-1 flex items-center justify-end gap-2 text-2xl font-semibold tracking-tight text-foreground">
-              {Number(ticket?.price || 0) === 0 ? (
-                <span>Free</span>
-              ) : (
-                <>
-                  <IconCurrencyRupee className="h-5 w-5" />
-                  <span>
-                    {numberFormatter.format(Number(ticket?.price || 0))}
-                  </span>
-                </>
-              )}
+        <div className="p-2">
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <p className="text-sm font-semibold text-foreground">
+                Sales progress
+              </p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {availabilityLabel}
+              </p>
             </div>
-            <p className="mt-1 text-xs text-muted-foreground">
-              {isGroupTicket ? "Per team" : "Per attendee"}
-            </p>
-          </div>
-
-          {/* SALES PROGRESS */}
-          <div className="col-span-2 rounded-2xl border bg-muted/20 px-2 py-1 space-y-2 h-full justify-between">
-            <div className="flex items-start justify-between gap-2">
-              <div>
-                <p className="text-sm font-semibold text-foreground">
-                  Sales progress
-                </p>
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {numberFormatter.format(sold)} sold out of{" "}
-                  {numberFormatter.format(capacity)} capacity
-                </p>
-              </div>
-              <div className="text-right">
-                <p className={cn("text-lg font-semibold", progressToneClass)}>
-                  {soldPercentLabel}%
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {availabilityLabel}
-                </p>
-              </div>
-            </div>
-
-            <Progress value={soldPercent} className="h-2.5 bg-muted" />
-
-            <div className="flex items-center justify-between gap-3 text-xs text-muted-foreground">
-              <span>{formatPrice(ticket?.price)}</span>
-              <span>{numberFormatter.format(available)} remaining</span>
+            <div className="text-right">
+              <p
+                className={cn(
+                  "text-lg font-semibold",
+                  soldPercent >= 100
+                    ? "text-destructive"
+                    : soldPercent >= 70
+                      ? "text-amber-600"
+                      : "text-emerald-600",
+                )}
+              >
+                {Math.round(soldPercent)}%
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {numberFormatter.format(available)} remaining
+              </p>
             </div>
           </div>
-        </div>
 
-        {/* SECTION 3 */}
-        <div className="grid grid-cols-1 gap-3 w-full">
-          <div className="rounded-2xl border bg-background p-2 shadow-sm">
-            <div className="flex items-center">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-                <IconCalendarEvent className="h-6 w-6" />
+          <Progress value={soldPercent} className="mt-2 h-2.5 bg-background" />
+
+          <div className="mt-4 grid gap-2 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border/60 bg-background/80 p-3">
+              <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                Price
+              </p>
+              <div className="mt-2 flex items-center gap-1 text-lg font-semibold text-foreground">
+                {Number(ticket?.price || 0) === 0 ? (
+                  <span>Free</span>
+                ) : (
+                  <>
+                    <IconCurrencyRupee className="h-4 w-4" />
+                    <span>{priceLabel}</span>
+                  </>
+                )}
               </div>
-              <span className="ml-1 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                Sales window
-              </span>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {isGroupTicket ? "Charged per team" : "Charged per attendee"}
+              </p>
             </div>
-            <div className="w-full flex flex-col items-center pt-1">
-              <Badge variant={salesState.variant} className="text-xs">
-                {salesState.label}
-              </Badge>
-              <div className="w-full flex flex-col items-center pt-2">
-                <p className="font-semibold">
+
+            <div className="rounded-2xl border border-border/60 bg-background/80 p-3">
+              <div className="flex items-center gap-2">
+                <IconCalendarEvent className="h-4 w-4 text-muted-foreground" />
+                <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+                  Sales window
+                </p>
+              </div>
+              <div className="mt-2 space-y-1.5 text-sm">
+                <p className="font-medium text-foreground">
                   {formatDateTime(ticket?.salesStartTime)}
                 </p>
-                <p className="text-sm text-muted-foreground">TO</p>
-                <p className="font-semibold">
+                <p className="text-muted-foreground">to</p>
+                <p className="font-medium text-foreground">
                   {formatDateTime(ticket?.salesEndTime)}
                 </p>
               </div>
             </div>
           </div>
 
-          {isGroupTicket ? (
-            <div className="w-full h-full">
-              <div className="rounded-2xl border bg-background p-2 shadow-sm h-full">
-                <div className="flex items-center">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-                    <IconUsersGroup className="h-6 w-6" />
-                  </div>
-                  <span className="ml-1 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-                    Group Rule
-                  </span>
-                </div>
-                <div className="w-full flex flex-col items-center pt-1">
-                  <p className="">Group can have:</p>
-                  <p className="">
-                    At least -{" "}
-                    <span className="text-primary font-bold text-lg">
-                      {ticket.groupSettings.minParticipants}
-                    </span>
-                  </p>
-                  <p className="">
-                    At max -{" "}
-                    <span className="text-primary font-bold text-lg">
-                      {ticket.groupSettings.maxParticipants}
-                    </span>
-                  </p>
-                  <p>
-                    Member{" "}
-                    {ticket.groupSettings.groupLeaderRequired &&
-                      "including leader"}
-                  </p>
-                </div>
-              </div>
+          {isGroupTicket && ticket?.groupSettings ? (
+            <div className="mt-3 rounded-2xl border border-primary/10 bg-primary/5 p-3 text-sm">
+              <p className="font-medium text-foreground">Group rule</p>
+              <p className="mt-1 text-muted-foreground">
+                {ticket.groupSettings.minParticipants} to{" "}
+                {ticket.groupSettings.maxParticipants} participants
+                {ticket.groupSettings.groupLeaderRequired
+                  ? ", including a group leader."
+                  : "."}
+              </p>
             </div>
           ) : (
-            <div className="rounded-2xl border bg-background p-2 shadow-sm w-full">
-              <div className="flex items-center">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
-                  <IconCalendarTime className="h-6 w-6" />
-                </div>
-                <span className="ml-1 text-xs font-medium uppercase text-muted-foreground">
-                  Ticket Access
-                </span>
-              </div>
-              <p className="text-center font-semibold">
-                Single Attendee Admission
-              </p>
+            <div className="mt-3 rounded-2xl border border-border/60 bg-background/80 p-3 text-sm text-muted-foreground">
+              This ticket is configured for single attendee admission.
             </div>
           )}
         </div>
       </CardContent>
 
-      <div className="grid h-12 w-full grid-cols-3 gap-0 border-t p-0">
-        <button
+      <CardFooter className="grid grid-cols-1 gap-2 border-t border-border sm:grid-cols-3">
+        <Button
           type="button"
-          className="flex h-full items-center justify-center gap-2 border-r rounded-bl-xl text-sm font-semibold text-foreground transition-colors hover:bg-muted cursor-pointer"
+          variant="outline"
+          className="h-10 rounded-full"
           onClick={handleEdit}
         >
           <IconEdit className="h-4 w-4" />
           Edit
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
-          className="flex h-full items-center justify-center gap-2 border-r text-sm font-semibold text-foreground transition-colors hover:bg-muted cursor-pointer"
+          variant="outline"
+          className="h-10 rounded-full"
           onClick={() => onDuplicate?.(ticket)}
         >
           <IconCopy className="h-4 w-4" />
           Duplicate
-        </button>
+        </Button>
 
-        <button
+        <Button
           type="button"
           className={cn(
-            "flex h-full items-center justify-center gap-2 rounded-br-xl text-sm font-semibold text-white transition-colors cursor-pointer",
+            "h-10 rounded-full text-white",
             isActive
               ? "bg-destructive hover:bg-destructive/90"
-              : "bg-success hover:bg-success/90",
+              : "bg-emerald-600 hover:bg-emerald-500",
           )}
+          disabled={isBusy}
           onClick={() => onToggleActive?.(ticket)}
         >
           {isActive ? "Deactivate" : "Activate"}
-        </button>
-      </div>
+        </Button>
+      </CardFooter>
     </Card>
   );
 }

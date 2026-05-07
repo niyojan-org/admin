@@ -3,8 +3,8 @@
 import { useParams, useRouter } from "next/navigation";
 import { IconArrowRight, IconPlus } from "@tabler/icons-react";
 
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -17,12 +17,12 @@ import { cn } from "@/lib/utils";
 
 import { EventStore } from "../../event-store";
 import ManagementBanner from "../../components/management-banner";
-import { EventTicketStore } from "./event-ticket-store";
-import AddingTicket from "./adding-tickets";
-import TicketCard from "./ticket-card";
-import TicketInfo from "./ticket-info";
+import { EventSessionStore } from "./event-session-store";
+import AddingSession from "./adding-session";
+import SessionCard from "./session-card";
+import SessionInfo from "./session-info";
 
-function TicketPageSkeleton() {
+function SessionPageSkeleton() {
   return (
     <div className="space-y-6">
       <Skeleton className="h-52 rounded-3xl" />
@@ -40,7 +40,7 @@ function TicketPageSkeleton() {
   );
 }
 
-export function TicketMainPage({ className, needCreateOption = true }) {
+export function SessionMainPage({ className, needCreateOption = true }) {
   const router = useRouter();
   const params = useParams();
   const routeEventId = Array.isArray(params?.eventId)
@@ -48,50 +48,57 @@ export function TicketMainPage({ className, needCreateOption = true }) {
     : params?.eventId;
 
   const { event, loading } = EventStore();
-  const { loading: ticketActionLoading } = EventTicketStore();
-  const tickets = event?.tickets || [];
+  const { loading: sessionActionLoading } = EventSessionStore();
+  const sessions = event?.sessions || [];
+  const allowMultipleSessions = event?.allowMultipleSessions ?? true;
 
   if (loading && !event) {
-    return <TicketPageSkeleton />;
+    return <SessionPageSkeleton />;
   }
 
-  const handleCreateTicket = () => {
-    if (!routeEventId) return;
-    router.push(`/events/${routeEventId}/tickets/create`);
+  const canCreate =
+    allowMultipleSessions ? sessions.length < 30 : sessions.length === 0;
+
+  const handleCreateSession = () => {
+    if (!routeEventId || !canCreate) return;
+    router.push(`/events/${routeEventId}/sessions/create`);
   };
 
-  const handleDuplicateTicket = (ticket) => {
+  const handleDuplicateSession = (session) => {
     if (!routeEventId) return;
-    router.push(`/events/${routeEventId}/tickets/create?copy=${ticket._id}`);
+    router.push(`/events/${routeEventId}/sessions/create?copy=${session._id}`);
   };
 
-  const toggleTicketStatus = (ticket) => {
-    EventTicketStore.getState().toggleTicketStatus(ticket.type);
+  const toggleSessionStatus = (session) => {
+    EventSessionStore.getState().toggleSessionStatus(session._id);
+  };
+
+  const enableCheckIn = (session, payload) => {
+    EventSessionStore.getState().enableCheckIn(session._id, payload);
   };
 
   return (
     <div className={cn("space-y-6", className)}>
       <ManagementBanner />
 
-      <TicketInfo
-        tickets={tickets}
-        handleCreateTicket={handleCreateTicket}
-        needCreateOption={needCreateOption}
+      <SessionInfo
+        sessions={sessions}
+        onCreate={handleCreateSession}
+        canCreate={needCreateOption && canCreate}
       />
 
-      {tickets.length === 0 ? (
+      {sessions.length === 0 ? (
         <Card className="border-dashed border-border/70 bg-muted/20 p-6 shadow-none sm:p-8">
           <CardHeader className="gap-3 p-0">
             <Badge variant="secondary" className="w-fit rounded-full px-3 py-1">
-              No tickets yet
+              No sessions yet
             </Badge>
             <CardTitle className="text-2xl font-semibold tracking-tight">
-              Start with your first ticket type
+              Add your first session to the agenda
             </CardTitle>
             <CardDescription className="max-w-xl text-sm leading-6 sm:text-base">
-              Add a general pass, early bird offer, VIP tier, or a team-based
-              registration option. You can refine timings and inventory any time
-              later.
+              Sessions help attendees understand the flow of your event. Add a
+              keynote, workshop, or panel to get started.
             </CardDescription>
           </CardHeader>
           {needCreateOption && (
@@ -99,10 +106,11 @@ export function TicketMainPage({ className, needCreateOption = true }) {
               <Button
                 size="lg"
                 className="rounded-full px-5"
-                onClick={handleCreateTicket}
+                onClick={handleCreateSession}
+                disabled={!canCreate}
               >
                 <IconPlus className="h-4 w-4" />
-                Add your first ticket
+                Add your first session
               </Button>
             </CardContent>
           )}
@@ -112,15 +120,15 @@ export function TicketMainPage({ className, needCreateOption = true }) {
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h3 className="text-xl font-semibold tracking-tight text-foreground">
-                Current ticket lineup
+                Current session lineup
               </h3>
               <p className="text-sm text-muted-foreground">
-                Review pricing, inventory, and sales availability at a glance.
+                Review timing, check-in status, and locations at a glance.
               </p>
             </div>
             {!needCreateOption && (
               <Badge variant="outline" className="rounded-full px-3 py-1">
-                {tickets.length} configured tickets
+                {sessions.length} configured sessions
               </Badge>
             )}
           </div>
@@ -131,26 +139,28 @@ export function TicketMainPage({ className, needCreateOption = true }) {
               needCreateOption && "2xl:grid-cols-3",
             )}
           >
-            {tickets.map((ticket) => (
-              <TicketCard
-                key={ticket._id}
-                ticket={ticket}
-                onDuplicate={handleDuplicateTicket}
-                onToggleActive={toggleTicketStatus}
-                isBusy={ticketActionLoading}
+            {sessions.map((session) => (
+              <SessionCard
+                key={session._id}
+                session={session}
+                onDuplicate={handleDuplicateSession}
+                onToggleActive={toggleSessionStatus}
+                onEnableCheckIn={enableCheckIn}
+                isBusy={sessionActionLoading}
               />
             ))}
 
-            {needCreateOption && tickets.length < 7 && (
-              <AddingTicket onClick={handleCreateTicket} />
+            {needCreateOption && canCreate && (
+              <AddingSession onClick={handleCreateSession} />
             )}
           </div>
 
-          {needCreateOption && tickets.length >= 7 && (
+          {needCreateOption && !canCreate && (
             <div className="flex items-center justify-between rounded-3xl border border-border/70 bg-background/80 px-4 py-3 text-sm text-muted-foreground">
               <span>
-                You have reached the current recommendation of 7 ticket types
-                for a simple buyer journey.
+                {allowMultipleSessions
+                  ? "You have reached the maximum of 30 sessions for this event."
+                  : "Only one session is allowed for this event."}
               </span>
               <span className="inline-flex items-center gap-1 font-medium text-foreground">
                 Keep it focused

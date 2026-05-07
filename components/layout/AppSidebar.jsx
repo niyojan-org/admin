@@ -32,6 +32,7 @@ import SidebarHeader from "./sidebar/SidebarHeader";
 import NavigationItem from "./sidebar/NavigationItem";
 import ThemeToggle from "./sidebar/ThemeToggle";
 import UserProfile from "./sidebar/UserProfile";
+import { IconTicket } from "@tabler/icons-react";
 
 const navigationItems = [
   {
@@ -117,7 +118,13 @@ const getEventContextItems = (eventId) => [
     id: "event-tickets",
     label: "Tickets",
     href: `/events/${eventId}/tickets`,
-    icon: IconIdBadge2,
+    icon: IconTicket,
+  },
+  {
+    id: "event-sessions",
+    label: "Sessions",
+    href: `/events/${eventId}/sessions`,
+    icon: IconCalendarEvent,
   },
   {
     id: "event-registration",

@@ -103,7 +103,7 @@ function QuickActionsCard({ event, className }) {
       label: "Manage sessions",
       description: "Add sessions, update venues, and configure check-in.",
       icon: IconCalendarEvent,
-      href: `/events/${eventPath}/edit?step=sessions`,
+      href: `/events/${eventPath}/sessions`,
       roles: ["owner", "admin"],
     },
     {
