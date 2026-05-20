@@ -6,6 +6,7 @@ export const EventStore = create((set, get) => ({
   event: null,
   loading: false,
   error: null,
+  setEvent: (event) => set({ event }),
 
   fetchEvent: async (eventId) => {
     try {
@@ -31,7 +32,7 @@ export const EventStore = create((set, get) => ({
   refreshEvent: async () => {
     try {
       set({ loading: true, error: null });
-      const eventId = get().event?.slug;
+      const eventId = get().event?.slug || get().event?._id;
       if (!eventId) {
         return null;
       }

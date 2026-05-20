@@ -3,6 +3,7 @@ import AboutEvent from "./components/about-event";
 import EventBanner from "./components/EventBanner";
 import MetricsCard from "./components/metrics-card";
 import OverviewEvent from "./components/overview-event";
+import PublishWindow from "./components/publish/publish-window";
 import QuickActionsCard from "./components/quick-actions-card";
 import RegistrationCard from "./components/registration-card";
 import { EventStore } from "./event-store";
@@ -27,7 +28,8 @@ function Page() {
           </div>
         </div>
 
-        <div className="col-span-1 xl:col-span-4">
+        <div className="col-span-1 space-y-4 xl:col-span-4">
+          <PublishWindow event={event} />
           <QuickActionsCard event={event} />
         </div>
       </div>
