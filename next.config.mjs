@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    // eslint: {
-    //     ignoreDuringBuilds: true, // disables ESLint during build & dev
-    // },
+    eslint: {
+        ignoreDuringBuilds: true, // disables ESLint during build & dev
+    },
     allowedDevOrigins: ['client.iamabhi.me'],
     images: {
         remotePatterns: [

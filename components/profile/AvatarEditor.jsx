@@ -66,7 +66,7 @@ async function getCroppedImg(imageSrc, pixelCrop, rotation = 0) {
   ctx.drawImage(
     image,
     safeArea / 2 - image.width * 0.5,
-    safeArea / 2 - image.height * 0.5
+    safeArea / 2 - image.height * 0.5,
   );
 
   const data = ctx.getImageData(0, 0, safeArea, safeArea);
@@ -77,13 +77,17 @@ async function getCroppedImg(imageSrc, pixelCrop, rotation = 0) {
   ctx.putImageData(
     data,
     Math.round(0 - safeArea / 2 + image.width * 0.5 - pixelCrop.x),
-    Math.round(0 - safeArea / 2 + image.height * 0.5 - pixelCrop.y)
+    Math.round(0 - safeArea / 2 + image.height * 0.5 - pixelCrop.y),
   );
 
   return new Promise((resolve) => {
-    canvas.toBlob((blob) => {
-      resolve(blob);
-    }, "image/jpeg", 0.92);
+    canvas.toBlob(
+      (blob) => {
+        resolve(blob);
+      },
+      "image/jpeg",
+      0.92,
+    );
   });
 }
 
@@ -144,9 +148,9 @@ export function AvatarEditor({ user, triggerButton }) {
       const croppedBlob = await getCroppedImg(
         imageSrc,
         croppedAreaPixels,
-        rotation
+        rotation,
       );
-      
+
       // Create file from blob
       const croppedFile = new File([croppedBlob], selectedFile.name, {
         type: "image/jpeg",
@@ -183,9 +187,7 @@ export function AvatarEditor({ user, triggerButton }) {
       }
     } catch (error) {
       console.error("Avatar upload error:", error);
-      toast.error(
-        error.response?.data?.message || "Failed to upload avatar"
-      );
+      toast.error(error.response?.data?.message || "Failed to upload avatar");
     } finally {
       setIsUploading(false);
     }
@@ -276,14 +278,14 @@ export function AvatarEditor({ user, triggerButton }) {
               {/* Current Avatar Preview */}
               <div className="flex flex-col items-center gap-3">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/5 rounded-full blur-xl"></div>
+                  <div className="absolute inset-0 bg-linear-to-br from-primary/20 to-primary/5 rounded-full blur-xl"></div>
                   <Avatar className="relative h-24 w-24 sm:h-32 sm:w-32 border-4 border-background shadow-xl">
                     <AvatarImage
                       src={user?.avatar}
                       alt={user?.name}
                       className="object-cover"
                     />
-                    <AvatarFallback className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground text-2xl sm:text-3xl font-bold">
+                    <AvatarFallback className="bg-linear-to-br from-primary to-primary/80 text-primary-foreground text-2xl sm:text-3xl font-bold">
                       {getInitials(user?.name)}
                     </AvatarFallback>
                   </Avatar>
@@ -317,7 +319,9 @@ export function AvatarEditor({ user, triggerButton }) {
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <IconUpload className="h-4 w-4 sm:h-5 sm:w-5" />
-                  <span className="text-sm sm:text-base">Choose New Picture</span>
+                  <span className="text-sm sm:text-base">
+                    Choose New Picture
+                  </span>
                 </Button>
 
                 {user?.avatar && (
@@ -331,12 +335,16 @@ export function AvatarEditor({ user, triggerButton }) {
                     {isUploading ? (
                       <>
                         <IconLoader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
-                        <span className="text-sm sm:text-base">Removing...</span>
+                        <span className="text-sm sm:text-base">
+                          Removing...
+                        </span>
                       </>
                     ) : (
                       <>
                         <IconTrash className="h-4 w-4 sm:h-5 sm:w-5" />
-                        <span className="text-sm sm:text-base">Remove Picture</span>
+                        <span className="text-sm sm:text-base">
+                          Remove Picture
+                        </span>
                       </>
                     )}
                   </Button>
@@ -349,7 +357,7 @@ export function AvatarEditor({ user, triggerButton }) {
           {step === "crop" && imageSrc && (
             <div className="space-y-4 sm:space-y-6 py-2 sm:py-4">
               {/* Cropper Area */}
-              <div className="relative w-full h-[250px] sm:h-[350px] md:h-[400px] bg-muted/30 rounded-lg overflow-hidden border-2 border-dashed border-border">
+              <div className="relative w-full h-62.5 sm:h-87.5 md:h-100 bg-muted/30 rounded-lg overflow-hidden border-2 border-dashed border-border">
                 <Cropper
                   image={imageSrc}
                   crop={crop}

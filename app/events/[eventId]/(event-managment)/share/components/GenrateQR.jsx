@@ -59,7 +59,6 @@ const defaultOptions = {
   },
 };
 
-
 import PropTypes from "prop-types";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 
@@ -193,7 +192,7 @@ function GenerateQR({ qrData, setQrData }) {
     e.preventDefault();
     navigator.clipboard.writeText(qrData).then(
       () => toast.success("Link copied"),
-      () => toast.error("Copy failed")
+      () => toast.error("Copy failed"),
     );
   };
 
@@ -213,7 +212,7 @@ function GenerateQR({ qrData, setQrData }) {
           />
         </div>
 
-        <ScrollArea className="max-h-[40vh] sm:max-h-[300px] w-full">
+        <ScrollArea className="max-h-[40vh] sm:max-h-75 w-full">
           <div className="space-y-2">
             {/* Download Size */}
             <div className="grid grid-cols-2 gap-4">
@@ -225,7 +224,11 @@ function GenerateQR({ qrData, setQrData }) {
                   min={100}
                   max={1000}
                   value={downloadWidth ?? ""}
-                  onChange={(e) => setDownloadWidth(Math.max(100, Math.min(1000, Number(e.target.value))))}
+                  onChange={(e) =>
+                    setDownloadWidth(
+                      Math.max(100, Math.min(1000, Number(e.target.value))),
+                    )
+                  }
                   aria-label="Download Width"
                 />
               </div>
@@ -237,7 +240,11 @@ function GenerateQR({ qrData, setQrData }) {
                   min={100}
                   max={1000}
                   value={downloadHeight ?? ""}
-                  onChange={(e) => setDownloadHeight(Math.max(100, Math.min(1000, Number(e.target.value))))}
+                  onChange={(e) =>
+                    setDownloadHeight(
+                      Math.max(100, Math.min(1000, Number(e.target.value))),
+                    )
+                  }
                   aria-label="Download Height"
                 />
               </div>
@@ -256,7 +263,9 @@ function GenerateQR({ qrData, setQrData }) {
                     <SelectItem value="dots">Dots</SelectItem>
                     <SelectItem value="extra-rounded">Extra Rounded</SelectItem>
                     <SelectItem value="classy">Classy</SelectItem>
-                    <SelectItem value="classy-rounded">Classy Rounded</SelectItem>
+                    <SelectItem value="classy-rounded">
+                      Classy Rounded
+                    </SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -305,7 +314,10 @@ function GenerateQR({ qrData, setQrData }) {
             <div className="grid grid-cols-2 gap-4 w-full">
               <div className="w-full">
                 <Label htmlFor="corner-dot-shape">Corner Dot Shape</Label>
-                <Select value={cornerDotShape} onValueChange={setCornerDotShape}>
+                <Select
+                  value={cornerDotShape}
+                  onValueChange={setCornerDotShape}
+                >
                   <SelectTrigger id="corner-dot-shape" className="w-full">
                     <SelectValue />
                   </SelectTrigger>
@@ -352,7 +364,11 @@ function GenerateQR({ qrData, setQrData }) {
                   min={0}
                   max={1}
                   value={logoSize ?? ""}
-                  onChange={(e) => setLogoSize(Math.max(0, Math.min(1, Number(e.target.value))))}
+                  onChange={(e) =>
+                    setLogoSize(
+                      Math.max(0, Math.min(1, Number(e.target.value))),
+                    )
+                  }
                   aria-label="Logo Size"
                 />
               </div>
@@ -364,7 +380,11 @@ function GenerateQR({ qrData, setQrData }) {
                   min={0}
                   max={100}
                   value={logoMargin ?? ""}
-                  onChange={(e) => setLogoMargin(Math.max(0, Math.min(100, Number(e.target.value))))}
+                  onChange={(e) =>
+                    setLogoMargin(
+                      Math.max(0, Math.min(100, Number(e.target.value))),
+                    )
+                  }
                   aria-label="Logo Margin"
                 />
               </div>
@@ -387,7 +407,11 @@ function GenerateQR({ qrData, setQrData }) {
       {/* QR Preview & Download */}
       <CardContent className="flex flex-col items-center justify-center gap-4 w-full md:w-[45%]">
         <div className="w-32 h-32 sm:w-48 sm:h-48 md:w-56 md:h-56 flex items-center justify-center bg-white rounded-lg shadow border mx-auto">
-          <div ref={qrRef} aria-label="QR Code Preview" className="w-full h-full flex items-center justify-center" />
+          <div
+            ref={qrRef}
+            aria-label="QR Code Preview"
+            className="w-full h-full flex items-center justify-center"
+          />
         </div>
         <Button
           onClick={async () => {
@@ -399,9 +423,15 @@ function GenerateQR({ qrData, setQrData }) {
                 width: parseInt(downloadWidth),
                 height: parseInt(downloadHeight),
               });
-              await qrInstance.current.download({ name: "event-qr", extension: "png" });
+              await qrInstance.current.download({
+                name: "event-qr",
+                extension: "png",
+              });
               // Restore preview size
-              await qrInstance.current.update({ width: PREVIEW_SIZE, height: PREVIEW_SIZE });
+              await qrInstance.current.update({
+                width: PREVIEW_SIZE,
+                height: PREVIEW_SIZE,
+              });
             } finally {
               setLoading(false);
             }

@@ -3,7 +3,7 @@ import { toast } from "sonner";
 import { create } from "zustand";
 import { loginWithPasskey as passkeyLogin } from "@/lib/passkey";
 
-export const useUserStore = create((set, get) => ({
+export const useUserStore = create((set) => ({
   user: null,
   organization: null,
   loading: false,
@@ -35,8 +35,14 @@ export const useUserStore = create((set, get) => ({
         };
       }
 
-      const { userId, name, email: userEmail, avatar, token, organizationId } =
-        response.data.data;
+      const {
+        userId,
+        name,
+        email: userEmail,
+        avatar,
+        token,
+        organizationId,
+      } = response.data.data;
 
       // Store access token in memory
       setAccessToken(token);
@@ -62,7 +68,10 @@ export const useUserStore = create((set, get) => ({
   },
 
   // --- PASSKEY LOGIN ---
-  loginWithPasskey: async (useConditionalUI = false, abortController = null) => {
+  loginWithPasskey: async (
+    useConditionalUI = false,
+    abortController = null,
+  ) => {
     try {
       // For conditional UI, don't show loading state
       // This allows the form to remain interactive while waiting for passkey selection
@@ -126,7 +135,7 @@ export const useUserStore = create((set, get) => ({
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,32}$/;
     if (!strongPassword.test(password)) {
       toast.error(
-        "Weak password: must include 1 uppercase, 1 lowercase, 1 number, 1 special character, min 8 chars"
+        "Weak password: must include 1 uppercase, 1 lowercase, 1 number, 1 special character, min 8 chars",
       );
       return false;
     }
@@ -151,7 +160,7 @@ export const useUserStore = create((set, get) => ({
     try {
       await api.post("/auth/logout");
     } catch (e) {
-      // ignore network errors
+      console.error("Logout failed:", e);
     } finally {
       clearAccessToken();
       set({
@@ -176,12 +185,9 @@ export const useUserStore = create((set, get) => ({
         isAuthenticated: true,
       });
       try {
-
-      } catch {
-
-      }
+      } catch {}
       return true;
-    } catch (error) {
+    } catch {
       clearAccessToken();
       set({
         user: null,
@@ -249,7 +255,10 @@ export const useUserStore = create((set, get) => ({
   verifyTOTP: async (userId, totpCode) => {
     try {
       set({ loading: true, error: null });
-      const response = await api.post("/auth/totp/verify-login", { userId, token: totpCode });
+      const response = await api.post("/auth/totp/verify-login", {
+        userId,
+        token: totpCode,
+      });
 
       const { name, email, avatar, token, organizationId } = response.data.data;
 
@@ -278,7 +287,10 @@ export const useUserStore = create((set, get) => ({
   verifyBackupCode: async (userId, backupCode) => {
     try {
       set({ loading: true, error: null });
-      const response = await api.post("/auth/verify-backup-code", { userId, backupCode });
+      const response = await api.post("/auth/verify-backup-code", {
+        userId,
+        backupCode,
+      });
 
       const { name, email, avatar, token, organizationId } = response.data.data;
 
@@ -294,7 +306,8 @@ export const useUserStore = create((set, get) => ({
       toast.success(response.data.message || "Account recovered successfully!");
       return { success: true };
     } catch (error) {
-      const msg = error?.response?.data?.message || "Backup code verification failed";
+      const msg =
+        error?.response?.data?.message || "Backup code verification failed";
       set({ error: msg });
       toast.error(msg);
       return { success: false, error: msg };
