@@ -1,25 +1,14 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "motion/react";
-import { cn } from "@/lib/utils";
-import { IconChevronDown } from "@tabler/icons-react";
-import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'motion/react';
+import { cn } from '@/lib/utils';
+import { IconChevronDown } from '@tabler/icons-react';
+import { Badge } from '@/components/ui/badge';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
-const NavigationItem = ({
-  item,
-  isActive,
-  isCollapsed,
-  isExpanded,
-  onToggleExpanded,
-  onItemClick
-}) => {
+const NavigationItem = ({ item, isActive, isCollapsed, isExpanded, onToggleExpanded, onItemClick }) => {
   const hasChildren = item.children && item.children.length > 0;
   const pathname = usePathname();
 
@@ -38,10 +27,10 @@ const NavigationItem = ({
               <Link href={item.href} onClick={handleItemClick}>
                 <div
                   className={cn(
-                    "w-full flex justify-center h-10 px-3 items-center cursor-pointer transition-all duration-200",
+                    'w-full flex justify-center h-10 px-3 items-center cursor-pointer transition-all duration-200',
                     isActive
-                      ? "text-foreground font-bold"
-                      : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-foreground"
+                      ? 'text-foreground font-bold'
+                      : 'text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-foreground',
                   )}
                 >
                   <item.icon className="h-5 w-5 shrink-0" />
@@ -55,19 +44,14 @@ const NavigationItem = ({
         ) : (
           <button
             className={cn(
-              "w-full flex justify-start h-10 px-3 items-center cursor-pointer transition-all duration-200 relative group",
-              isActive
-                ? "text-foreground font-bold"
-                : "text-muted-foreground hover:text-foreground"
+              'w-full flex justify-start h-10 px-3 items-center cursor-pointer transition-all duration-200 relative group',
+              isActive ? 'text-foreground font-bold' : 'text-muted-foreground hover:text-foreground',
             )}
             onClick={onToggleExpanded}
           >
             <div className="flex items-center flex-1 min-w-0">
               <item.icon className="h-5 w-5 shrink-0" />
-              <span className={cn(
-                "ml-3 text-sm truncate overflow-hidden",
-                isActive ? "font-bold" : "font-medium"
-              )}>
+              <span className={cn('ml-3 text-sm truncate overflow-hidden', isActive ? 'font-bold' : 'font-medium')}>
                 {item.label}
               </span>
             </div>
@@ -78,10 +62,9 @@ const NavigationItem = ({
               </Badge>
             )}
 
-            <IconChevronDown className={cn(
-              "h-4 w-4 transition-transform ml-auto",
-              isExpanded ? "rotate-180" : "rotate-0"
-            )} />
+            <IconChevronDown
+              className={cn('h-4 w-4 transition-transform ml-auto', isExpanded ? 'rotate-180' : 'rotate-0')}
+            />
 
             {/* Underline effect for hover */}
             {!isActive && (
@@ -94,7 +77,7 @@ const NavigationItem = ({
           {isExpanded && !isCollapsed && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
+              animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               className="overflow-hidden pl-6 space-y-1"
             >
@@ -102,11 +85,11 @@ const NavigationItem = ({
                 <Link key={child.id} href={child.href} onClick={handleItemClick}>
                   <div
                     className={cn(
-                      "w-full flex justify-start h-9 text-sm items-center px-3 relative group transition-all duration-200 rounded-md",
-                      (child.href === "/events" && pathname === "/events") ||
-                        (child.href !== "/events" && pathname.startsWith(child.href))
-                        ? "text-foreground font-bold bg-accent"
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                      'w-full flex justify-start h-9 text-sm items-center px-3 relative group transition-all duration-200 rounded-md',
+                      (child.href === '/events' && pathname === '/events') ||
+                        (child.href !== '/events' && pathname.startsWith(child.href))
+                        ? 'text-foreground font-bold bg-accent'
+                        : 'text-muted-foreground hover:text-foreground hover:bg-accent/50',
                     )}
                   >
                     <child.icon className="h-4 w-4 mr-3" />
@@ -128,10 +111,10 @@ const NavigationItem = ({
           <TooltipTrigger asChild>
             <div
               className={cn(
-                "w-full flex justify-center h-10 px-3 items-center transition-all duration-200",
+                'w-full flex justify-center h-10 px-3 items-center transition-all duration-200',
                 isActive
-                  ? "text-foreground font-bold"
-                  : "text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-foreground"
+                  ? 'text-foreground font-bold'
+                  : 'text-muted-foreground hover:text-foreground hover:border-b-2 hover:border-foreground',
               )}
             >
               <item.icon className="h-5 w-5 shrink-0" />
@@ -144,18 +127,13 @@ const NavigationItem = ({
       ) : (
         <div
           className={cn(
-            "w-full flex justify-start h-10 px-3 items-center relative group transition-all duration-200",
-            isActive
-              ? "text-foreground font-bold"
-              : "text-muted-foreground hover:text-foreground"
+            'w-full flex justify-start h-10 px-3 items-center relative group transition-all duration-200',
+            isActive ? 'text-foreground font-bold' : 'text-muted-foreground hover:text-foreground',
           )}
         >
           <div className="flex items-center flex-1 min-w-0">
             <item.icon className="h-5 w-5 shrink-0" />
-            <span className={cn(
-              "ml-3 text-sm truncate overflow-hidden",
-              isActive ? "font-bold" : "font-medium"
-            )}>
+            <span className={cn('ml-3 text-sm truncate overflow-hidden', isActive ? 'font-bold' : 'font-medium')}>
               {item.label}
             </span>
           </div>

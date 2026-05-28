@@ -1,36 +1,27 @@
-"use client";
-import { cn } from "@/lib/utils";
-import React, { useState, createContext, useContext } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { IconMenu2, IconX } from "@tabler/icons-react";
-import Link from "next/link";
+'use client';
+import { cn } from '@/lib/utils';
+import React, { useState, createContext, useContext } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { IconMenu2, IconX } from '@tabler/icons-react';
+import Link from 'next/link';
 
 const SidebarContext = createContext(undefined);
 
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
   if (!context) {
-    throw new Error("useSidebar must be used within a SidebarProvider");
+    throw new Error('useSidebar must be used within a SidebarProvider');
   }
   return context;
 };
 
-export const SidebarProvider = ({
-  children,
-  open: openProp,
-  setOpen: setOpenProp,
-  animate = true,
-}) => {
+export const SidebarProvider = ({ children, open: openProp, setOpen: setOpenProp, animate = true }) => {
   const [openState, setOpenState] = useState(false);
 
   const open = openProp !== undefined ? openProp : openState;
   const setOpen = setOpenProp !== undefined ? setOpenProp : setOpenState;
 
-  return (
-    <SidebarContext.Provider value={{ open, setOpen, animate: animate }}>
-      {children}
-    </SidebarContext.Provider>
-  );
+  return <SidebarContext.Provider value={{ open, setOpen, animate: animate }}>{children}</SidebarContext.Provider>;
 };
 
 export const Sidebar = ({ children, open, setOpen, animate }) => {
@@ -55,12 +46,9 @@ export const DesktopSidebar = ({ className, children, ...props }) => {
   return (
     <>
       <motion.div
-        className={cn(
-          "h-full px-4 py-4 hidden  md:flex md:flex-col w-[300px] shrink-0",
-          className
-        )}
+        className={cn('h-full px-4 py-4 hidden  md:flex md:flex-col w-75 shrink-0', className)}
         animate={{
-          width: animate ? (open ? "300px" : "60px") : "300px",
+          width: animate ? (open ? '300px' : '60px') : '300px',
         }}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
@@ -79,17 +67,17 @@ export const MobileSidebar = ({ className, children, ...props }) => {
       {/* Top nav bar for mobile */}
       <nav
         className={cn(
-          "fixed top-0 left-0 right-0 h-14 px-4 flex flex-row md:hidden items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full z-30 shadow-sm",
-          className
+          'fixed top-0 left-0 right-0 h-14 px-4 flex flex-row md:hidden items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full z-30 shadow-sm',
+          className,
         )}
         {...props}
       >
         {/* Logo on left */}
         <div className="flex items-center">
-          <a href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-black dark:bg-white" />
             <span className="font-medium text-black dark:text-white text-base">Orgatick</span>
-          </a>
+          </Link>
         </div>
         {/* Menu icon on right */}
         <button
@@ -107,7 +95,7 @@ export const MobileSidebar = ({ className, children, ...props }) => {
             initial={{ y: -40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -40, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
             className="fixed top-14 left-0 right-0 bg-white dark:bg-neutral-900 z-40 shadow-lg px-4 py-6 flex flex-col gap-4"
           >
             <button
@@ -133,13 +121,13 @@ export const SidebarLink = ({ link, className, ...props }) => {
   return (
     <Link
       href={link.href}
-      className={cn("flex items-center justify-start gap-2  group/sidebar py-2", className)}
+      className={cn('flex items-center justify-start gap-2  group/sidebar py-2', className)}
       {...props}
     >
       {link.icon}
       <motion.span
-        animate={{  
-          display: animate ? (open ? "inline-block" : "none") : "inline-block",
+        animate={{
+          display: animate ? (open ? 'inline-block' : 'none') : 'inline-block',
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
         className="text-lg group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block p-0! m-0!"
@@ -170,10 +158,7 @@ export const Logo = () => {
 };
 export const LogoIcon = () => {
   return (
-    <a
-      href="#"
-      className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black"
-    >
+    <a href="#" className="relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black">
       <div className="h-5 w-6 shrink-0 rounded-tl-lg rounded-tr-sm rounded-br-lg rounded-bl-sm bg-black dark:bg-white" />
     </a>
   );

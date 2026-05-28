@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "motion/react";
-import { cn } from "@/lib/utils";
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { motion, AnimatePresence } from 'motion/react';
+import { cn } from '@/lib/utils';
 import {
   IconDashboard,
   IconCalendarEvent,
@@ -22,73 +22,73 @@ import {
   IconSpeakerphone,
   IconQrcode,
   IconEdit,
-} from "@tabler/icons-react";
-import { Separator } from "@/components/ui/separator";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { useUserStore } from "@/store/userStore";
-import { useOrgStore } from "@/store/orgStore";
-import Image from "next/image";
-import SidebarHeader from "./sidebar/SidebarHeader";
-import NavigationItem from "./sidebar/NavigationItem";
-import ThemeToggle from "./sidebar/ThemeToggle";
-import UserProfile from "./sidebar/UserProfile";
-import { IconTicket } from "@tabler/icons-react";
+} from '@tabler/icons-react';
+import { Separator } from '@/components/ui/separator';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { useUserStore } from '@/store/userStore';
+import { useOrgStore } from '@/store/orgStore';
+import Image from 'next/image';
+import SidebarHeader from './sidebar/SidebarHeader';
+import NavigationItem from './sidebar/NavigationItem';
+import ThemeToggle from './sidebar/ThemeToggle';
+import UserProfile from './sidebar/UserProfile';
+import { IconTicket } from '@tabler/icons-react';
 
 const navigationItems = [
   {
-    id: "dashboard",
-    label: "Dashboard",
+    id: 'dashboard',
+    label: 'Dashboard',
     icon: IconDashboard,
-    href: "/dashboard",
+    href: '/dashboard',
   },
   {
-    id: "events",
-    label: "Events",
+    id: 'events',
+    label: 'Events',
     icon: IconCalendarEvent,
-    href: "/events",
-    badge: { text: "3", variant: "secondary" },
+    href: '/events',
+    badge: { text: '3', variant: 'secondary' },
     children: [
       {
-        id: "all-events",
-        label: "All Events",
-        href: "/events",
+        id: 'all-events',
+        label: 'All Events',
+        href: '/events',
         icon: IconCalendarEvent,
       },
       {
-        id: "create-event",
-        label: "Create Event",
-        href: "/events/create",
+        id: 'create-event',
+        label: 'Create Event',
+        href: '/events/create',
         icon: IconPlus,
       },
     ],
   },
   {
-    id: "notifications",
-    label: "Notifications",
+    id: 'notifications',
+    label: 'Notifications',
     icon: IconBell,
-    href: "/notifications",
+    href: '/notifications',
   },
 ];
 
 const settingsItems = [
   {
-    id: "settings",
-    label: "Organization",
+    id: 'settings',
+    label: 'Organization',
     icon: IconBuilding,
-    href: "/organization",
+    href: '/organization',
     exact: true,
   },
   {
-    id: "member-management",
-    label: "Members",
+    id: 'member-management',
+    label: 'Members',
     icon: IconHomeCog,
-    href: "/organization/members",
+    href: '/organization/members',
   },
   {
-    id: "contact-support",
-    label: "Support",
+    id: 'contact-support',
+    label: 'Support',
     icon: IconHeadset,
-    href: "/contact",
+    href: '/contact',
   },
 ];
 
@@ -96,63 +96,63 @@ const getEventIdFromPath = (pathname) => {
   const match = pathname.match(/^\/events\/([^/]+)/);
   const eventId = match?.[1];
 
-  if (!eventId || eventId === "create") return null;
+  if (!eventId || eventId === 'create') return null;
   return eventId;
 };
 
 const getEventContextItems = (eventId) => [
   {
-    id: "event-overview",
-    label: "Overview",
+    id: 'event-overview',
+    label: 'Overview',
     href: `/events/${eventId}`,
     icon: IconChartBar,
     exact: true,
   },
   {
-    id: "event-participants",
-    label: "Participants",
+    id: 'event-participants',
+    label: 'Participants',
     href: `/events/${eventId}/participants`,
     icon: IconUsers,
   },
   {
-    id: "event-tickets",
-    label: "Tickets",
+    id: 'event-tickets',
+    label: 'Tickets',
     href: `/events/${eventId}/tickets`,
     icon: IconTicket,
   },
   {
-    id: "event-sessions",
-    label: "Sessions",
+    id: 'event-sessions',
+    label: 'Sessions',
     href: `/events/${eventId}/sessions`,
     icon: IconCalendarEvent,
   },
   {
-    id: "event-registration",
-    label: "Registration",
-    href: `/events/${eventId}/registration`,
+    id: 'event-registration',
+    label: 'Registration',
+    href: `/events/${eventId}/registrations`,
     icon: IconIdBadge2,
   },
   {
-    id: "event-share",
-    label: "Share",
+    id: 'event-share',
+    label: 'Share',
     href: `/events/${eventId}/share`,
     icon: IconShare3,
   },
   {
-    id: "event-announcements",
-    label: "Announcements",
+    id: 'event-announcements',
+    label: 'Announcements',
     href: `/events/${eventId}/announcements`,
     icon: IconSpeakerphone,
   },
   {
-    id: "event-checkin",
-    label: "Check-in",
+    id: 'event-checkin',
+    label: 'Check-in',
     href: `/events/${eventId}/checkin`,
     icon: IconQrcode,
   },
   {
-    id: "event-edit",
-    label: "Edit Event",
+    id: 'event-edit',
+    label: 'Edit Event',
     href: `/events/${eventId}/edit`,
     icon: IconEdit,
   },
@@ -171,8 +171,8 @@ const AppSidebar = ({ className }) => {
 
   const isActive = (item) => {
     if (item.exact) return pathname === item.href;
-    if (item.href === "/events") {
-      return pathname === "/events" || pathname.startsWith("/events/");
+    if (item.href === '/events') {
+      return pathname === '/events' || pathname.startsWith('/events/');
     }
     if (item.children) return item.children.some((child) => isActive(child));
     return pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -181,7 +181,7 @@ const AppSidebar = ({ className }) => {
   useEffect(() => {
     setExpandedItems((prev) => ({
       ...prev,
-      events: pathname.startsWith("/events"),
+      events: pathname.startsWith('/events'),
     }));
   }, [pathname]);
 
@@ -227,9 +227,7 @@ const AppSidebar = ({ className }) => {
         {isEventWorkspace && (
           <>
             {(!isCollapsed || isMobile) && (
-              <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-                Event
-              </p>
+              <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Event</p>
             )}
             {eventContextItems.map((item) => (
               <NavigationItem
@@ -292,11 +290,11 @@ const AppSidebar = ({ className }) => {
       {/* Desktop Sidebar */}
       <motion.div
         className={cn(
-          "scrollbar-none hidden lg:flex h-dvh shrink-0 flex-col overflow-visible bg-card sticky top-0 z-40",
+          'scrollbar-none hidden lg:flex h-dvh shrink-0 flex-col overflow-visible bg-card sticky top-0 z-40',
           className,
         )}
         animate={{ width: isCollapsed ? 80 : 280 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
+        transition={{ duration: 0.3, ease: 'easeInOut' }}
       >
         <TooltipProvider>
           <SidebarContent />
@@ -307,16 +305,8 @@ const AppSidebar = ({ className }) => {
       <div className="lg:hidden fixed top-0 z-40 bg-card overflow-hidden w-full">
         <div className="flex items-center justify-between px-4 py-3 bg-card border-b border-border">
           <Link href="/" className="flex items-center space-x-3">
-            <Image
-              src="/icons/icon.png"
-              width={100}
-              height={100}
-              alt="Orgatick"
-              className="h-8 w-8 object-contain"
-            />
-            <h2 className="text-xl font-semibold text-foreground truncate">
-              Orgatick
-            </h2>
+            <Image src="/icons/icon.png" width={100} height={100} alt="Orgatick" className="h-8 w-8 object-contain" />
+            <h2 className="text-xl font-semibold text-foreground truncate">Orgatick</h2>
           </Link>
 
           <div className="flex items-center gap-2">
@@ -347,10 +337,10 @@ const AppSidebar = ({ className }) => {
                 onClick={() => setIsMobileMenuOpen(false)}
               />
               <motion.div
-                initial={{ x: "-100%" }}
+                initial={{ x: '-100%' }}
                 animate={{ x: 0 }}
-                exit={{ x: "-100%" }}
-                transition={{ type: "spring", damping: 30, stiffness: 300 }}
+                exit={{ x: '-100%' }}
+                transition={{ type: 'spring', damping: 30, stiffness: 300 }}
                 className="scrollbar-none fixed left-0 top-0 h-full w-72 overflow-y-auto bg-card border-r border-border shadow-lg z-50 lg:hidden"
               >
                 <SidebarContent isMobile />

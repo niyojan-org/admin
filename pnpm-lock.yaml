@@ -113,6 +113,9 @@ importers:
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      prop-types:
+        specifier: ^15.8.1
+        version: 15.8.1
       qr-code-styling:
         specifier: ^1.9.2
         version: 1.9.2
