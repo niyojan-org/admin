@@ -1,7 +1,7 @@
-import api, { setAccessToken, clearAccessToken } from "@/lib/api";
-import { toast } from "sonner";
-import { create } from "zustand";
-import { loginWithPasskey as passkeyLogin } from "@/lib/passkey";
+import api, { setAccessToken, clearAccessToken } from '@/lib/api';
+import { toast } from 'sonner';
+import { create } from 'zustand';
+import { loginWithPasskey as passkeyLogin } from '@/lib/passkey';
 
 export const useUserStore = create((set) => ({
   user: null,
@@ -15,13 +15,13 @@ export const useUserStore = create((set) => ({
   login: async (credentials) => {
     const { email, password } = credentials;
     if (!email || !password) {
-      toast.error("Email and password are required");
+      toast.error('Email and password are required');
       return false;
     }
 
     try {
       set({ loading: true, error: null });
-      const response = await api.post("/auth/login", credentials);
+      const response = await api.post('/auth/login', credentials);
 
       // Check if 2FA is required
       if (response.data.requiresTOTP || response.data.requiresPasskey) {
@@ -35,14 +35,7 @@ export const useUserStore = create((set) => ({
         };
       }
 
-      const {
-        userId,
-        name,
-        email: userEmail,
-        avatar,
-        token,
-        organizationId,
-      } = response.data.data;
+      const { userId, name, email: userEmail, avatar, token, organizationId } = response.data.data;
 
       // Store access token in memory
       setAccessToken(token);
@@ -53,10 +46,10 @@ export const useUserStore = create((set) => ({
         message: response.data.message,
       });
 
-      toast.success(response.data.message || "Login successful!");
+      toast.success(response.data.message || 'Login successful!');
       return { success: true };
     } catch (error) {
-      const msg = error?.response?.data?.message || "Login failed";
+      const msg = error?.response?.data?.message || 'Login failed';
       set({ error: msg, isAuthenticated: false });
       toast.error(msg, {
         description: error?.response?.data?.error?.details,
@@ -68,10 +61,7 @@ export const useUserStore = create((set) => ({
   },
 
   // --- PASSKEY LOGIN ---
-  loginWithPasskey: async (
-    useConditionalUI = false,
-    abortController = null,
-  ) => {
+  loginWithPasskey: async (useConditionalUI = false, abortController = null) => {
     try {
       // For conditional UI, don't show loading state
       // This allows the form to remain interactive while waiting for passkey selection
@@ -88,7 +78,7 @@ export const useUserStore = create((set) => ({
       }
 
       if (!result.success) {
-        throw new Error(result.message || "Passkey login failed");
+        throw new Error(result.message || 'Passkey login failed');
       }
       const { name, email, avatar, token } = result.data;
 
@@ -102,13 +92,13 @@ export const useUserStore = create((set) => ({
       set({
         user: { userId, name, email, avatar, organizationId },
         isAuthenticated: true,
-        message: result.message || "Passkey login successful!",
+        message: result.message || 'Passkey login successful!',
       });
 
-      toast.success(result.message || "Passkey login successful!");
+      toast.success(result.message || 'Passkey login successful!');
       return true;
     } catch (error) {
-      const msg = error?.message || "Passkey login failed";
+      const msg = error?.message || 'Passkey login failed';
       set({ error: msg, isAuthenticated: false });
 
       // Only show error toast for non-conditional UI attempts
@@ -127,26 +117,23 @@ export const useUserStore = create((set) => ({
   register: async (userData) => {
     const { name, email, password } = userData;
     if (!name || !email || !password) {
-      toast.error("All fields are required");
+      toast.error('All fields are required');
       return false;
     }
 
-    const strongPassword =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,32}$/;
+    const strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,32}$/;
     if (!strongPassword.test(password)) {
-      toast.error(
-        "Weak password: must include 1 uppercase, 1 lowercase, 1 number, 1 special character, min 8 chars",
-      );
+      toast.error('Weak password: must include 1 uppercase, 1 lowercase, 1 number, 1 special character, min 8 chars');
       return false;
     }
 
     try {
       set({ loading: true, error: null });
-      const response = await api.post("/auth/register", userData);
-      toast.success(response.data.message || "Registration successful!");
+      const response = await api.post('/auth/register', userData);
+      toast.success(response.data.message || 'Registration successful!');
       return true;
     } catch (error) {
-      const msg = error?.response?.data?.message || "Registration failed";
+      const msg = error?.response?.data?.message || 'Registration failed';
       set({ error: msg });
       toast.error(msg);
       return false;
@@ -158,9 +145,9 @@ export const useUserStore = create((set) => ({
   // --- LOGOUT ---
   logout: async () => {
     try {
-      await api.post("/auth/logout");
+      await api.post('/auth/logout');
     } catch (e) {
-      console.error("Logout failed:", e);
+      console.error('Logout failed:', e);
     } finally {
       clearAccessToken();
       set({
@@ -170,7 +157,7 @@ export const useUserStore = create((set) => ({
         error: null,
         message: null,
       });
-      toast.success("Logout successful!");
+      toast.success('Logout successful!');
     }
   },
 
@@ -178,7 +165,7 @@ export const useUserStore = create((set) => ({
   fetchUser: async () => {
     try {
       set({ loading: true, error: null });
-      const response = await api.get("/users/me");
+      const response = await api.get('/users/me');
       const user = response.data.data;
       set({
         user,
@@ -204,17 +191,17 @@ export const useUserStore = create((set) => ({
   updateUser: async (updatedData) => {
     try {
       set({ loading: true, error: null });
-      const response = await api.patch("/user/me", updatedData);
+      const response = await api.patch('/user/me', updatedData);
 
       const updatedUser = response.data.data;
       set((state) => ({
         user: { ...state.user, ...updatedUser },
-        message: "Profile updated successfully",
+        message: 'Profile updated successfully',
       }));
-      toast.success(response.data.message || "Profile updated successfully");
+      toast.success(response.data.message || 'Profile updated successfully');
       return true;
     } catch (error) {
-      const msg = error?.response?.data?.message || "Failed to update profile";
+      const msg = error?.response?.data?.message || 'Failed to update profile';
       toast.error(msg, {
         description: error?.response?.data?.error?.details,
       });
@@ -235,14 +222,12 @@ export const useUserStore = create((set) => ({
   resendVerificationEmail: async (email) => {
     try {
       set({ loading: true, error: null });
-      const response = await api.post("/auth/resend-verification", { email });
-      toast.success(response.data.message || "Verification email sent!");
+      const response = await api.post('/auth/resend-verification', { email });
+      toast.success(response.data.message || 'Verification email sent!');
       set({ message: response.data.message });
       return true;
     } catch (error) {
-      const msg =
-        error?.response?.data?.message ||
-        "Failed to resend verification email.";
+      const msg = error?.response?.data?.message || 'Failed to resend verification email.';
       set({ error: msg });
       toast.error(msg);
       return false;
@@ -255,7 +240,7 @@ export const useUserStore = create((set) => ({
   verifyTOTP: async (userId, totpCode) => {
     try {
       set({ loading: true, error: null });
-      const response = await api.post("/auth/totp/verify-login", {
+      const response = await api.post('/auth/totp/verify-login', {
         userId,
         token: totpCode,
       });
@@ -271,10 +256,10 @@ export const useUserStore = create((set) => ({
         message: response.data.message,
       });
 
-      toast.success(response.data.message || "TOTP verification successful!");
+      toast.success(response.data.message || 'TOTP verification successful!');
       return { success: true };
     } catch (error) {
-      const msg = error?.response?.data?.message || "TOTP verification failed";
+      const msg = error?.response?.data?.message || 'TOTP verification failed';
       set({ error: msg });
       toast.error(msg);
       return { success: false, error: msg };
@@ -287,7 +272,7 @@ export const useUserStore = create((set) => ({
   verifyBackupCode: async (userId, backupCode) => {
     try {
       set({ loading: true, error: null });
-      const response = await api.post("/auth/verify-backup-code", {
+      const response = await api.post('/auth/verify-backup-code', {
         userId,
         backupCode,
       });
@@ -303,11 +288,10 @@ export const useUserStore = create((set) => ({
         message: response.data.message,
       });
 
-      toast.success(response.data.message || "Account recovered successfully!");
+      toast.success(response.data.message || 'Account recovered successfully!');
       return { success: true };
     } catch (error) {
-      const msg =
-        error?.response?.data?.message || "Backup code verification failed";
+      const msg = error?.response?.data?.message || 'Backup code verification failed';
       set({ error: msg });
       toast.error(msg);
       return { success: false, error: msg };

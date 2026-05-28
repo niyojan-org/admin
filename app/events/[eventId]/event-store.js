@@ -1,6 +1,6 @@
-import api from "@/lib/api";
-import { toast } from "sonner";
-import { create } from "zustand";
+import api from '@/lib/api';
+import { toast } from 'sonner';
+import { create } from 'zustand';
 
 export const EventStore = create((set, get) => ({
   event: null,
@@ -20,11 +20,9 @@ export const EventStore = create((set, get) => ({
       set({ event: response.data.event });
     } catch (error) {
       set({
-        error: error?.response?.data?.message || "Failed to load event data",
+        error: error?.response?.data?.message || 'Failed to load event data',
       });
-      toast.error(
-        error?.response?.data?.message || "Failed to load event data",
-      );
+      toast.error(error?.response?.data?.message || 'Failed to load event data');
     } finally {
       set({ loading: false });
     }
@@ -40,11 +38,9 @@ export const EventStore = create((set, get) => ({
       set({ event: response.data.event });
     } catch (error) {
       set({
-        error: error?.response?.data?.message || "Failed to refresh event data",
+        error: error?.response?.data?.message || 'Failed to refresh event data',
       });
-      toast.error(
-        error?.response?.data?.message || "Failed to refresh event data",
-      );
+      toast.error(error?.response?.data?.message || 'Failed to refresh event data');
     } finally {
       set({ loading: false });
     }

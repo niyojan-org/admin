@@ -1,6 +1,4 @@
-import 'server-only';
 import axios, { AxiosError, AxiosHeaders, InternalAxiosRequestConfig } from 'axios';
-import { headers } from 'next/headers';
 
 const baseURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:5050';
 
@@ -8,20 +6,11 @@ type RetryAxiosRequestConfig = InternalAxiosRequestConfig & {
   _retry?: boolean;
 };
 
-export async function createServerApi() {
-  const headerList = await headers();
-  const cookie = headerList.get('cookie');
+export function createClientApi() {
   const api = axios.create({
     baseURL,
     timeout: 10000,
     withCredentials: true,
-    headers: {
-      ...(cookie
-        ? {
-            Cookie: cookie,
-          }
-        : {}),
-    },
   });
 
   api.interceptors.response.use(
@@ -48,13 +37,6 @@ export async function createServerApi() {
             {},
             {
               withCredentials: true,
-              headers: {
-                ...(cookie
-                  ? {
-                      Cookie: cookie,
-                    }
-                  : {}),
-              },
             },
           );
 

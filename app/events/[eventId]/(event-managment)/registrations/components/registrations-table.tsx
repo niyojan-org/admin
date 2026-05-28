@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowUpDown, MoreHorizontal } from 'lucide-react';
+import { ArrowUpDown, MoreHorizontal, Eye } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -70,6 +71,8 @@ const SortHeader = ({ column, label, onSort }: { column: string; label: string; 
 
 export function RegistrationsTable({ sortBy, sortOrder, registrations, onSort, onRefresh }: RegistrationsTableProps) {
   const [updating, setUpdating] = useState<string | null>(null);
+  const router = useRouter();
+  const params = useParams();
 
   const handleStatusUpdate = useCallback(
     async (registrationId: string, newStatus: string) => {
@@ -119,6 +122,7 @@ export function RegistrationsTable({ sortBy, sortOrder, registrations, onSort, o
             <TableHead className="w-32">
               <SortHeader column="status" label="Status" onSort={handleSort} />
             </TableHead>
+            <TableHead className="w-12 text-right">View</TableHead>
             <TableHead className="w-12 text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
@@ -139,6 +143,17 @@ export function RegistrationsTable({ sortBy, sortOrder, registrations, onSort, o
                 </TableCell>
                 <TableCell>
                   <Badge className={STATUS_COLORS[reg.status]}>{reg.status.replace(/_/g, ' ')}</Badge>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0"
+                    onClick={() => router.push(`/events/${params.eventId}/registrations/${reg._id}`)}
+                    title="View registration details"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
                 </TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>

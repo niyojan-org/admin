@@ -1,16 +1,15 @@
-"use client";
-import AboutEvent from "./components/about-event";
-import EventBanner from "./components/EventBanner";
-import MetricsCard from "./components/metrics-card";
-import OverviewEvent from "./components/overview-event";
-import PublishWindow from "./components/publish/publish-window";
-import QuickActionsCard from "./components/quick-actions-card";
-import RegistrationCard from "./components/registration-card";
-import { EventStore } from "./event-store";
+'use client';
+import AboutEvent from './components/about-event';
+import EventBanner from './components/EventBanner';
+import MetricsCard from './components/metrics-card';
+import OverviewEvent from './components/overview-event';
+import PublishWindow from './components/publish/publish-window';
+import QuickActionsCard from './components/quick-actions-card';
+import RegistrationCard from './components/registration-card';
+import { EventStore } from './event-store';
 
 function Page() {
   const { event } = EventStore();
-
   if (!event) return null;
 
   return (

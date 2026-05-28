@@ -67,7 +67,7 @@ export const MobileSidebar = ({ className, children, ...props }) => {
       {/* Top nav bar for mobile */}
       <nav
         className={cn(
-          'fixed top-0 left-0 right-0 h-14 px-4 flex flex-row md:hidden items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full z-30 shadow-sm',
+          'fixed top-0 left-0 right-0 h-14 px-4 flex flex-row md:hidden items-center justify-between bg-neutral-100 dark:bg-neutral-800 w-full z-10 shadow-sm',
           className,
         )}
         {...props}

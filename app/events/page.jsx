@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import api from "@/lib/api";
-import { toast } from "sonner";
-import EventsHeader from "./components/EventsHeader";
-import EventsFiltersBar from "./components/EventsFiltersBar";
-import EventsSkeleton from "./components/EventsSkeleton";
-import EventsGrid from "./components/EventsGrid";
-import EventsEmptyState from "./components/EventsEmptyState";
-import EventsPagination from "./components/EventsPagination";
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import api from '@/lib/api';
+import { toast } from 'sonner';
+import EventsHeader from './components/EventsHeader';
+import EventsFiltersBar from './components/EventsFiltersBar';
+import EventsSkeleton from './components/EventsSkeleton';
+import EventsGrid from './components/EventsGrid';
+import EventsEmptyState from './components/EventsEmptyState';
+import EventsPagination from './components/EventsPagination';
 
 const DEFAULT_PAGINATION = {
   page: 1,
@@ -26,13 +26,13 @@ const DEFAULT_PAGINATION = {
 export default function EventsPage() {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState('');
   const [query, setQuery] = useState({
-    page: "1",
-    limit: "10",
-    status: "all",
-    isPublished: "all",
-    search: "",
+    page: '1',
+    limit: '10',
+    status: 'all',
+    isPublished: 'all',
+    search: '',
   });
   const [pagination, setPagination] = useState(DEFAULT_PAGINATION);
 
@@ -40,7 +40,7 @@ export default function EventsPage() {
     const timer = setTimeout(() => {
       setQuery((prev) => ({
         ...prev,
-        page: "1",
+        page: '1',
         search: searchInput.trim(),
       }));
     }, 350);
@@ -55,22 +55,17 @@ export default function EventsPage() {
         const params = {
           page: query.page,
           limit: query.limit,
-          ...(query.status !== "all" ? { status: query.status } : {}),
-          ...(query.isPublished !== "all"
-            ? { isPublished: query.isPublished }
-            : {}),
+          ...(query.status !== 'all' ? { status: query.status } : {}),
+          ...(query.isPublished !== 'all' ? { isPublished: query.isPublished } : {}),
           ...(query.search ? { search: query.search } : {}),
         };
 
-        const { data } = await api.get("/events/admin", { params });
+        const { data } = await api.get('/events/admin', { params });
 
         setEvents(data?.events || []);
         setPagination(data?.pagination || DEFAULT_PAGINATION);
       } catch (error) {
-        toast.error(
-          error.response?.data?.message ||
-            "Failed to fetch events. Please try again later.",
-        );
+        toast.error(error.response?.data?.message || 'Failed to fetch events. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -79,23 +74,20 @@ export default function EventsPage() {
     fetchEvents();
   }, [query]);
 
-  const hasActiveFilters =
-    Boolean(query.search) ||
-    query.status !== "all" ||
-    query.isPublished !== "all";
+  const hasActiveFilters = Boolean(query.search) || query.status !== 'all' || query.isPublished !== 'all';
 
   const handlePageChange = (nextPage) => {
     setQuery((prev) => ({ ...prev, page: String(nextPage) }));
   };
 
   const handleResetFilters = () => {
-    setSearchInput("");
+    setSearchInput('');
     setQuery((prev) => ({
       ...prev,
-      page: "1",
-      status: "all",
-      isPublished: "all",
-      search: "",
+      page: '1',
+      status: 'all',
+      isPublished: 'all',
+      search: '',
     }));
   };
 
@@ -103,28 +95,16 @@ export default function EventsPage() {
     return <EventsSkeleton />;
   }
 
-  const publishedCount = events.filter(
-    (event) => event.status === "published",
-  ).length;
-  const draftCount = events.filter((event) => event.status === "draft").length;
+  const publishedCount = events.filter((event) => event.status === 'published').length;
+  const draftCount = events.filter((event) => event.status === 'draft').length;
   const seatsOnPage = events.reduce((total, event) => {
     if (!event.tickets?.length) return total;
-    return (
-      total +
-      event.tickets.reduce(
-        (ticketTotal, ticket) => ticketTotal + (ticket.capacity || 0),
-        0,
-      )
-    );
+    return total + event.tickets.reduce((ticketTotal, ticket) => ticketTotal + (ticket.capacity || 0), 0);
   }, 0);
 
   return (
     <div className="space-y-5 h-full pt-4">
-      <motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.25 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
         <EventsHeader
           totalEvents={pagination.totalItems || events.length}
           pageCount={events.length}
@@ -144,32 +124,18 @@ export default function EventsPage() {
           searchQuery={searchInput}
           onSearchQueryChange={setSearchInput}
           status={query.status}
-          onStatusChange={(value) =>
-            setQuery((prev) => ({ ...prev, page: "1", status: value }))
-          }
+          onStatusChange={(value) => setQuery((prev) => ({ ...prev, page: '1', status: value }))}
           isPublished={query.isPublished}
-          onPublishedChange={(value) =>
-            setQuery((prev) => ({ ...prev, page: "1", isPublished: value }))
-          }
+          onPublishedChange={(value) => setQuery((prev) => ({ ...prev, page: '1', isPublished: value }))}
           limit={query.limit}
-          onLimitChange={(value) =>
-            setQuery((prev) => ({ ...prev, page: "1", limit: value }))
-          }
+          onLimitChange={(value) => setQuery((prev) => ({ ...prev, page: '1', limit: value }))}
           onReset={handleResetFilters}
           isLoading={loading}
         />
 
-        {events.length > 0 ? (
-          <EventsGrid events={events} />
-        ) : (
-          <EventsEmptyState hasFilters={hasActiveFilters} />
-        )}
+        {events.length > 0 ? <EventsGrid events={events} /> : <EventsEmptyState hasFilters={hasActiveFilters} />}
 
-        <EventsPagination
-          pagination={pagination}
-          onPageChange={handlePageChange}
-          isDisabled={loading}
-        />
+        <EventsPagination pagination={pagination} onPageChange={handlePageChange} isDisabled={loading} />
       </motion.div>
     </div>
   );

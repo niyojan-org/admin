@@ -16,12 +16,7 @@ interface RegistrationsPageProps {
   query: RegistrationsQuery;
 }
 
-export function RegistrationsPage({
-  registrations,
-  totalDocs,
-  totalPages,
-  query,
-}: RegistrationsPageProps) {
+export function RegistrationsPage({ registrations, totalDocs, totalPages, query }: RegistrationsPageProps) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -30,7 +25,7 @@ export function RegistrationsPage({
       const nextQuery: RegistrationsQuery = {
         ...query,
         ...next,
-        page: resetPage ? REGISTRATIONS_DEFAULTS.page : next.page ?? query.page,
+        page: resetPage ? REGISTRATIONS_DEFAULTS.page : (next.page ?? query.page),
       };
       const queryString = buildRegistrationsQuery(nextQuery);
       router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
@@ -67,7 +62,7 @@ export function RegistrationsPage({
   );
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 w-full">
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold tracking-tight">Event Registrations</h1>

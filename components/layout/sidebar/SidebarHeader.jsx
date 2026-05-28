@@ -3,65 +3,131 @@
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '@/lib/utils';
-import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react';
+import { IconLayoutSidebarLeftCollapse, IconLayoutSidebarLeftExpand, IconChevronDown } from '@tabler/icons-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import Image from 'next/image';
 
-const SidebarHeader = ({ isCollapsed, onToggleCollapse, isMobile }) => {
+const SidebarHeader = ({ isCollapsed, onToggleCollapse, isMobile, organization }) => {
   return (
-    <div className="relative">
+    <div className="relative w-full">
+      {/* Header Container */}
       <div
         className={cn(
-          'flex items-center px-4 py-6',
-          isCollapsed && !isMobile ? 'justify-center px-2' : 'justify-start',
+          'flex items-center justify-between px-4 py-4 gap-2',
+          'bg-linear-to-b from-background to-background/80',
+          'border-b border-border/50',
+          'overflow-visible',
         )}
       >
-        {isCollapsed && !isMobile ? (
+        {/* Logo and Title */}
+        <div className={cn('flex items-center gap-3', isCollapsed && !isMobile ? 'flex-col w-full' : 'flex-1 min-w-0')}>
+          {isCollapsed && !isMobile ? (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+                  <div className="relative h-8 w-8 flex items-center justify-center bg-accent rounded-md">
+                    {organization?.logo ? (
+                      <Image
+                        src={organization.logo}
+                        alt={organization.name || 'Organization'}
+                        width={32}
+                        height={32}
+                        className="h-8 w-8 object-contain rounded-md"
+                        priority
+                      />
+                    ) : (
+                      <Image
+                        src="/icons/icon.png"
+                        alt="Orgatick"
+                        width={32}
+                        height={32}
+                        className="h-6 w-6 object-contain"
+                        priority
+                      />
+                    )}
+                  </div>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p className="font-semibold">{organization?.name || 'Orgatick'}</p>
+              </TooltipContent>
+            </Tooltip>
+          ) : (
+            <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity group min-w-0">
+              <div className="relative h-8 w-8 flex items-center justify-center bg-accent rounded-md">
+                {organization?.logo ? (
+                  <Image
+                    src={organization.logo}
+                    alt={organization.name || 'Organization'}
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 object-contain rounded-md"
+                    priority
+                  />
+                ) : (
+                  <Image
+                    src="/icons/icon.png"
+                    alt="Orgatick"
+                    width={32}
+                    height={32}
+                    className="h-6 w-6 object-contain"
+                    priority
+                  />
+                )}
+              </div>
+
+              <AnimatePresence mode="wait">
+                {(!isCollapsed || isMobile) && (
+                  <motion.div
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: 'auto' }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden min-w-0"
+                  >
+                    <div className="flex flex-col gap-0.5 min-w-0">
+                      <h2 className="text-sm font-bold text-foreground truncate group-hover:text-primary transition-colors">
+                        {organization?.name || 'Orgatick'}
+                      </h2>
+                      <p className="text-xs text-muted-foreground truncate">
+                        {organization?.category || 'Event Management'}
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </Link>
+          )}
+        </div>
+
+        {/* Collapse Button */}
+        {!isMobile && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Link href="/" className="flex items-center">
-                <Image src="/icons/icon.png" alt="Orgatick" width={24} height={24} className="h-6 w-6 object-contain" />
-              </Link>
+              <motion.button
+                onClick={onToggleCollapse}
+                className={cn(
+                  'flex items-center justify-center',
+                  'text-muted-foreground',
+                  'transition-colors duration-200',
+                  isCollapsed && 'w-full mt-2',
+                )}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                {isCollapsed ? (
+                  <IconLayoutSidebarLeftExpand className="h-4 w-4" />
+                ) : (
+                  <IconLayoutSidebarLeftCollapse className="h-4 w-4" />
+                )}
+              </motion.button>
             </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>Orgatick</p>
+            <TooltipContent side={isCollapsed && !isMobile ? 'right' : 'bottom'}>
+              <p className="text-xs">{isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}</p>
             </TooltipContent>
           </Tooltip>
-        ) : (
-          <Link href="/" className="flex items-center space-x-3">
-            <Image src="/icons/icon.png" alt="Orgatick" width={24} height={24} className="h-6 w-6 object-contain" />
-            <AnimatePresence>
-              {(!isCollapsed || isMobile) && (
-                <motion.div
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
-                  exit={{ opacity: 0, width: 0 }}
-                  className="overflow-hidden"
-                >
-                  <h2 className="text-xl font-bold text-foreground">Orgatick</h2>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </Link>
         )}
       </div>
-
-      {/* Absolute positioned expand arrow at the right edge */}
-      {!isMobile && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              onClick={onToggleCollapse}
-              className="absolute -right-3 top-1/2 transform -translate-y-1/2 h-6 w-6 flex items-center justify-center rounded-full bg-card border border-border hover:bg-accent transition-colors text-muted-foreground hover:text-foreground shadow-sm z-10"
-            >
-              {isCollapsed ? <IconChevronRight className="h-3 w-3" /> : <IconChevronLeft className="h-3 w-3" />}
-            </button>
-          </TooltipTrigger>
-          <TooltipContent side="right">
-            <p>{isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}</p>
-          </TooltipContent>
-        </Tooltip>
-      )}
     </div>
   );
 };
