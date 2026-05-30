@@ -108,81 +108,79 @@ export function RegistrationsTable({ sortBy, sortOrder, registrations, onSort, o
   }
 
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-32">
-              <SortHeader column="createdAt" label="Date" onSort={handleSort} />
-            </TableHead>
-            <TableHead>Participant</TableHead>
-            <TableHead>Contact</TableHead>
-            <TableHead className="text-right w-24">Count</TableHead>
-            <TableHead className="text-right w-28">Total</TableHead>
-            <TableHead className="w-32">
-              <SortHeader column="status" label="Status" onSort={handleSort} />
-            </TableHead>
-            <TableHead className="w-12 text-right">View</TableHead>
-            <TableHead className="w-12 text-right">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {registrations.map((reg) => {
-            const firstParticipant = reg.participantIds[0];
-            return (
-              <TableRow key={reg._id}>
-                <TableCell className="font-medium text-sm">{formatDate(reg.createdAt)}</TableCell>
-                <TableCell className="text-sm">{firstParticipant?.name || '-'}</TableCell>
-                <TableCell className="text-sm text-muted-foreground">
-                  <div>{firstParticipant?.email || '-'}</div>
-                  <div>{firstParticipant?.phone || '-'}</div>
-                </TableCell>
-                <TableCell className="text-right text-sm font-medium">{reg.participantsCount}</TableCell>
-                <TableCell className="text-right text-sm font-medium">
-                  {reg.pricing.currency} {reg.pricing.total}
-                </TableCell>
-                <TableCell>
-                  <Badge className={STATUS_COLORS[reg.status]}>{reg.status.replace(/_/g, ' ')}</Badge>
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0"
-                    onClick={() => router.push(`/events/${params.eventId}/registrations/${reg._id}`)}
-                    title="View registration details"
-                  >
-                    <Eye className="h-4 w-4" />
-                  </Button>
-                </TableCell>
-                <TableCell className="text-right">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0" disabled={updating === reg._id}>
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <div className="px-2 py-1.5 text-sm font-semibold">Update Status</div>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuRadioGroup
-                        value={reg.status}
-                        onValueChange={(newStatus) => handleStatusUpdate(reg._id, newStatus)}
-                      >
-                        {REGISTRATION_STATUS_OPTIONS.map((statusOption) => (
-                          <DropdownMenuRadioItem key={statusOption.value} value={statusOption.value}>
-                            {statusOption.label}
-                          </DropdownMenuRadioItem>
-                        ))}
-                      </DropdownMenuRadioGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+    <Table className="min-w-max">
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-32">
+            <SortHeader column="createdAt" label="Date" onSort={handleSort} />
+          </TableHead>
+          <TableHead>Participant</TableHead>
+          <TableHead>Contact</TableHead>
+          <TableHead className="text-right w-24">Count</TableHead>
+          <TableHead className="text-right w-28">Total</TableHead>
+          <TableHead className="w-32">
+            <SortHeader column="status" label="Status" onSort={handleSort} />
+          </TableHead>
+          <TableHead className="w-12 text-right">View</TableHead>
+          <TableHead className="w-12 text-right">Action</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {registrations.map((reg) => {
+          const firstParticipant = reg.participantIds[0];
+          return (
+            <TableRow key={reg._id}>
+              <TableCell className="font-medium text-sm">{formatDate(reg.createdAt)}</TableCell>
+              <TableCell className="text-sm">{firstParticipant?.name || '-'}</TableCell>
+              <TableCell className="text-sm text-muted-foreground">
+                <div>{firstParticipant?.email || '-'}</div>
+                <div>{firstParticipant?.phone || '-'}</div>
+              </TableCell>
+              <TableCell className="text-right text-sm font-medium">{reg.participantsCount}</TableCell>
+              <TableCell className="text-right text-sm font-medium">
+                {reg.pricing.currency} {reg.pricing.total}
+              </TableCell>
+              <TableCell>
+                <Badge className={STATUS_COLORS[reg.status]}>{reg.status.replace(/_/g, ' ')}</Badge>
+              </TableCell>
+              <TableCell className="text-right">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0"
+                  onClick={() => router.push(`/events/${params.eventId}/registrations/${reg._id}`)}
+                  title="View registration details"
+                >
+                  <Eye className="h-4 w-4" />
+                </Button>
+              </TableCell>
+              <TableCell className="text-right">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0" disabled={updating === reg._id}>
+                      <MoreHorizontal className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <div className="px-2 py-1.5 text-sm font-semibold">Update Status</div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuRadioGroup
+                      value={reg.status}
+                      onValueChange={(newStatus) => handleStatusUpdate(reg._id, newStatus)}
+                    >
+                      {REGISTRATION_STATUS_OPTIONS.map((statusOption) => (
+                        <DropdownMenuRadioItem key={statusOption.value} value={statusOption.value}>
+                          {statusOption.label}
+                        </DropdownMenuRadioItem>
+                      ))}
+                    </DropdownMenuRadioGroup>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
+            </TableRow>
+          );
+        })}
+      </TableBody>
+    </Table>
   );
 }

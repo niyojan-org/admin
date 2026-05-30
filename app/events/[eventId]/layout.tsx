@@ -3,7 +3,7 @@ import EventHydrator from './event-hydrator';
 import fetchEvent from './events';
 
 async function EventDetailLayout({ children, params }) {
-  const { eventId } = params;
+  const { eventId } = await params;
   const event = await fetchEvent(eventId);
   return (
     <div className="w-full bg-background">

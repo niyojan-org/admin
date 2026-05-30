@@ -71,8 +71,6 @@ export async function createServerApi() {
           });
           return api(originalRequest);
         } catch (refreshError) {
-          console.error('Token refresh failed:', refreshError);
-
           return Promise.reject(refreshError);
         }
       }

@@ -1,24 +1,12 @@
-"use client";
-import React from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  IconLock,
-  IconAlertTriangle,
-  IconShieldCheck,
-  IconFileText,
-  IconMail,
-} from "@tabler/icons-react";
-import Link from "next/link";
-import { useOrgStore } from "@/store/orgStore";
+'use client';
+import React from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { IconLock, IconAlertTriangle, IconShieldCheck, IconFileText, IconMail } from '@tabler/icons-react';
+import Link from 'next/link';
+import { useOrgStore } from '@/store/orgStore';
 
 export default function EventCreationNotAllowed() {
   const { organization } = useOrgStore();
@@ -29,59 +17,54 @@ export default function EventCreationNotAllowed() {
     if (!organization?.verified) {
       reasons.push({
         icon: IconShieldCheck,
-        title: "Organization Not Verified",
-        description:
-          "Your organization needs to be verified before you can create events.",
-        severity: "high",
+        title: 'Organization Not Verified',
+        description: 'Your organization needs to be verified before you can create events.',
+        severity: 'high',
       });
     }
 
     if (!organization?.allowsEventCreation) {
       reasons.push({
         icon: IconLock,
-        title: "Event Creation Disabled",
-        description:
-          "Event creation is currently disabled for your organization.",
-        severity: "high",
+        title: 'Event Creation Disabled',
+        description: 'Event creation is currently disabled for your organization.',
+        severity: 'high',
       });
     }
 
     if (organization?.documents?.some((doc) => !doc.verified)) {
       reasons.push({
         icon: IconFileText,
-        title: "Pending Document Verification",
-        description: "Some of your uploaded documents are still under review.",
-        severity: "medium",
+        title: 'Pending Document Verification',
+        description: 'Some of your uploaded documents are still under review.',
+        severity: 'medium',
       });
     }
 
     if (organization?.fraudFlags?.length > 0) {
       reasons.push({
         icon: IconAlertTriangle,
-        title: "Fraud Flags Detected",
-        description:
-          "Your organization has been flagged for review due to security concerns.",
-        severity: "high",
+        title: 'Fraud Flags Detected',
+        description: 'Your organization has been flagged for review due to security concerns.',
+        severity: 'high',
       });
     }
 
     if (organization?.warnings?.length > 0) {
       reasons.push({
         icon: IconAlertTriangle,
-        title: "Active Warnings",
-        description:
-          "Your organization has active warnings that need to be addressed.",
-        severity: "medium",
+        title: 'Active Warnings',
+        description: 'Your organization has active warnings that need to be addressed.',
+        severity: 'medium',
       });
     }
 
     if (organization?.isBlocked) {
       reasons.push({
         icon: IconLock,
-        title: "Organization Blocked",
-        description:
-          "Your organization has been temporarily blocked from creating events.",
-        severity: "high",
+        title: 'Organization Blocked',
+        description: 'Your organization has been temporarily blocked from creating events.',
+        severity: 'high',
       });
     }
 
@@ -89,10 +72,9 @@ export default function EventCreationNotAllowed() {
     if (reasons.length === 0) {
       reasons.push({
         icon: IconLock,
-        title: "Event Creation Not Available",
-        description:
-          "Event creation is currently not available for your organization.",
-        severity: "medium",
+        title: 'Event Creation Not Available',
+        description: 'Event creation is currently not available for your organization.',
+        severity: 'medium',
       });
     }
 
@@ -103,12 +85,12 @@ export default function EventCreationNotAllowed() {
 
   const getSeverityColor = (severity) => {
     switch (severity) {
-      case "high":
-        return "destructive";
-      case "medium":
-        return "warning";
+      case 'high':
+        return 'destructive';
+      case 'medium':
+        return 'warning';
       default:
-        return "secondary";
+        return 'secondary';
     }
   };
 
@@ -121,12 +103,9 @@ export default function EventCreationNotAllowed() {
               <IconLock className="h-8 w-8 text-destructive" />
             </div>
           </div>
-          <CardTitle className="text-2xl text-destructive">
-            Event Creation Not Allowed
-          </CardTitle>
+          <CardTitle className="text-2xl text-destructive">Event Creation Not Allowed</CardTitle>
           <CardDescription className="text-base">
-            You currently don't have permission to create events for this
-            organization.
+            You currently don&apos;t have permission to create events for this organization.
           </CardDescription>
         </CardHeader>
 
@@ -138,25 +117,20 @@ export default function EventCreationNotAllowed() {
               <Alert
                 key={index}
                 className={`border-l-4 ${
-                  reason.severity === "high"
-                    ? "border-l-destructive bg-destructive/5"
-                    : reason.severity === "medium"
-                      ? "border-l-yellow-500 bg-yellow-500/5"
-                      : "border-l-blue-500 bg-blue-500/5"
+                  reason.severity === 'high'
+                    ? 'border-l-destructive bg-destructive/5'
+                    : reason.severity === 'medium'
+                      ? 'border-l-yellow-500 bg-yellow-500/5'
+                      : 'border-l-blue-500 bg-blue-500/5'
                 }`}
               >
                 <reason.icon className="h-4 w-4" />
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex-1">
                     <h4 className="font-medium">{reason.title}</h4>
-                    <AlertDescription className="mt-1">
-                      {reason.description}
-                    </AlertDescription>
+                    <AlertDescription className="mt-1">{reason.description}</AlertDescription>
                   </div>
-                  <Badge
-                    variant={getSeverityColor(reason.severity)}
-                    className="self-start sm:ml-2"
-                  >
+                  <Badge variant={getSeverityColor(reason.severity)} className="self-start sm:ml-2">
                     {reason.severity}
                   </Badge>
                 </div>
@@ -170,69 +144,40 @@ export default function EventCreationNotAllowed() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Verification Status
-                  </span>
-                  <Badge
-                    variant={organization?.verified ? "success" : "destructive"}
-                  >
-                    {organization?.verified ? "Verified" : "Not Verified"}
+                  <span className="text-sm text-muted-foreground">Verification Status</span>
+                  <Badge variant={organization?.verified ? 'success' : 'destructive'}>
+                    {organization?.verified ? 'Verified' : 'Not Verified'}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Event Creation
-                  </span>
-                  <Badge
-                    variant={
-                      organization?.allowsEventCreation
-                        ? "success"
-                        : "destructive"
-                    }
-                  >
-                    {organization?.allowsEventCreation ? "Enabled" : "Disabled"}
+                  <span className="text-sm text-muted-foreground">Event Creation</span>
+                  <Badge variant={organization?.allowsEventCreation ? 'success' : 'destructive'}>
+                    {organization?.allowsEventCreation ? 'Enabled' : 'Disabled'}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Paid Events
-                  </span>
-                  <Badge
-                    variant={
-                      organization?.allowsPaidEvents ? "success" : "secondary"
-                    }
-                  >
-                    {organization?.allowsPaidEvents ? "Enabled" : "Disabled"}
+                  <span className="text-sm text-muted-foreground">Paid Events</span>
+                  <Badge variant={organization?.allowsPaidEvents ? 'success' : 'secondary'}>
+                    {organization?.allowsPaidEvents ? 'Enabled' : 'Disabled'}
                   </Badge>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Trust Score
-                  </span>
-                  <Badge variant="outline">
-                    {organization?.trustScore || 0}/100
+                  <span className="text-sm text-muted-foreground">Trust Score</span>
+                  <Badge variant="outline">{organization?.trustScore || 0}/100</Badge>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">Active Status</span>
+                  <Badge variant={organization?.active ? 'success' : 'destructive'}>
+                    {organization?.active ? 'Active' : 'Inactive'}
                   </Badge>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Active Status
-                  </span>
-                  <Badge
-                    variant={organization?.active ? "success" : "destructive"}
-                  >
-                    {organization?.active ? "Active" : "Inactive"}
-                  </Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    Documents
-                  </span>
+                  <span className="text-sm text-muted-foreground">Documents</span>
                   <Badge variant="outline">
-                    {organization?.documents?.filter((doc) => doc.verified)
-                      .length || 0}
-                    /{organization?.documents?.length || 0} Verified
+                    {organization?.documents?.filter((doc) => doc.verified).length || 0}/
+                    {organization?.documents?.length || 0} Verified
                   </Badge>
                 </div>
               </div>

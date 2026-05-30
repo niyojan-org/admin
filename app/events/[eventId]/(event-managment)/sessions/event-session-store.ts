@@ -1,9 +1,30 @@
-import api from '@/lib/api';
-import { toast } from 'sonner';
-import { create } from 'zustand';
-import { EventStore } from '../../event-store';
+'use client';
 
-const updateEventSessions = async (sessions) => {
+import { create } from 'zustand';
+import { toast } from 'sonner';
+import api from '@/lib/api';
+import { EventStore } from '../../event-store';
+import { EventSession } from '@/types/event';
+
+interface EventSessionCheckInPayload {
+  checkInStartTime?: string;
+  checkInEndTime?: string;
+  checkInCode?: string;
+}
+
+interface EventSessionStore {
+  loading: boolean;
+  error: string | null;
+  addSession: (sessionData: EventSession) => Promise<boolean>;
+  editSession: (sessionData: EventSession) => Promise<boolean>;
+  toggleSessionStatus: (sessionId: string) => Promise<void>;
+  enableCheckIn: (
+    sessionId: string,
+    payload?: EventSessionCheckInPayload
+  ) => Promise<boolean>;
+}
+
+const updateEventSessions = async (sessions: EventSession[]) => {
   const event = EventStore.getState().event;
   if (!event?.slug) {
     throw new Error('Event details are not available yet.');
@@ -13,11 +34,11 @@ const updateEventSessions = async (sessions) => {
   await EventStore.getState().refreshEvent();
 };
 
-export const EventSessionStore = create((set) => ({
+export const EventSessionStore = create<EventSessionStore>((set) => ({
   loading: false,
   error: null,
 
-  addSession: async (sessionData) => {
+  addSession: async (sessionData: EventSession) => {
     try {
       set({ loading: true, error: null });
       const event = EventStore.getState().event;
@@ -25,7 +46,7 @@ export const EventSessionStore = create((set) => ({
       await updateEventSessions(sessions);
       toast.success('Session added successfully');
       return true;
-    } catch (error) {
+    } catch (error: any) {
       const message = error.response?.data?.message || 'Failed to add session';
       toast.error(message);
       set({ error: message });
@@ -35,18 +56,19 @@ export const EventSessionStore = create((set) => ({
     }
   },
 
-  editSession: async (sessionData) => {
+  editSession: async (sessionData: EventSession) => {
     try {
       set({ loading: true, error: null });
       const event = EventStore.getState().event;
       const sessions = (event?.sessions || []).map((session) =>
-        session._id === sessionData._id ? sessionData : session,
+        session._id === sessionData._id ? sessionData : session
       );
       await updateEventSessions(sessions);
       toast.success('Session updated successfully');
       return true;
-    } catch (error) {
-      const message = error.response?.data?.message || 'Failed to update session';
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || 'Failed to update session';
       toast.error(message);
       set({ error: message });
       return false;
@@ -55,7 +77,7 @@ export const EventSessionStore = create((set) => ({
     }
   },
 
-  toggleSessionStatus: async (sessionId) => {
+  toggleSessionStatus: async (sessionId: string) => {
     try {
       set({ loading: true, error: null });
       const event = EventStore.getState().event;
@@ -65,8 +87,9 @@ export const EventSessionStore = create((set) => ({
       });
       await updateEventSessions(sessions);
       toast.success('Session status updated successfully');
-    } catch (error) {
-      const message = error.response?.data?.message || 'Failed to update session status';
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || 'Failed to update session status';
       toast.error(message);
       set({ error: message });
     } finally {
@@ -74,7 +97,10 @@ export const EventSessionStore = create((set) => ({
     }
   },
 
-  enableCheckIn: async (sessionId, payload) => {
+  enableCheckIn: async (
+    sessionId: string,
+    payload?: EventSessionCheckInPayload
+  ) => {
     try {
       set({ loading: true, error: null });
       const event = EventStore.getState().event;
@@ -89,15 +115,16 @@ export const EventSessionStore = create((set) => ({
           allowCheckIn: true,
           checkInStartTime: payload?.checkInStartTime || null,
           checkInEndTime: payload?.checkInEndTime || null,
-          checkInCode: payload?.checkInCode || session.checkInCode,
+          checkInCode: payload?.checkInCode || (session as any).checkInCode,
         };
       });
 
       EventStore.setState({ event: { ...event, sessions } });
       toast.success('Check-in enabled (demo)');
       return true;
-    } catch (error) {
-      const message = error.response?.data?.message || 'Failed to enable check-in';
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || 'Failed to enable check-in';
       toast.error(message);
       set({ error: message });
       return false;

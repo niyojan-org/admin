@@ -103,7 +103,7 @@ export default function EventsPage() {
   }, 0);
 
   return (
-    <div className="space-y-5 h-full pt-4">
+    <div className="space-y-5 h-full">
       <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }}>
         <EventsHeader
           totalEvents={pagination.totalItems || events.length}

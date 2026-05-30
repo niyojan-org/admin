@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { RegistrationsTable, Registration } from './registrations-table';
 import { RegistrationsFilters } from './registrations-filters';
 import { RegistrationsPagination } from './registrations-pagination';
-import { Card } from '@/components/ui/card';
+import ManagementBanner from '../../../components/management-banner';
 import { buildRegistrationsQuery, RegistrationsQuery } from './registrations-query';
 import { REGISTRATIONS_DEFAULTS } from './registrations-constants';
 
@@ -62,7 +62,8 @@ export function RegistrationsPage({ registrations, totalDocs, totalPages, query 
   );
 
   return (
-    <div className="space-y-4 w-full">
+    <div className="space-y-4 w-full overflow-hidden">
+      <ManagementBanner />
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold tracking-tight">Event Registrations</h1>
@@ -70,15 +71,17 @@ export function RegistrationsPage({ registrations, totalDocs, totalPages, query 
         <RegistrationsFilters status={query.status} search={query.search} onFilterChange={handleFilterChange} />
       </div>
 
-      <Card className="border-0">
-        <RegistrationsTable
-          registrations={registrations}
-          sortBy={query.sortBy}
-          sortOrder={query.sortOrder}
-          onSort={handleSort}
-          onRefresh={() => router.refresh()}
-        />
-      </Card>
+      <div className="w-full">
+        <div className="w-full max-w-full overflow-x-auto rounded-md border">
+          <RegistrationsTable
+            registrations={registrations}
+            sortBy={query.sortBy}
+            sortOrder={query.sortOrder}
+            onSort={handleSort}
+            onRefresh={() => router.refresh()}
+          />
+        </div>
+      </div>
 
       <RegistrationsPagination
         page={query.page}

@@ -4,7 +4,7 @@ import Icon404 from '@/assets/svg/404';
 
 const Error404 = () => {
   return (
-    <section className="relative flex flex-col items-center justify-center h-dvh" role="main">
+    <section className="relative flex flex-col items-center justify-center h-full" role="main">
       <div className="max-w-md w-full flex flex-col items-center">
         <Icon404 />
         <h1 className="text-4xl font-extrabold mb-4 text-center text-primary">Oops! Page Not Found</h1>

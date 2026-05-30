@@ -19,13 +19,11 @@ export default async function Page({ params, searchParams }: PageProps) {
   });
 
   return (
-    <>
-      <RegistrationsPage
-        registrations={data.registrations}
-        totalDocs={data.totalDocs}
-        totalPages={data.totalPages}
-        query={query}
-      />
-    </>
+    <RegistrationsPage
+      registrations={data.registrations}
+      totalDocs={data.totalDocs}
+      totalPages={data.totalPages}
+      query={query}
+    />
   );
 }

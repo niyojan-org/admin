@@ -1,45 +1,29 @@
-import {
-  IconCalendarEvent,
-  IconCircleCheck,
-  IconMapPin,
-  IconQrcode,
-} from "@tabler/icons-react";
+import { IconCalendarEvent, IconCircleCheck, IconMapPin, IconQrcode } from '@tabler/icons-react';
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
-const numberFormatter = new Intl.NumberFormat("en-IN", {
+const numberFormatter = new Intl.NumberFormat('en-IN', {
   maximumFractionDigits: 0,
 });
 
 function SummaryCard({ title, value, helper, icon: Icon, accentClass }) {
   return (
-    <Card className="border-border/70 bg-background/80 shadow-sm">
+    <Card className="border-border/70 bg-background/80 shadow-sm p-2">
       <CardContent className="flex items-start justify-between gap-3 p-0">
         <div className="flex w-full flex-col">
           <div className="flex w-full items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">
-                {title}
-              </p>
-              <p className="text-2xl font-semibold tracking-tight text-foreground">
-                {value}
-              </p>
+              <p className="text-sm font-medium text-muted-foreground">{title}</p>
+              <p className="text-2xl font-semibold tracking-tight text-foreground">{value}</p>
             </div>
-            <div
-              className={cn(
-                "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border",
-                accentClass,
-              )}
-            >
+            <div className={cn('flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border', accentClass)}>
               <Icon className="h-5 w-5" />
             </div>
           </div>
-          <p className="line-clamp-1 text-sm text-muted-foreground">
-            {helper}
-          </p>
+          <p className="line-clamp-1 text-sm text-muted-foreground">{helper}</p>
         </div>
       </CardContent>
     </Card>
@@ -48,9 +32,7 @@ function SummaryCard({ title, value, helper, icon: Icon, accentClass }) {
 
 function SessionInfo({ sessions, onCreate, canCreate }) {
   const liveSessions = sessions.filter((session) => session?.isActive).length;
-  const checkInSessions = sessions.filter(
-    (session) => session?.allowCheckIn,
-  ).length;
+  const checkInSessions = sessions.filter((session) => session?.allowCheckIn).length;
   const venueSessions = sessions.filter((session) => session?.venue?.name).length;
 
   return (
@@ -66,17 +48,13 @@ function SessionInfo({ sessions, onCreate, canCreate }) {
             </p>
           </div>
           {canCreate && (
-            <Button
-              size="lg"
-              className="h-11 rounded-full px-5"
-              onClick={onCreate}
-            >
+            <Button size="lg" className="h-11 rounded-full px-5" onClick={onCreate}>
               Create session
             </Button>
           )}
         </div>
 
-        <div className="mt-3 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="mt-3 grid grid-cols-2 gap-2 sm:gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <SummaryCard
             title="Sessions"
             value={numberFormatter.format(sessions.length)}
@@ -87,9 +65,7 @@ function SessionInfo({ sessions, onCreate, canCreate }) {
           <SummaryCard
             title="Live"
             value={numberFormatter.format(liveSessions)}
-            helper={`${numberFormatter.format(
-              Math.max(sessions.length - liveSessions, 0),
-            )} inactive`}
+            helper={`${numberFormatter.format(Math.max(sessions.length - liveSessions, 0))} inactive`}
             icon={IconCircleCheck}
             accentClass="border-emerald-500/20 bg-emerald-500/10 text-emerald-600"
           />

@@ -1,10 +1,14 @@
 'use client';
 
 import { useEffect } from 'react';
-
 import { EventStore } from './event-store';
+import { EventData } from '@/types/event';
 
-function EventHydrator({ event }) {
+interface EventHydratorProps {
+  event: EventData;
+}
+
+function EventHydrator({ event }: EventHydratorProps) {
   const setEvent = EventStore((state) => state.setEvent);
 
   useEffect(() => {
